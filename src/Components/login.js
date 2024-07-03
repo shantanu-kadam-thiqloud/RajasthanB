@@ -21,7 +21,7 @@ const Login = () => {
   const handleSubmit = async (values) => {    
     const UserData = {
       userName: values.username,
-      userType: "Checker",
+      userType: "Maker",
       token: "sdfdsfdsf",
       firstName: "Shantanu"
     }

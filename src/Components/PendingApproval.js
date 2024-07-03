@@ -99,10 +99,14 @@ const PendingApproval = () => {
             <div className="container-fluid">
           <div className="row">
             <div className="col-md-12">
+            <div className="card">
+                    <div className="card-header">
+                      <div className="row alignCenter">                        
               <h2 className="mb-3 mt-3 pageTitle">User Requests</h2>
-            </div>
-          </div>
+              </div>
+            </div>          
           <div className="row">
+          <div className="card-body">
             <div className="col-md-11 mx-auto flex">              
               <DataTable
                 columns={columns}
@@ -114,7 +118,11 @@ const PendingApproval = () => {
                 enablePagination={false}
               />
             </div>{" "}
+            </div>
           </div>
+          </div>
+        </div>
+        </div>
         </div>
         </div>
         </div>

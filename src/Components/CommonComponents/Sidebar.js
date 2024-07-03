@@ -82,7 +82,7 @@ export default function Sidebar() {
                     icon={faUsers}
                     onClick={() => {}}
                   />
-                  <p>Customer Onboarding</p>
+                  <p>Customer Maintenance</p>
                 </Link>
               </li>
               <li className="nav-item">

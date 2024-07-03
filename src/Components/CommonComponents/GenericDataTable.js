@@ -39,6 +39,7 @@ const GenericDataTable = ({
       ) : (
         <FontAwesomeIcon
           icon={faEye}
+          className="ViewIcon"
           onClick={() => handleEyeAction(row)}
           style={{ cursor: "pointer", marginRight: "8px" }}
         />
@@ -48,6 +49,7 @@ const GenericDataTable = ({
       ) : (
         <FontAwesomeIcon
           icon={faEdit}
+          className="EditIcon"
           style={{ cursor: "pointer", marginRight: "8px" }}
           onClick={() => handleEditAction(row)}
         />
@@ -64,20 +66,20 @@ const GenericDataTable = ({
     </>
   );
 
-  useEffect(() => {
-    const initialSwitchStates = data.reduce((acc, row) => {
-      acc[row.id] = row.isActive;
-      return acc;
-    }, {});
-    setSwitchStates(initialSwitchStates);
-  }, [data]);
+  // useEffect(() => {
+  //   const initialSwitchStates = data.reduce((acc, row) => {
+  //     acc[row.id] = row.isActive;
+  //     return acc;
+  //   }, {});
+  //   setSwitchStates(initialSwitchStates);
+  // }, [data]);
 
-  const handleSwitchToggle = (rowId) => {
-    setSwitchStates((prevState) => ({
-      ...prevState,
-      [rowId]: !prevState[rowId],
-    }));
-  };
+  // const handleSwitchToggle = (rowId) => {
+  //   setSwitchStates((prevState) => ({
+  //     ...prevState,
+  //     [rowId]: !prevState[rowId],
+  //   }));
+  // };
 
   const handleEyeAction = (user) => {
     navigate(`/${detailpage}`, { state: { user } });
@@ -92,11 +94,16 @@ const GenericDataTable = ({
     //${user.id}`);
   };
 
+  const accountValidityTemplate = (row) => {
+    return row.is_account_valid ? "Active" : "Inactive";
+  };
   const getTemplate = (field, template) => {
     if (field === "isActive") {
       return switchTemplate;
     } else if (field === "") {
       return buttonsTemplate;
+    }else if (field === "is_account_valid" || field === "is_active") {
+      return accountValidityTemplate;
     } else if (template === "HyperLinkTemplate") {
       return createTemplate(field);
     }

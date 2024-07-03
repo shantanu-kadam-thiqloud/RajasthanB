@@ -67,7 +67,7 @@ export default function AddUser() {
 
   const  AddUser = async (values) => {
     values.is_active = (values.is_active === true || values.is_active === 1) ? 1 : 0;
-    const requestData = await createRequestData(existingValue, values);
+   // const requestData = await createRequestData(existingValue, values);
     const data = {
       utilityType: "user",
       makerId: "1",
@@ -75,7 +75,7 @@ export default function AddUser() {
       requestType: isEdit ? "update" : "add",
       tableName: "txn_sb_users",
       updatedValue: values,
-      requestData: requestData,
+      //requestData: requestData,
       existing_values: existingValue,
       description: isEdit ? "Update user" : "Creating a new user",
       createdBy: "Admin",
@@ -91,17 +91,17 @@ export default function AddUser() {
     });
   };
 
-  async function createRequestData(oldValue, updatedValue) {
-    const keys = Object.keys(updatedValue);
-    const requestData = keys.map(key => {
-      return {
-        field: key,
-        existingValue: oldValue[key],
-        newValue: updatedValue[key]
-      };
-    });
-    return requestData;
-  }
+  // async function createRequestData(oldValue, updatedValue) {
+  //   const keys = Object.keys(updatedValue);
+  //   const requestData = keys.map(key => {
+  //     return {
+  //       field: key,
+  //       existingValue: oldValue[key],
+  //       newValue: updatedValue[key]
+  //     };
+  //   });
+  //   return requestData;
+  // }
   
 
   const copyToClipboard = (text) => {
@@ -220,11 +220,12 @@ export default function AddUser() {
                                       </label>
                                       <br />
                                       <Field
-                                        name="is_active"
-                                        className="form-check-input checkbox-custom"
-                                        type="checkbox"
-                                        id="flexSwitchCheckChecked"
-                                      />
+                                      name="is_active"
+                                      className="form-check-input checkbox-custom"
+                                      type="checkbox"
+                                      id="flexSwitchCheckChecked"
+                                      onChange={(e) => setFieldValue("is_active", e.target.checked ? 1 : 0)}
+                                    />
                                     </div>                                  
                                 </div>
                                 <div className="col">
@@ -272,8 +273,8 @@ export default function AddUser() {
                                       <option value="" className="greyText">Select role</option>
                                       <option value="1">Checker</option>
                                       <option value="2">Maker</option>
-                                      <option value="3">Admin</option>
-                                      <option value="4">Operation Checker</option>
+                                      {/* <option value="3">Admin</option>
+                                      <option value="4">Operation Checker</option> */}
                                     </Field>
                                     <ErrorMessage name="role_id" component="div" className="error" />
                                   </div>                                  

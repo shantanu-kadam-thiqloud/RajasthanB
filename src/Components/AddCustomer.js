@@ -2,32 +2,53 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
+import { saveData } from "./../Services/API-services";
+import { toast } from "react-toastify";
 
 export default function AddCustomer() {
   const [isLoading, setIsLoading] = useState(false);
-  const [customer, setCustomer] = useState({});
+  const location = useLocation();
+  const customerid = location.state ? location.state.user.customer_id  : "";
+  const [customer, setCustomer] = useState(location.state ? location.state.user : {});
+  const [existingValue, setExistingValue] = useState(location.state ? location.state.user : {});
+  // const [customer, setCustomer] = useState({});
   const path = window.location.pathname;
   const isEdit = path.includes("EditCustomer");
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
-    customerName: Yup.string().max(255, "Must be 255 characters or less").required("Customer Name is required"),
-    customerAccountNo: Yup.string().max(50, "Must be 50 characters or less").required("Customer Account No is required"),
-    confirmAccountNumber: Yup.string().oneOf([Yup.ref('customerAccountNo'), null], 'Account numbers must match').required("Confirm Account Number is required"),
-    isAccountValid: Yup.number().oneOf([0, 1], "Must be 0 or 1"),
-    invalidReason: Yup.string().max(255, "Must be 255 characters or less"),
-    validateDate: Yup.date(),
-    ifscCode: Yup.string().max(100, "Must be 100 characters or less").required("IFSC Code is required"),
-    emailId: Yup.string().email("Invalid email address").max(255, "Must be 255 characters or less"),
-    mobileNo: Yup.string().max(15, "Must be 15 characters or less"),
-    clientId: Yup.string().max(255, "Must be 255 characters or less").required("Client ID is required"),
-    clientSecret: Yup.string().max(255, "Must be 255 characters or less").required("Client Secret is required"),
-    merchantName: Yup.string().max(100, "Must be 100 characters or less").required("Merchant Name is required"),
-    state: Yup.string().max(100, "Must be 100 characters or less").required("State is required"),
-    schemeName: Yup.string().max(255, "Must be 255 characters or less"),
-    description: Yup.string().max(255, "Must be 255 characters or less"),
-    isActive: Yup.number().oneOf([0, 1], "Must be 0 or 1").required("Is Active is required"),
+    customer_name: Yup.string().max(255, "Must be 255 characters or less").required("Account Name is required"),
+    customer_account_no: Yup.string()
+    .matches(/^[0-9]+$/, "Account Number must be numeric")
+    .max(50, "Must be 50 characters or less")
+    .required("Account No is required"),
+  confirm_account_number: Yup.string()
+    .oneOf([Yup.ref('customer_account_no'), null], 'Account numbers must match')
+    .matches(/^[0-9]+$/, "Account Number must be numeric")
+    .required("Confirm Account Number is required"),
+    ifsc_code: Yup.string()
+    .matches(/^[a-zA-Z0-9]{11}$/, "IFSC Code must be 11 characters long and alphanumeric")
+    .required("IFSC Code is required"),
+    email_id: Yup.string().email("Invalid email address").max(255, "Must be 255 characters or less"),
+    mobile_no: Yup.string().matches(/^[0-9]{10}$/, "Invalid Mobile No"),
+    client_id: Yup.string().max(255, "Must be 255 characters or less").required("Client ID is required"),
+    client_secret: Yup.string().max(255, "Must be 255 characters or less").required("Secret Key is required"),
+    merchant_name: Yup.string().max(100, "Must be 100 characters or less").required("E-collection Merchant ID is required"),
   });
+
+  const initialValues={
+    customer_name: isEdit ? customer.customer_name : "",
+    customer_account_no: isEdit ? customer.customer_account_no : "",
+    confirm_account_number: isEdit ? customer.confirm_account_number : "",                       
+    ifsc_code: isEdit ? customer.ifsc_code : "",
+    email_id: isEdit ? customer.email_id : "",
+    mobile_no: isEdit ? customer.mobile_no : "",
+    client_id: isEdit ? customer.client_id : "",
+    client_secret: isEdit ? customer.client_secret : "",
+    merchant_name: isEdit ? customer.merchant_name : "",
+    description: isEdit ? customer.description : "",
+    is_active: isEdit ? customer.is_active : 0,
+  }
 
   useEffect(() => {
     if (isEdit) {
@@ -38,22 +59,62 @@ export default function AddCustomer() {
     }
   }, [isEdit]);
 
-  const handleSubmit = (values, { resetForm, setSubmitting }) => {
+  const handleSubmit = (values) => {
     setIsLoading(true);
-    if (isEdit) {
-      editCustomer(values);
-    } else {
-      addCustomer(values);
-    }
+    addCustomer(values);
   };
 
   function addCustomer(values) {
-    // Add customer API call
-  }
+    values.is_active = (!isEdit) ? 1 : values.is_active;
+    const data = {
+      utilityType: "user",
+      makerId: "1",
+      user_id: customerid,
+      requestType: isEdit ? "update" : "add",
+      tableName: "mst_customer",
+      updatedValue: values,
+     // requestData: requestData,
+      existing_values: existingValue,
+      description: isEdit ? "Update Customer" : "Creating a new Customer",
+      createdBy: "Admin",
+    };
+    const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+    saveData(data, `${baseUrl}/makerRequest`, (response) => {
+      if (response.data) {
+        showCustomToast(
+          response.data.message + ". Your Request Id is " + response.data.requestId,
+          response.data.requestId
+        );
+      }
+    });
+  };
+ 
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("Request ID copied to clipboard", {
+        position: "top-right",
+        autoClose: false,
+      });
+    });
+  };
 
-  function editCustomer(values) {
-    // Edit customer API call
-  }
+  const CustomToast = ({ closeToast, requestData, requestId }) => (
+    <div>
+      <div>{requestData}</div><br />
+      <button className="btn BackBtn mr-3" onClick={() => copyToClipboard(requestId)}>
+        Copy ID
+      </button>
+      <button className="btn addUser" onClick={() => closeToast()}>OK</button>
+    </div>
+  );
+
+  const showCustomToast = (response, requestId) => {
+    toast.success(<CustomToast requestData={response} requestId={requestId} />, {
+      position: "top-center",
+      autoClose: false,
+      className: "custom-toast",
+    });
+  };
 
   return (
     <div>
@@ -72,28 +133,15 @@ export default function AddCustomer() {
                       </div>
                     </div>
                     <div className="card-body">
-                      <Formik
-                        initialValues={{
-                          customerName: isEdit ? customer.customerName : "",
-                          customerAccountNo: isEdit ? customer.customerAccountNo : "",
-                          confirmAccountNumber: isEdit ? customer.confirmAccountNumber : "",
-                          isAccountValid: isEdit ? customer.isAccountValid : 0,
-                          invalidReason: isEdit ? customer.invalidReason : "",
-                          validateDate: isEdit ? customer.validateDate : "",
-                          ifscCode: isEdit ? customer.ifscCode : "",
-                          emailId: isEdit ? customer.emailId : "",
-                          mobileNo: isEdit ? customer.mobileNo : "",
-                          clientId: isEdit ? customer.clientId : "",
-                          clientSecret: isEdit ? customer.clientSecret : "",
-                          merchantName: isEdit ? customer.merchantName : "",
-                          state: isEdit ? customer.state : "",
-                          schemeName: isEdit ? customer.schemeName : "",
-                          description: isEdit ? customer.description : "",
-                          isActive: isEdit ? customer.isActive : 0,
-                        }}
+                    <Formik
+                        initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
-                        enableReinitialize
+                        enableReinitialize={true}
+                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                          handleSubmit(values);
+                          setSubmitting(false);
+                          resetForm({ values: initialValues });
+                        }}
                       >
                         {({ values, setFieldValue }) => (
                           <Form>
@@ -101,89 +149,99 @@ export default function AddCustomer() {
                               <div className="row">
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="customerName" className="form-label required">Customer Name</label>
-                                    <Field type="text" className="form-control" id="customerName" name="customerName" placeholder="Enter customer name" maxLength="255" />
-                                    <ErrorMessage name="customerName" component="div" className="error" />
+                                    <label htmlFor="customer_name" className="form-label required">Account Name <span className="Fieldrequired">*</span></label>
+                                    <Field type="text" className="form-control" id="customer_name" name="customer_name" placeholder="Enter customer name" maxLength="255" />
+                                    <ErrorMessage name="customer_name" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="customerAccountNo" className="form-label required">Customer Account No</label>
-                                    <Field type="text" className="form-control" id="customerAccountNo" name="customerAccountNo" placeholder="Enter account number" maxLength="50" />
-                                    <ErrorMessage name="customerAccountNo" component="div" className="error" />
+                                    <label htmlFor="customer_account_no" className="form-label required">Account Number <span className="Fieldrequired">*</span></label>
+                                    <Field type="text" className="form-control" id="customer_account_no" name="customer_account_no" placeholder="Enter account number" maxLength="50" />
+                                    <ErrorMessage name="customer_account_no" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="confirmAccountNumber" className="form-label required">Confirm Account Number</label>
-                                    <Field type="text" className="form-control" id="confirmAccountNumber" name="confirmAccountNumber" placeholder="Confirm account number" maxLength="50" />
-                                    <ErrorMessage name="confirmAccountNumber" component="div" className="error" />
+                                    <label htmlFor="confirm_account_number" className="form-label required">Confirm Account Number <span className="Fieldrequired">*</span></label>
+                                    <Field type="text" className="form-control" id="confirm_account_number" name="confirm_account_number" placeholder="Confirm account number" maxLength="50" />
+                                    <ErrorMessage name="confirm_account_number" component="div" className="error" />
+                                  </div>
+                                </div>
+                                {/* <div className="col-md-6">
+                                  <div className="mb-3">
+                                    <label htmlFor="is_account_valid" className="form-label">Is Account Valid</label>                                   
+                                  <Field
+                                      as="select"
+                                      className="form-control form-select"
+                                      id="is_account_valid"
+                                      name="is_account_valid"
+                                      onChange={(e) => setFieldValue("is_account_valid",parseInt(e.target.value, 10))}
+                                    >
+                                      <option value="" className="greyText">Select status</option>
+                                      <option value="1">Active</option>
+                                      <option value="2">Inactive</option>
+                                    </Field>
+                                    <ErrorMessage name="is_account_valid" component="div" className="error" />
+                                  </div>
+                                </div> */}
+                                {/* <div className="col-md-6">
+                                  <div className="mb-3">
+                                    <label htmlFor="invalid_reason" className="form-label">Invalid Reason</label>
+                                    <Field type="text" className="form-control" id="invalid_reason" name="invalid_reason" placeholder="Enter reason for invalidity" maxLength="255" />
+                                    <ErrorMessage name="invalid_reason" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="isAccountValid" className="form-label">Is Account Valid</label>
-                                    <Field type="number" className="form-control" id="isAccountValid" name="isAccountValid" />
-                                    <ErrorMessage name="isAccountValid" component="div" className="error" />
+                                    <label htmlFor="validate_date" className="form-label">Validate Date</label>
+                                    <Field type="datetime-local" className="form-control" id="validate_date" name="validate_date" />
+                                    <ErrorMessage name="validate_date" component="div" className="error" />
+                                  </div>
+                                </div> */}
+                                <div className="col-md-6">
+                                  <div className="mb-3">
+                                    <label htmlFor="ifsc_code" className="form-label required">IFSC Code <span className="Fieldrequired">*</span></label>
+                                    <Field type="text" className="form-control" id="ifsc_code" name="ifsc_code" placeholder="Enter IFSC code" maxLength="100" />
+                                    <ErrorMessage name="ifsc_code" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="invalidReason" className="form-label">Invalid Reason</label>
-                                    <Field type="text" className="form-control" id="invalidReason" name="invalidReason" placeholder="Enter reason for invalidity" maxLength="255" />
-                                    <ErrorMessage name="invalidReason" component="div" className="error" />
+                                    <label htmlFor="merchant_name" className="form-label required">E-collection Merchant ID <span className="Fieldrequired">*</span></label>
+                                    <Field type="text" className="form-control" id="merchant_name" name="merchant_name" placeholder="Enter merchant name" maxLength="100" />
+                                    <ErrorMessage name="merchant_name" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="validateDate" className="form-label">Validate Date</label>
-                                    <Field type="datetime-local" className="form-control" id="validateDate" name="validateDate" />
-                                    <ErrorMessage name="validateDate" component="div" className="error" />
+                                    <label htmlFor="client_id" className="form-label required">Client ID <span className="Fieldrequired">*</span></label>
+                                    <Field type="text" className="form-control" id="client_id" name="client_id" placeholder="Enter client ID" maxLength="255" />
+                                    <ErrorMessage name="client_id" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="ifscCode" className="form-label required">IFSC Code</label>
-                                    <Field type="text" className="form-control" id="ifscCode" name="ifscCode" placeholder="Enter IFSC code" maxLength="100" />
-                                    <ErrorMessage name="ifscCode" component="div" className="error" />
+                                    <label htmlFor="client_secret" className="form-label required">Secret Key <span className="Fieldrequired">*</span></label>
+                                    <Field type="text" className="form-control" id="client_secret" name="client_secret" placeholder="Enter client secret" maxLength="255" />
+                                    <ErrorMessage name="client_secret" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="emailId" className="form-label">Email ID</label>
-                                    <Field type="text" className="form-control" id="emailId" name="emailId" placeholder="Enter email ID" maxLength="255" />
-                                    <ErrorMessage name="emailId" component="div" className="error" />
+                                    <label htmlFor="email_id" className="form-label">Email ID</label>
+                                    <Field type="text" className="form-control" id="email_id" name="email_id" placeholder="Enter email ID" maxLength="255" />
+                                    <ErrorMessage name="email_id" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="mobileNo" className="form-label">Mobile No</label>
-                                    <Field type="text" className="form-control" id="mobileNo" name="mobileNo" placeholder="Enter mobile number" maxLength="15" />
-                                    <ErrorMessage name="mobileNo" component="div" className="error" />
+                                    <label htmlFor="mobile_no" className="form-label">Mobile No</label>
+                                    <Field type="text" className="form-control" id="mobile_no" name="mobile_no" placeholder="Enter mobile number" maxLength="15" />
+                                    <ErrorMessage name="mobile_no" component="div" className="error" />
                                   </div>
-                                </div>
-                                <div className="col-md-6">
-                                  <div className="mb-3">
-                                    <label htmlFor="clientId" className="form-label required">Client ID</label>
-                                    <Field type="text" className="form-control" id="clientId" name="clientId" placeholder="Enter client ID" maxLength="255" />
-                                    <ErrorMessage name="clientId" component="div" className="error" />
-                                  </div>
-                                </div>
-                                <div className="col-md-6">
-                                  <div className="mb-3">
-                                    <label htmlFor="clientSecret" className="form-label required">Client Secret</label>
-                                    <Field type="text" className="form-control" id="clientSecret" name="clientSecret" placeholder="Enter client secret" maxLength="255" />
-                                    <ErrorMessage name="clientSecret" component="div" className="error" />
-                                  </div>
-                                </div>
-                                <div className="col-md-6">
-                                  <div className="mb-3">
-                                    <label htmlFor="merchantName" className="form-label required">Merchant Name</label>
-                                    <Field type="text" className="form-control" id="merchantName" name="merchantName" placeholder="Enter merchant name" maxLength="100" />
-                                    <ErrorMessage name="merchantName" component="div" className="error" />
-                                  </div>
-                                </div>
-                                <div className="col-md-6">
+                                </div>                                                               
+                                {/* <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="state" className="form-label required">State</label>
                                     <Field type="text" className="form-control" id="state" name="state" placeholder="Enter state" maxLength="100" />
@@ -192,37 +250,41 @@ export default function AddCustomer() {
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="schemeName" className="form-label">Scheme Name</label>
-                                    <Field type="text" className="form-control" id="schemeName" name="schemeName" placeholder="Enter scheme name" maxLength="255" />
-                                    <ErrorMessage name="schemeName" component="div" className="error" />
+                                    <label htmlFor="scheme_name" className="form-label">Scheme Name</label>
+                                    <Field type="text" className="form-control" id="scheme_name" name="scheme_name" placeholder="Enter scheme name" maxLength="255" />
+                                    <ErrorMessage name="scheme_name" component="div" className="error" />
                                   </div>
-                                </div>
+                                </div> */}
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="description" className="form-label">Description</label>
+                                    <label htmlFor="description" className="form-label">Remarks</label>
                                     <Field type="text" className="form-control" id="description" name="description" placeholder="Enter description" maxLength="255" />
                                     <ErrorMessage name="description" component="div" className="error" />
                                   </div>
                                 </div>
+                                {isEdit && (
                                 <div className="col-md-6">
                                   <div className="mb-3">
-                                    <label htmlFor="isActive" className="form-label required">Is Active</label>
-                                    <Field as="select" className="form-control" id="isActive" name="isActive">
-                                      <option value="0">Inactive</option>
+                                    <label htmlFor="is_active" className="form-label required">Is Active</label>                                 
+                                    <Field
+                                      as="select"
+                                      className="form-control form-select"
+                                      id="is_active"
+                                      name="is_active"
+                                      onChange={(e) => setFieldValue("is_active", parseInt(e.target.value, 10))}
+                                    >
+                                      <option value="" className="greyText">Select status</option>
                                       <option value="1">Active</option>
+                                      <option value="2">Inactive</option>
                                     </Field>
-                                    <ErrorMessage name="isActive" component="div" className="error" />
                                   </div>
                                 </div>
+                                )}
                               </div>
                             </div>
                             <div className="modal-footer">
-                              <button className="btn BackBtn me-2" type="button" onClick={() => navigate("/Customers")}>
-                                Back to List
-                              </button>
-                              <button className="btn addUser min me-2" type="submit">
-                                Submit
-                              </button>
+                              <button type="button" className="btn BackBtn" onClick={() => navigate(-1)}>Back to List</button>
+                              <button type="submit" className="btn addUser">Submit</button>
                             </div>
                           </Form>
                         )}
