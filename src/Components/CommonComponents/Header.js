@@ -12,6 +12,7 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const isLogin = location.pathname === "/" ? true : false;
+  const lastSessionStorage = sessionStorage.getItem("USER");
   const USER = getSessionStorage("USER");
   useEffect(() => {
     const fetchLoginData = async () => {
@@ -28,6 +29,33 @@ export default function Header() {
     };
     fetchLoginData();
   }, [isLogin]);
+
+  useEffect(() => {
+    if (!USER && !isLogin) {
+      window.location.href = "/";
+    }
+  }, []);
+
+  useEffect(() => {
+    const checkSessionStorage = () => {
+      if (!isLogin) {
+        const currentSessionValue = sessionStorage.getItem("USER");
+        if (currentSessionValue !== lastSessionStorage) {
+          removeUserDataSession();
+          window.location.href = "/";
+        }
+      }
+    };
+    const intervalId = setInterval(checkSessionStorage, 1000);
+    // Clear interval on component unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [lastSessionStorage, isLogin]);
+
+  const removeUserDataSession = () => {
+    sessionStorage.removeItem("USER");
+  };
 
   function logout() {
     sessionStorage.clear();

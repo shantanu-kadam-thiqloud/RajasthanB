@@ -20,6 +20,8 @@ SaFiooJfF/3B3vzJzvxzdQkNaAajfB4/9ZMxt8SF8fXpaorQ01+UhuRz5t6Ng9yz
 AgMBAAE=
 -----END PUBLIC KEY-----`;
 
+const publicKkey = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArWNWAjuFGdwpTCgyGqZwehtK2RaZ3s05nD85pZO8YUjI4mEYFvFwaN/xq0oZ1qrXgeIcqT0WL2PPMDEEU1Ncf4twxm/GMOvYHU8MZuXcrN5q8auWpIth1puBfELCzmHZ7klkwuJmYlQ4iSLLAle4yi37lYlhsDs8+G+hSvR3OKpyuqy8dY5GMOkkRUlc04cpndxDedLqUPtPlC65Z8hcnC1drIQB6yekbfdmYKogTR6+0ujGv3dEZEpvFk85SUi5EA61wIjfhLC9qZaWpAXOYvjrhoeL1OKMzP6kJ8cbdwucleyrj27mqLvtCfYNiYCXLL64LYhWsbkTENp092pAXwIDAQAB`;
+
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----
 MIIEogIBAAKCAQB4bo0ViZi3LL4UIh6fShEUQ6TIq8PDwyzRq99WHNe2Ue8MFJXO
 BOL7pOLFvyXVGyO7wDGgw0swuJoHiFuzvq4md6AuMvbjab6DWhxRF3d3cT5fkD4g
@@ -155,6 +157,19 @@ export const decryptData = (encryptedText) => {
     return decryptedData;
   } catch (error) {
     console.error("Decryption error:", error);
+    return null; // Return null on error
+  }
+};
+
+export const encryptValue = (value) => {
+  try {
+    const encrypt = new JSEncrypt();
+    encrypt.setPublicKey(publicKkey);
+    const encryptedMessage = encrypt.encrypt(value);
+    //setEncrypted(encryptedMessage);
+    return encryptedMessage;
+  } catch (error) {
+    console.error("Encryption error:", error);
     return null; // Return null on error
   }
 };

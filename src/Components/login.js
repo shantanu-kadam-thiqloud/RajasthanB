@@ -11,6 +11,7 @@ import "./CommonComponents/style.css";
 import LOGO from "../Assets/img/kotak-mahindra-bank-logo.png";
 import { loginUser } from "../Services/API-services";
 import { toast } from "react-toastify";
+import { encryptData, encryptValue } from "./HtmlComponents/CommonFunction";
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
   password: Yup.string().required("Password is required"),
@@ -33,15 +34,14 @@ const Login = () => {
     setUserDataInCookie(JSON.stringify(UserData));
     // navigate("/Dashboard");
     // // userLogin(dataToSend, values);
+    const encryptedPassword = encryptValue(values.password);
+    const encryptedUserName = encryptValue(values.username);
+    const requestBody = {
+      userName: encryptedUserName, //"kxt71325",
+      userPassword: encryptedPassword, //"password123",
+    };
     loginUser(
-      {
-        requestMetaData: {
-          applicationId: "nhai-dashboard",
-          correlationId: "ere353535-456fdgfdg-4564fghfh-ghjg567",
-        },
-        userName: values.username, //"kxt71325",
-        userPassword: values.password, //"password123",
-      },
+      requestBody,
       (response) => {
         if (response.status === 200) {
           const user = response.data.responseObject;
