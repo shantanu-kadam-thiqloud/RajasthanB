@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getSessionStorage } from "./CommonComponents/cookieData";
 
-export default function dashboard() {
+export default function Dashboard() {
+  const USER = getSessionStorage("USER");
+  useEffect(() => {
+    console.log("Data from session -> ", USER);
+  }, []);
+
   return (
     <div>
       <div className="content-wrapper ">

@@ -1,13 +1,13 @@
-import { DropdownService } from "../../Service/DropdownService";
+// import { DropdownService } from "../../Service/DropdownService";
 import { v4 as uuid } from "uuid";
-import sideBarDataChecker from "../Checker/sideBarData";
+// import sideBarDataChecker from "../Checker/sideBarData";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { addUser } from "../../Store/Reducers/userReducer"; // Correct import path
-import { setProfile } from "../../Store/Reducers/profileReducer"; // Import action creator for profile
-import * as forge from "node-forge";
-import { useSelector } from "react-redux";
+// import { useDispatch } from "react-redux";
+// import { addUser } from "../../Store/Reducers/userReducer"; // Correct import path
+// import { setProfile } from "../../Store/Reducers/profileReducer"; // Import action creator for profile
+// import * as forge from "node-forge";
+// import { useSelector } from "react-redux";
 import JSEncrypt from "jsencrypt";
 
 const publicKey = `-----BEGIN PUBLIC KEY-----
@@ -81,31 +81,31 @@ export const ConvertFormat = (inputDate) => {
   }
 };
 
-export const getCheckValueByName = (menuData, submenuName, actionName) => {
-  //Side bar Data
-  // var sidejsonData = sideBarDataChecker.find(
-  //   (item) => item.type === "menuData"
-  // );
-  const MappingData = JSON.parse(sessionStorage.getItem("Mapping"));
-  const sidebarMockData = MappingData; //sidejsonData.data;
+// export const getCheckValueByName = (menuData, submenuName, actionName) => {
+//   //Side bar Data
+//   // var sidejsonData = sideBarDataChecker.find(
+//   //   (item) => item.type === "menuData"
+//   // );
+//   const MappingData = JSON.parse(sessionStorage.getItem("Mapping"));
+//   const sidebarMockData = MappingData; //sidejsonData.data;
 
-  for (const menu of sidebarMockData) {
-    for (const submenu of menu.subMenu) {
-      if (submenu.name === submenuName) {
-        if (actionName !== undefined) {
-          for (const action of submenu.action) {
-            if (action.actionName === actionName) {
-              return action.check;
-            }
-          }
-        } else {
-          return submenu.check;
-        }
-      }
-    }
-  }
-  return undefined; // Submenu or action not found
-};
+//   for (const menu of sidebarMockData) {
+//     for (const submenu of menu.subMenu) {
+//       if (submenu.name === submenuName) {
+//         if (actionName !== undefined) {
+//           for (const action of submenu.action) {
+//             if (action.actionName === actionName) {
+//               return action.check;
+//             }
+//           }
+//         } else {
+//           return submenu.check;
+//         }
+//       }
+//     }
+//   }
+//   return undefined; // Submenu or action not found
+// };
 
 export async function DownloadByteArray(filename, response) {
   const date = new Date();
@@ -116,184 +116,6 @@ export async function DownloadByteArray(filename, response) {
   downloadLink.download = fileName;
   downloadLink.click();
 }
-
-export const useZoneDataList = (piuId) => {
-  const [zoneList, setZoneList] = useState([]);
-  const USER = getCookie("USER");
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        DropdownService.getZoneData(
-          {
-            requestMetaData: {
-              applicationId: "nhai-dashboard",
-              correlationId: uuid(),
-            },
-            userName: USER.userName || "",
-            piuId: piuId,
-          },
-          (res) => {
-            if (res.status === 200) {
-              const list =
-                res.data.data.zones == null
-                  ? [
-                      {
-                        zoneName: "UnMapped",
-                      },
-                      {
-                        zoneName: "Asia",
-                      },
-                      {
-                        zoneName: "North",
-                      },
-                      {
-                        zoneName: "MoRTH",
-                      },
-                    ]
-                  : res.data.data.zones;
-              setZoneList(list);
-              console.log("->", list);
-            } else if (res.status === 404) {
-              console.log(res.status);
-            } else if (res.status === 500) {
-              console.log(res.status);
-            }
-          },
-          (error) => {
-            console.error("Error->", error);
-          }
-        );
-      } catch (error) {
-        console.error("Error->", error);
-      }
-    };
-
-    fetchData();
-
-    // Clean-up function
-    return () => {
-      // Any necessary clean-up code here
-    };
-  }, [piuId]); // Dependency array to ensure useEffect runs when piuId changes
-
-  return zoneList;
-};
-
-export const useRoDataList = (piuId, piuZoneName) => {
-  const [roList, setRoList] = useState([]);
-  const USER = getCookie("USER");
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        DropdownService.getROData(
-          {
-            requestMetaData: {
-              applicationId: "nhai-dashboard",
-              correlationId: uuid(),
-            },
-            userName: USER.userName || "",
-            piuId: piuId,
-            piuZoneName: piuZoneName,
-          },
-          (res) => {
-            if (res.status === 200) {
-              const list =
-                res.data.data.ros == null
-                  ? [
-                      {
-                        roName: "Jaipur",
-                      },
-                      {
-                        roName: "Chennai",
-                      },
-                    ]
-                  : res.data.data.ros;
-              setRoList(list);
-              console.log("->", list);
-            } else if (res.status === 404) {
-              console.log(res.status);
-            } else if (res.status === 500) {
-              console.log(res.status);
-            }
-          },
-          (err) => {
-            console.error("Error->", err);
-          }
-        );
-      } catch (error) {
-        console.error("Error->", error);
-      }
-    };
-
-    fetchData();
-
-    // Clean-up function
-    return () => {
-      // Any necessary clean-up code here
-    };
-  }, [piuId, piuZoneName]); // Dependency array to ensure useEffect runs when piuId or piuZoneName changes
-
-  return roList;
-};
-
-export const usePIUDataList = (locationId, piuStateName) => {
-  const [piuList, setPiuList] = useState([]);
-  const USER = getCookie("USER");
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        DropdownService.getPIUData(
-          {
-            requestMetaData: {
-              applicationId: "nhai-dashboard",
-              correlationId: uuid(),
-            },
-            userName: USER.userName || "",
-            locationId: locationId,
-            piuStateName: piuStateName,
-          },
-          (res) => {
-            if (res.status === 200) {
-              const list =
-                res.data.data.pius == null
-                  ? [
-                      {
-                        piuId: 1,
-                        piuName: "Agra",
-                      },
-                      {
-                        piuId: 2,
-                        piuName: "Ahmedabad",
-                      },
-                    ]
-                  : res.data.data.pius;
-              setPiuList(list);
-              console.log("->", list);
-            } else if (res.status === 404) {
-              console.log(res.status);
-            } else if (res.status === 500) {
-              console.log(res.status);
-            }
-          },
-          (err) => {
-            console.error("Error->", err);
-          }
-        );
-      } catch (error) {
-        console.error("Error->", error);
-      }
-    };
-
-    fetchData();
-
-    // Clean-up function
-    return () => {
-      // Any necessary clean-up code here
-    };
-  }, [locationId, piuStateName]); // Dependency array to ensure useEffect runs when locationId or piuStateName changes
-
-  return piuList;
-};
 
 export async function getBase64(file) {
   if (file === null) {
@@ -309,34 +131,6 @@ export async function getBase64(file) {
     });
   }
 }
-//----------Encrypt & Decrypt----------------------------------------------------------------------
-
-// export function encryptData(value, publicKey) {
-//   const forge = require("node-forge");
-//   const publicKeyForge = forge.pki.publicKeyFromPem(publicKey);
-//   try {
-//     const jsonString = JSON.stringify(value);
-//     const encrypted = publicKeyForge.encrypt(jsonString, "RSA-OAEP");
-//     return forge.util.encode64(encrypted);
-//   } catch (error) {
-//     console.error("Error encrypting JSON data:", error);
-//     return null;
-//   }
-// }
-
-// export function decryptData(encryptedText, privateKey) {
-//   const forge = require("node-forge");
-//   const privateKeyForge = forge.pki.privateKeyFromPem(privateKey);
-//   try {
-//     const encrypted = forge.util.decode64(encryptedText);
-//     const decrypted = privateKeyForge.decrypt(encrypted, "RSA-OAEP");
-//     return JSON.parse(decrypted);
-//   } catch (error) {
-//     console.error("Error decrypting JSON data:", error);
-//     return null;
-//   }
-// }
-//-----------------------------------------------------------------------------
 
 export const encryptData = (value) => {
   try {
@@ -365,74 +159,74 @@ export const decryptData = (encryptedText) => {
   }
 };
 
-//-----------Cookie----------------------------------------------------------------
+// //-----------Cookie----------------------------------------------------------------
 
-// Function to set a cookie with JSON data
-export function setCookie(name, value, days) {
-  const encryptedValues = encryptData(value);
+// // Function to set a cookie with JSON data
+// export function setCookie(name, value, days) {
+//   const encryptedValues = encryptData(value);
 
-  //------------------------------------------------------------------------------------------
-  let expires = "";
-  if (days) {
-    let date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    expires = "; expires=" + date.toUTCString();
-  }
-  document.cookie = name + "=" + encryptedValues + expires + "; path=/";
-  //encodeURIComponent()
-}
+//   //------------------------------------------------------------------------------------------
+//   let expires = "";
+//   if (days) {
+//     let date = new Date();
+//     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+//     expires = "; expires=" + date.toUTCString();
+//   }
+//   document.cookie = name + "=" + encryptedValues + expires + "; path=/";
+//   //encodeURIComponent()
+// }
 
-// Function to get a cookie and parse JSON data
-export function getCookie(name) {
-  let nameEQ = name + "=";
-  let cookies = document.cookie.split(";");
-  for (let i = 0; i < cookies.length; i++) {
-    let cookie = cookies[i];
-    while (cookie.charAt(0) === " ") {
-      cookie = cookie.substring(1, cookie.length);
-    }
-    if (cookie.indexOf(nameEQ) === 0) {
-      var cookieValue = cookie.substring(nameEQ.length, cookie.length);
-      //--Decryption---------------------------------------------------------------------------------
-      const unencryptedData = decryptData(cookieValue);
-      //---------------------------------------------------------------------------------------------
-      return unencryptedData;
-    }
-  }
-  return null;
-}
+// // Function to get a cookie and parse JSON data
+// export function getCookie(name) {
+//   let nameEQ = name + "=";
+//   let cookies = document.cookie.split(";");
+//   for (let i = 0; i < cookies.length; i++) {
+//     let cookie = cookies[i];
+//     while (cookie.charAt(0) === " ") {
+//       cookie = cookie.substring(1, cookie.length);
+//     }
+//     if (cookie.indexOf(nameEQ) === 0) {
+//       var cookieValue = cookie.substring(nameEQ.length, cookie.length);
+//       //--Decryption---------------------------------------------------------------------------------
+//       const unencryptedData = decryptData(cookieValue);
+//       //---------------------------------------------------------------------------------------------
+//       return unencryptedData;
+//     }
+//   }
+//   return null;
+// }
 
-// Function to clear a cookie
-export function clearCookie(name) {
-  document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-}
+// // Function to clear a cookie
+// export function clearCookie(name) {
+//   document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+// }
 
 //-------------------------------------------------------------------------------------
 
-export const useSetReduxData = () => {
-  const dispatch = useDispatch();
+// export const useSetReduxData = () => {
+//   const dispatch = useDispatch();
 
-  const setReduxData = (data) => {
-    dispatch(addUser(data));
-  };
+//   const setReduxData = (data) => {
+//     dispatch(addUser(data));
+//   };
 
-  return setReduxData;
-};
+//   return setReduxData;
+// };
 
-export const useSetReduxProfile = () => {
-  const dispatch = useDispatch();
+// export const useSetReduxProfile = () => {
+//   const dispatch = useDispatch();
 
-  const setReduxProfile = (data) => {
-    dispatch(setProfile(data));
-  };
+//   const setReduxProfile = (data) => {
+//     dispatch(setProfile(data));
+//   };
 
-  return setReduxProfile;
-};
+//   return setReduxProfile;
+// };
 
-export const useGetReduxData = () => {
-  // const userData = useSelector((state) => state.NHAIUser.data); // Assuming 'NHAIUser' is the slice name
-  // const profileData = useSelector((state) => state.profile.profile);
-  const userData = useSelector((state) => state.NHAIUser.data[0]?.userData); // Accessing userData directly
-  const profileData = useSelector((state) => state.profile.profile);
-  return { userData, profileData };
-};
+// export const useGetReduxData = () => {
+//   // const userData = useSelector((state) => state.NHAIUser.data); // Assuming 'NHAIUser' is the slice name
+//   // const profileData = useSelector((state) => state.profile.profile);
+//   const userData = useSelector((state) => state.NHAIUser.data[0]?.userData); // Accessing userData directly
+//   const profileData = useSelector((state) => state.profile.profile);
+//   return { userData, profileData };
+// };
