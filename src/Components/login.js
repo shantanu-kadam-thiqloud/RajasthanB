@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import loginImage from "../Assets/img/slogin.avif";
-import { setUserDataInCookie } from "../Components/CommonComponents/cookieData";
+import {
+  setSessionStorage,
+  setUserDataInCookie,
+} from "../Components/CommonComponents/cookieData";
 import { useNavigate } from "react-router-dom";
 import "./CommonComponents/style.css";
 import LOGO from "../Assets/img/kotak-mahindra-bank-logo.png";
-
+import { loginUser } from "../Services/API-services";
+import { toast } from "react-toastify";
+import { encryptData, encryptValue } from "./HtmlComponents/CommonFunction";
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
   password: Yup.string().required("Password is required"),
@@ -18,17 +23,53 @@ const Login = () => {
   };
   const navigate = useNavigate();
 
-  const handleSubmit = async (values) => {    
+  const handleSubmit = async (values) => {
     const UserData = {
       userName: values.username,
       userType: "Maker",
       token: "sdfdsfdsf",
-      firstName: "Shantanu"
-    }
+      firstName: "Shantanu",
+    };
     //let usersetData = await encryptData(JSON.stringify(UserData));
     setUserDataInCookie(JSON.stringify(UserData));
-    navigate("/Dashboard");
-    // userLogin(dataToSend, values);
+    // navigate("/Dashboard");
+    // // userLogin(dataToSend, values);
+    const encryptedPassword = encryptValue(values.password);
+    const encryptedUserName = encryptValue(values.username);
+    const requestBody = {
+      userName: encryptedUserName, //"kxt71325",
+      userPassword: encryptedPassword, //"password123",
+    };
+    loginUser(
+      requestBody,
+      (response) => {
+        if (response.status === 200) {
+          const user = response.data.responseObject;
+          const userData = {
+            userId: user.userId,
+            firstName: user.firstName,
+            emailId: user.emailId,
+            userName: user.userName,
+            lastLoginDateTime: user.lastLoginDateTime,
+            roleId: user.roleId,
+            role_name: user.role_name,
+          };
+          setSessionStorage("USER", userData);
+          toast.success("Login successfully !", {
+            position: "top-right",
+            autoClose: 3000,
+          });
+          navigate("/Dashboard");
+        }
+      },
+      (error) => {
+        console.log("Error->", error.message);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    );
   };
 
   return (
