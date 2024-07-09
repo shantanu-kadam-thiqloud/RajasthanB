@@ -23,3 +23,7 @@ export function loginUser(req, res) {
     req
   );
 }
+
+export function fetchRoles(req, res) {
+  return new RestDataSource().GetData(BaseUrl + Global_var.URL_FETCH_ROLE, res);
+}
