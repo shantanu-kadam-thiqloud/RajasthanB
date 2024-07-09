@@ -61,14 +61,14 @@ export default function UserDetails() {
                     <div className="card-body">
                       <div className="row UserDetails mt-3 makerFields">                        
                         <div className="col-md-12 p-0">
-                        <table className="table">
+                        <table className="table customerDetails">
                           <tbody>
                             <tr>                              
-                              <td className="col-md-3 UDCoulmns fieldColumn">
+                              <td className="col-md-3 UDCoulmns">
                                 <strong>Account Name:</strong>
                               </td>
                               <td className="col-md-3 UDCoulmns">{customer.customer_name}</td>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
+                              <td className="col-md-3 UDCoulmns">
                                 <strong>Account No:</strong>
                               </td>
                               <td className="col-md-3 UDCoulmns">{customer.customer_account_no}</td>
@@ -77,18 +77,18 @@ export default function UserDetails() {
                               <td className="col-md-3 UDCoulmns fieldColumn">
                                 <strong>IFSC Code:</strong>
                               </td>
-                              <td className="col-md-3 UDCoulmns">{customer.ifsc_code}</td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">{customer.ifsc_code}</td>
                               <td className="col-md-3 UDCoulmns fieldColumn">
                                 <strong>E-collection Merchant ID:</strong>
                               </td>
-                              <td className="col-md-3 UDCoulmns">{customer.merchant_name}</td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">{customer.merchant_name}</td>
                             </tr>
                             <tr>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
+                              <td className="col-md-3 UDCoulmns">
                                 <strong>Client ID:</strong>
                               </td>
                               <td className="col-md-3 UDCoulmns">{customer.client_id}</td>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
+                              <td className="col-md-3 UDCoulmns">
                                 <strong>Secret Key:</strong>
                               </td>
                               <td className="col-md-3 UDCoulmns">{customer.client_secret}</td>
@@ -97,18 +97,18 @@ export default function UserDetails() {
                               <td className="col-md-3 UDCoulmns fieldColumn">
                                 <strong>Email ID:</strong>
                               </td>
-                              <td className="col-md-3 UDCoulmns">{customer.email_id}</td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">{customer.email_id}</td>
                               <td className="col-md-3 UDCoulmns fieldColumn">
                                 <strong>Mobile No:</strong>
                               </td>
-                              <td className="col-md-3 UDCoulmns">{customer.mobile_no}</td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">{customer.mobile_no}</td>
                             </tr>
                             <tr>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
+                              <td className="col-md-3 UDCoulmns">
                                 <strong>Remarks:</strong>
                               </td>
                               <td className="col-md-3 UDCoulmns">{customer.description}</td>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
+                              <td className="col-md-3 UDCoulmns">
                                 <strong>Is Active:</strong>
                               </td>
                               <td className="col-md-3 UDCoulmns">{customer.is_active ? "Yes" : "No"}</td>

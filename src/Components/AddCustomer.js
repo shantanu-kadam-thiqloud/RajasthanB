@@ -67,7 +67,7 @@ export default function AddCustomer() {
   function addCustomer(values) {
     values.is_active = (!isEdit) ? 1 : values.is_active;
     const data = {
-      utilityType: "user",
+      utilityType: "Customer",
       makerId: "1",
       user_id: customerid,
       requestType: isEdit ? "update" : "add",
@@ -93,7 +93,7 @@ export default function AddCustomer() {
     navigator.clipboard.writeText(text).then(() => {
       toast.success("Request ID copied to clipboard", {
         position: "top-right",
-        autoClose: false,
+        autoClose: true,
       });
     });
   };

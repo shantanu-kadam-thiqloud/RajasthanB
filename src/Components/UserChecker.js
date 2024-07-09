@@ -4,10 +4,10 @@ import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faRotateLeft, faThumbsDown, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import Spinner from "../Components/HtmlComponents/Spinner";
+import Spinner from "./HtmlComponents/Spinner";
 import { saveData } from "../Services/API-services";
 
-const CheckerDetails = () => {
+const UserChecker = () => {
   const path = window.location.pathname;
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
@@ -132,7 +132,7 @@ useEffect(() => {
           autoClose: 3000,
         });
         setTimeout(() => {
-          navigate("/PendingApproval");
+          navigate("/CustomerRequest");
         }, 1000);
       },
       (error) => {
@@ -233,7 +233,7 @@ useEffect(() => {
                       <th className="col-md-4 UDCoulmns">Old Value</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  {/* <tbody>
                         {requestTableData.map(({ field, existingValue, newValue }) => (
                           <tr key={field}>
                             <td className="col-md-4 UDCoulmns fieldColumn">
@@ -243,8 +243,8 @@ useEffect(() => {
                             <td className="col-md-4 UDCoulmns">{existingValue}</td>
                           </tr>
                         ))}
-                      </tbody>
-                  {/* <tbody>
+                      </tbody> */}
+                  <tbody>
                   <tr>
                       <td className="col-md-4 UDCoulmns fieldColumn">
                         <strong>First Name:</strong>
@@ -294,7 +294,7 @@ useEffect(() => {
                       <td className="col-md-4 UDCoulmns">{String(updatedValue.is_active)}</td>
                       <td className="col-md-4 UDCoulmns">{String(oldValue.is_active)}</td>
                     </tr>
-                  </tbody> */}
+                  </tbody>
                 </table>
               </div>
             </div>
@@ -304,7 +304,7 @@ useEffect(() => {
                 <button
                   className="btn BackBtn me-2"
                   type="submit"
-                  onClick={() => navigate("/PendingApproval")}
+                  onClick={() => navigate("/CustomerRequest")}
                 >
                   <FontAwesomeIcon icon={faRotateLeft} className="whiteIcon" />
                   Back to List
@@ -395,4 +395,4 @@ useEffect(() => {
   );
 };
 
-export default CheckerDetails;
+export default UserChecker;

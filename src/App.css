@@ -1,8 +1,8 @@
 body {
   background-color: #f4f6f9;
-  font-size: 14px !important;
+  font-size: 15px !important;
   font-family: "Roboto" !important;
-  font-weight: 700 !important;
+  /* font-weight: 700 !important; */
 }
 
 .main-footer {
@@ -132,16 +132,16 @@ label {
   border-bottom: 1px solid gray;
   padding: 10px;
   background-color: #C7D6ED !important;
-  font-size: 12px;
+  font-size: 14px;
   align-items: center;
-  text-align: center !important;
+  /* text-align: center !important; */
 }
 
 .tableDiv td {
   border-bottom: 1px solid gray;
   padding: 10px;
   align-items: left !important;
-  font-size: 12px;
+  font-size: 14px;
   background-color: white !important;
 }
 
@@ -154,21 +154,14 @@ label {
 }
 .tableDiv {
   border: 1px solid gray;
+  max-width: 100%;
+  overflow-x: auto;
 }
 /* ------------------------------------------------------------------------------------------ */
 
 .BackBtn {
-  border-color: #003366 !important;
-  /* padding: 12px !important; */
   min-width: 120px;
   border-radius: 4px !important;
-  background-color: #003366 !important;
-  border-color: #003366 !important;
-  color: #ffffff !important;
-  /* margin-right: 15px; */
-}
-
-.BackBtn:hover {
   background-color: #ffffff !important;
   border-color: #003366 !important;
   color: #003366 !important;
@@ -237,7 +230,7 @@ label {
 }
 
 .makerFields {
-  border: 1px solid #dee2e6 !important;
+  /* border: 1px solid #dee2e6 !important; */
   /* padding: 10px; */
   background-color: #ffffff;
   min-height: 300px;
@@ -270,8 +263,8 @@ svg.svg-inline--fa {
 }
 
 .fieldColumn {
-  background-color: #E5EEF5 !important;
-  border-right: 1px solid #dee2e6;
+  background-color: #F7F7F7 !important;
+  /* border-right: 1px solid #dee2e6; */
 }
 
 .EditIcon{
@@ -285,3 +278,24 @@ svg.svg-inline--fa {
 .Fieldrequired{
   color: #ee1c25;
 }
+
+table.tableBorder {
+  width: 100%;
+}
+
+table.customerDetails {
+  border: 1px solid #dee2e6 !important;
+}
+
+a.nav-link:focus {
+  background-color: rgba(255,255,255,.1) !important;
+  color: #fff !important;
+}
+.nav-pills .nav-link:not(.active):hover{
+  background-color: rgba(255,255,255,.1) !important;
+  color: #fff !important;
+}
+.checkerDetails{
+  border: 0px !important;
+}
+

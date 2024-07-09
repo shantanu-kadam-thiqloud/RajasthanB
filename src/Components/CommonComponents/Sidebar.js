@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import LOGO from "../../Assets/img/kotak-mahindra-bank-logo.png";
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
-import { faFile, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import { faUserGear,faBars } from "@fortawesome/free-solid-svg-icons";
+import { faHouse, faFile, faCircleCheck, faUser, faUsers, faUserGear, faBars, faAngleRight, faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
+
 export default function Sidebar() {
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState(window.location.pathname);
+  const [isPendingApprovalOpen, setIsPendingApprovalOpen] = useState(false);
+  const handlePendingApprovalClick = () => {
+    setIsPendingApprovalOpen(!isPendingApprovalOpen);
+    setActiveMenu("/PendingApproval");
+  };
   return (
     <div>
       <aside className="main-sidebar sidebar-dark-primary elevation-4">
@@ -140,28 +142,47 @@ export default function Sidebar() {
                   />
                   <p>Report</p>
                 </Link>
-              </li>
-
-              <li className="nav-item">
+              </li>              
+              <li className="nav-item has-treeview">
                 <Link
-                  to="/PendingApproval"
-                  className={
-                    activeMenu === "PendingApproval"
-                      ? `custom-link nav-link`
-                      : `nav-link`
-                  }
-                  onClick={() => {
-                    setActiveMenu("/PendingApproval");
-                  }}
-                >
-                  <FontAwesomeIcon
-                    className="fontIcon"
-                    icon={faCircleCheck}
-                    onClick={() => {}}
-                  />
-                  <p>Pending Approval</p>
+                  to="#"
+                  className={activeMenu.includes("PendingApproval") ? `custom-link nav-link` : `nav-link`}
+                  onClick={handlePendingApprovalClick}
+                  >
+                    <FontAwesomeIcon className="fontIcon" icon={faCircleCheck} />
+                    <p>
+                      Pending Approval
+                      {"  "} <FontAwesomeIcon icon={isPendingApprovalOpen ? faAngleDown : faAngleRight} />
+                    </p>
                 </Link>
-              </li>
+                {isPendingApprovalOpen ? (               
+                <ul className="nav">
+                  <li className="nav-item">
+                    <Link
+                      to="/CustomerRequest"
+                      className={activeMenu === "/CustomerRequest" ? `custom-link nav-link` : `nav-link`}
+                      onClick={() => setActiveMenu("/CustomerRequest")}
+                    >
+                      <FontAwesomeIcon icon={faAngleRight} />
+                      {"  "} Customer Requests
+                     
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      to="/UserChecker"
+                      className={activeMenu === "/UserChecker" ? `custom-link nav-link` : `nav-link`}
+                      onClick={() => setActiveMenu("/UserChecker")}
+                    >
+                     <FontAwesomeIcon icon={faAngleRight} />
+                       {"  "} User Request
+                    </Link>
+                  </li>
+                </ul>
+                ): (
+                  ""
+                )} 
+              </li>              
             </ul>
           </nav>
         </div>

@@ -11,8 +11,8 @@ import RoleDetails from "./Components/RoleDetails";
 import AddCustomer from "./Components/AddCustomer";
 import CustomerDetails from "./Components/CustomerDetails";
 import Customers from "./Components/Customers";
-import PendingApproval from "./Components/PendingApproval";
-import CheckerDetails from "./Components/CheckerDetails";
+import CustomerRequest from "./Components/CustomerRequest";
+import CustomerChecker from "./Components/CustomerChecker";
 
 const Routers = () => {
   return (
@@ -20,8 +20,8 @@ const Routers = () => {
       <Route path="/" element={<Login />} />
       <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/PendingApproval" element={<PendingApproval />} />
-      <Route path="/CheckerDetails" element={<CheckerDetails />} />
+      <Route path="/CustomerRequest" element={<CustomerRequest />} />
+      <Route path="/CustomerChecker" element={<CustomerChecker />} />
       {/* --------------------------------------------------------------- */}
       <Route path="/User" element={<Users />} />
       <Route path="/AddUser" element={<AddUser />} />
