@@ -102,7 +102,7 @@ const GenericDataTable = ({
       return switchTemplate;
     } else if (field === "") {
       return buttonsTemplate;
-    }else if (field === "is_account_valid" || field === "is_active") {
+    } else if (field === "is_account_valid" || field === "is_active") {
       return accountValidityTemplate;
     } else if (template === "HyperLinkTemplate") {
       return createTemplate(field);

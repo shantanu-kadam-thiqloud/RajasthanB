@@ -67,7 +67,7 @@ body {
   color: #fff;
 }
 .custom-link {
-  background-color:#4470B1 !important;
+  background-color: #4470b1 !important;
   color: #fff !important;
 }
 .fontIcon {
@@ -131,7 +131,7 @@ label {
   min-width: 150px;
   border-bottom: 1px solid gray;
   padding: 10px;
-  background-color: #C7D6ED !important;
+  background-color: #c7d6ed !important;
   font-size: 12px;
   align-items: center;
   text-align: center !important;
@@ -175,14 +175,15 @@ label {
 }
 
 .addUser {
-  border-color: #4470B1 !important;
+  border-color: #4470b1 !important;
   /* #012652 !important; */
   color: #ffffff !important;
-  background-color: #4470B1 !important;
+  background-color: #4470b1 !important;
   /* #012652 !important; */
   padding: 6px !important;
   min-width: 80px;
   border-radius: 4px !important;
+  margin-left: 10px;
 }
 
 .pageTitle {
@@ -229,8 +230,9 @@ label {
   background: grey;
 }
 
-.table td, .table th {
-  padding: .5rem;
+.table td,
+.table th {
+  padding: 0.5rem;
   vertical-align: top;
   background-color: white;
   border-left: 1px solid #dee2e6;
@@ -245,7 +247,8 @@ label {
   text-align: left;
 }
 
-.makerFields .table td, .table th{
+.makerFields .table td,
+.table th {
   border-left: 0px !important;
 }
 
@@ -253,7 +256,7 @@ svg.svg-inline--fa {
   margin-right: 5px;
 }
 
-.declineBtn{
+.declineBtn {
   border-color: #ff0000 !important;
   background-color: #ee1c25 !important;
 }
@@ -262,26 +265,27 @@ svg.svg-inline--fa {
   vertical-align: bottom;
   border-bottom: 0px;
   background-color: #003466 !important;
-  color: white; 
+  color: white;
 }
 
-.makerFields .UDCoulmns,.makerFields .table{
+.makerFields .UDCoulmns,
+.makerFields .table {
   margin-bottom: 0px !important;
 }
 
 .fieldColumn {
-  background-color: #E5EEF5 !important;
+  background-color: #e5eef5 !important;
   border-right: 1px solid #dee2e6;
 }
 
-.EditIcon{
-  color: #3766AC !important;
+.EditIcon {
+  color: #3766ac !important;
 }
 
-.ViewIcon{
-  color: #ADAF45 !important;
+.ViewIcon {
+  color: #adaf45 !important;
 }
 
-.Fieldrequired{
+.Fieldrequired {
   color: #ee1c25;
 }

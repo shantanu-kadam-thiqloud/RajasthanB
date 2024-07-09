@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 export default function RoleDetails() {
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState({});
+  // const [role, setRole] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
-
-  // const user = users.find((u) => u.id.toString() === userId);
   const path = window.location.pathname;
-  const userId = location.state ? location.state.user.id : ""; //useParams();
-  const locationData = location.state ? location.state.user : {};
+  const role = location.state ? location.state?.user : ""; //?.role_id
   const isDelete = path.includes("DeleteRole") ? true : false;
 
   useEffect(() => {
@@ -18,59 +14,53 @@ export default function RoleDetails() {
     // fetchUserById();
   }, []);
 
-  if (!user) {
-    return <p>User not found.</p>;
-  }
   //----------------------Get User--------------------------------------------
   function fetchUserById() {}
   //----------------------Delete User-----------------------------------------
   function DeleteUser() {}
   const rows = [
     {
-      id: "CUST001",
-      fullName: "Mohit J Sharma ",
-      accNo: "415689001",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB001",
+      role_name: "Admin",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST002",
-      fullName: "Jhonson L Roy ",
-      accNo: "415689002",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB002",
+      role_name: "Maker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST003",
-      fullName: "Martin M Starc ",
-      accNo: "415689003",
-      state: "Maharashtra",
-      isActive: false,
+      role_id: "RB003",
+      role_name: "Checker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST004",
-      fullName: "Davin N Gyle ",
-      accNo: "415689004",
-      state: "Maharashtra",
-      isActive: false,
+      role_id: "RB004",
+      role_name: "Operation Maker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST005",
-      fullName: "Ashutosh A Sharma ",
-      accNo: "415689005",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB005",
+      role_name: "Admin",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST006",
-      fullName: "Abhishek B Sharma ",
-      accNo: "415689006",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB006",
+      role_name: "Operation checker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
   ];
-  //const user = users.find((u) => u.id.toString() === userId);
+  // const role = rows.find((u) => u.role_id.toString() === roleId);
 
+  if (!role) {
+    return <p>Role not found.</p>;
+  }
   return (
     <div>
       <div className="content-wrapper ">
@@ -101,61 +91,49 @@ export default function RoleDetails() {
                         )}
                         <div className="col-md-6 mx-auto">
                           <div className="col-md-6 UDCoulmns">
-                            <strong>User Full Name :</strong>
+                            <strong>Role ID :</strong>
                           </div>
                           <div className="col-md-6 UDCoulmns">
-                            {user.fullName}
-                          </div>
-
-                          <div className="col-md-6 UDCoulmns">
-                            <strong>Mobile Number :</strong>
-                          </div>
-                          <div className="col-md-6 UDCoulmns">
-                            {user.mobileNumber}
+                            {role?.role_id}
                           </div>
 
                           <div className="col-md-6 UDCoulmns">
-                            <strong>EMail :</strong>
-                          </div>
-                          <div className="col-md-6 UDCoulmns">{user.email}</div>
-
-                          <div className="col-md-6 UDCoulmns">
-                            <strong>Created Date :</strong>
+                            <strong>Role Description :</strong>
                           </div>
                           <div className="col-md-6 UDCoulmns">
-                            {"createdDate"}
+                            {role?.role_description}
                           </div>
                         </div>
                         {/* -------------------------------------------------------- */}
                         <div className="col-md-5">
-                          {/* <div className="col-md-6 UDCoulmns">
-              <strong>User ID:</strong>
-            </div>
-            <div className="col-md-6 UDCoulmns">{user.userId}</div> */}
                           <div className="col-md-6 UDCoulmns">
-                            <strong>User ID :</strong>
+                            <strong>Role Name :</strong>
                           </div>
-                          <div className="col-md-6 UDCoulmns">{"User@123"}</div>
                           <div className="col-md-6 UDCoulmns">
-                            <strong>Role :</strong>
+                            {role?.role_name}
                           </div>
-                          <div className="col-md-6 UDCoulmns">{"Admin"}</div>
 
                           <div className="col-md-6 UDCoulmns">
+                            <strong>Created By :</strong>
+                          </div>
+                          <div className="col-md-6 UDCoulmns">
+                            {role?.created_by}
+                          </div>
+
+                          {/* <div className="col-md-6 UDCoulmns">
                             <strong>Status :</strong>
                           </div>
                           <div className="col-md-6 UDCoulmns">
-                            {/* {user.isActive ? "Yes" : "No"} */}
-                            {true ? "Active" : "Inactive"}
-                            {/* <input
+                           {true ? "Active" : "Inactive"}
+                           <input
                               name="isActive"
                               className="form-check-input"
                               type="checkbox"
                               id="flexSwitchCheckChecked"
                               checked={user.isActive}
                               readOnly
-                            /> */}
-                          </div>
+                            /> 
+                          </div> */}
                         </div>
                       </div>
                       <hr />
@@ -177,8 +155,8 @@ export default function RoleDetails() {
                             if (isDelete) {
                               // DeleteUser();
                             } else {
-                              navigate(`/EditUser`, {
-                                state: { user },
+                              navigate(`/EditRole`, {
+                                state: { user: role },
                               });
                             }
                           }}
