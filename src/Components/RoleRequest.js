@@ -42,18 +42,14 @@ const RoleRequest = () => {
     },
     {
       Header: <div className="float-center">Request Date</div>,
-      accessor: "created_date",
+      accessor: "makerTimestamp",
       Cell: ({ row }) => (
-        <div>
-          {DateFormatFunction(
-            row.values.created_date || row.values.createdDate
-          )}
-        </div>
+        <div>{DateFormatFunction(row.values.makerTimestamp)}</div>
       ),
     },
     {
       Header: <div className="float-center">Requested By</div>,
-      accessor: "makerName",
+      accessor: "createdBy",
     },
     {
       Header: <div className="float-center">Status</div>,

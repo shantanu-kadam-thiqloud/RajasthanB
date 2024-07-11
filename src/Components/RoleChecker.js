@@ -30,7 +30,9 @@ const RoleChecker = () => {
     requestData?.updatedValue || {}
   );
   const [oldValue, setOldValue] = useState(requestData?.existing_values || {});
-
+  const [menuData, setMenuData] = useState(
+    requestData?.updatedValue?.menu_access
+  );
   const getDateTime = (datestring) => {
     const dateTime = new Date(datestring);
 
@@ -346,6 +348,158 @@ const RoleChecker = () => {
                               </table>
                             </div>
                           </div>
+                          <hr />
+                          {/* -----------------Profile Mapping--------------------------------------------------------- */}
+                          <div className="col-md-12">
+                            <h1 className="mb-2 mt-2 pageTitle">
+                              Menu Mapping
+                            </h1>
+                          </div>
+                          {/* -------------------------------------------------------------------------------------- */}
+                          <div className="">
+                            <div className="col-md-11 mx-5 flex p-2">
+                              <div className="col p-1">
+                                <div className="row menuColor ">
+                                  <div className="col-md-4 "></div>
+                                  <div className="col-md-4 "></div>
+                                  <div className="col-md-2"> </div>
+                                  <div className="col-md-1">Updated</div>
+                                  <div className="col-md-1">Old </div>
+                                </div>
+                              </div>
+                              {(menuData || []).map((m, mindex) => {
+                                return (
+                                  <div className="col p-1" key={m.id}>
+                                    <div className="row menuColor">
+                                      <div className="col-md-4 ">
+                                        {m.menuName}
+                                      </div>
+                                      <div className="col-md-4 "></div>
+                                      <div className="col-md-2 "></div>
+                                      <div className="col-md-1">
+                                        {m.subMenu.length === 0 && (
+                                          <input
+                                            readOnly
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            id="menu"
+                                            checked={m.check}
+                                            onClick={(e) => {
+                                              console.log("menu -> ", m);
+                                            }}
+                                          />
+                                        )}
+                                      </div>
+                                      <div className="col-md-1">
+                                        {m.subMenu.length === 0 && (
+                                          <input
+                                            readOnly
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            id="menu"
+                                            checked={m.oldCheck}
+                                            onClick={(e) => {
+                                              console.log("menu -> ", m);
+                                            }}
+                                          />
+                                        )}
+                                      </div>
+                                    </div>
+                                    {(m.subMenu || []).map((s, sindex) => {
+                                      return (
+                                        <>
+                                          <div className="row p-1">
+                                            <div className="col-md-4 submenuColor"></div>
+                                            <div className="col-md-4 submenuColor ">
+                                              {s.name}
+                                            </div>
+                                            <div className="col-md-2 submenuColor"></div>
+                                            {s.action.length === 0 ? (
+                                              <>
+                                                {" "}
+                                                <div
+                                                  className="col-md-1 submenuColor"
+                                                  key={s.id}
+                                                >
+                                                  {" "}
+                                                  <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="submenu"
+                                                    checked={s.check}
+                                                    readOnly
+                                                  />
+                                                </div>
+                                                <div
+                                                  className="col-md-1 submenuColor"
+                                                  key={s.id}
+                                                >
+                                                  {" "}
+                                                  <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="submenu"
+                                                    checked={s.oldCheck}
+                                                    readOnly
+                                                  />
+                                                </div>
+                                              </>
+                                            ) : (
+                                              <div
+                                                className="col-md-2 submenuColor"
+                                                key={s.id}
+                                              ></div>
+                                            )}
+                                          </div>
+                                          {(s.action || []).map((a, aindex) => {
+                                            return (
+                                              <div
+                                                className="row p-1"
+                                                key={a.id}
+                                              >
+                                                <div className="col-md-4 submenuColor"></div>
+                                                <div className="col-md-4 submenuColor"></div>
+                                                <div className="col-md-2 submenuColor">
+                                                  {a.actionName}
+                                                </div>
+                                                <div
+                                                  className="col-md-1 submenuColor"
+                                                  key={a.id}
+                                                >
+                                                  {" "}
+                                                  <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="submenu"
+                                                    checked={a.check}
+                                                    readOnly
+                                                  />
+                                                </div>
+                                                <div
+                                                  className="col-md-1 submenuColor"
+                                                  key={a.id}
+                                                >
+                                                  {" "}
+                                                  <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="submenu"
+                                                    checked={a.oldCheck}
+                                                    readOnly
+                                                  />
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                        </>
+                                      );
+                                    })}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
                           <div className="row mb-5">
                             <div className="col-md-12">
                               <div className="modal-footer">

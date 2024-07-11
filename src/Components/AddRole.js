@@ -6,15 +6,13 @@ import { toast } from "react-toastify";
 import sideData from "./CommonComponents/sideBarData";
 import { getSessionStorage } from "./CommonComponents/cookieData";
 import { fetchRoles, makeRequest, saveData } from "../Services/API-services";
+import { DateFormatFunction } from "./HtmlComponents/CommonFunction";
 export default function AddRole() {
   const [isAllCheck, setAllCheck] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [profileName, setProfileName] = useState("");
   const [profileDescription, setProfileDescription] = useState("");
-  const [groupName, setGroupName] = useState("");
-  const [groupId, setGroupId] = useState("");
   const [profile, setProfile] = useState({});
-  const [groupList, setGroupList] = useState([]);
   const [is_active, setis_active] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -24,6 +22,7 @@ export default function AddRole() {
   const [existingValue, setExistingValue] = useState(
     location.state ? location.state.user : {}
   );
+  const [menuData, setMenuData] = useState(sideData[0].data);
   const path = window.location.pathname;
   const isEdit = path.includes("EditRole") ? true : false;
   const validationSchema = Yup.object({
@@ -82,13 +81,15 @@ export default function AddRole() {
   useEffect(() => {
     if (isEdit) {
       // setIsLoading(true);
+      setMenuData(role?.menu_access);
     }
   }, [isEdit]);
   //-----------------------Menu selection--------------------------------------
-  const [menuData, setMenuData] = useState(sideData[0].data);
+
   const handleCheckAll = () => {
     const updatedMenuData = menuData.map((menu) => ({
       ...menu,
+      check: true,
       subMenu: menu.subMenu.map((subMenu) => ({
         ...subMenu,
         check: true,
@@ -106,6 +107,7 @@ export default function AddRole() {
   const handleUnCheckAll = () => {
     const updatedMenuData = menuData.map((menu) => ({
       ...menu,
+      check: false,
       subMenu: menu.subMenu.map((subMenu) => ({
         ...subMenu,
         check: false,
@@ -120,13 +122,58 @@ export default function AddRole() {
     setMenuData(updatedMenuData);
   };
 
+  // const handleCheckboxChange = (menuIndex, subMenuIndex, actionIndex) => {
+  //   const updatedMenuData = [...menuData];
+
+  //   if (
+  //     updatedMenuData[menuIndex] &&
+  //     updatedMenuData[menuIndex].subMenu &&
+  //     subMenuIndex !== undefined &&
+  //     updatedMenuData[menuIndex].subMenu[subMenuIndex]
+  //   ) {
+  //     // Checkbox in submenu item clicked
+  //     const currentSubMenu = updatedMenuData[menuIndex].subMenu[subMenuIndex];
+  //     const oldCheckSubMenu = currentSubMenu.check;
+  //     currentSubMenu.oldCheck = oldCheckSubMenu; // Store old check value
+  //     currentSubMenu.check = !oldCheckSubMenu;
+  //   }
+
+  //   if (
+  //     actionIndex !== undefined &&
+  //     updatedMenuData[menuIndex] &&
+  //     updatedMenuData[menuIndex].subMenu &&
+  //     subMenuIndex !== undefined &&
+  //     updatedMenuData[menuIndex].subMenu[subMenuIndex] &&
+  //     updatedMenuData[menuIndex].subMenu[subMenuIndex].action &&
+  //     updatedMenuData[menuIndex].subMenu[subMenuIndex].action[actionIndex]
+  //   ) {
+  //     // Checkbox in action item clicked
+  //     const currentAction =
+  //       updatedMenuData[menuIndex].subMenu[subMenuIndex].action[actionIndex];
+  //     const oldCheckAction = currentAction.check;
+  //     currentAction.oldCheck = oldCheckAction; // Store old check value
+  //     currentAction.check = !oldCheckAction;
+  //   }
+
+  //   setMenuData(updatedMenuData);
+  // };
+
+  //----------------------Add Edit Role---------------------------------------------
   const handleCheckboxChange = (menuIndex, subMenuIndex, actionIndex) => {
     const updatedMenuData = [...menuData];
 
+    if (menuIndex !== undefined && updatedMenuData[menuIndex]) {
+      // Checkbox in menu item clicked
+      const currentMenu = updatedMenuData[menuIndex];
+      const oldCheckMenu = currentMenu.check;
+      currentMenu.oldCheck = oldCheckMenu; // Store old check value
+      currentMenu.check = !oldCheckMenu;
+    }
+
     if (
+      subMenuIndex !== undefined &&
       updatedMenuData[menuIndex] &&
       updatedMenuData[menuIndex].subMenu &&
-      subMenuIndex !== undefined &&
       updatedMenuData[menuIndex].subMenu[subMenuIndex]
     ) {
       // Checkbox in submenu item clicked
@@ -155,23 +202,25 @@ export default function AddRole() {
 
     setMenuData(updatedMenuData);
   };
-  //----------------------Add Edit Role---------------------------------------------
   function AddEditRole(values) {
     // values.is_active = (!isEdit) ? 1 : values.is_active;
     const requestBody = {
       utilityType: "Role",
       makerId: USER?.role_id,
       user_id: USER?.userId, //"1",
-      requestType: isEdit ? "update" : "add",
+      requestType: isEdit ? "Update" : "Add",
       tableName: "mst_sb_roles",
       updatedValue: {
         role_name: values?.profileName, //"John Doe",
         role_description: values?.profileDescription, //"1234567890123456",
+        created_by: USER?.userName,
+        menu_access: menuData || [],
       },
       existing_values: existingValue,
       description: isEdit ? "Update Role" : "Creating a new Role",
-      created_by: USER?.userName, // "Admin",//
+      createdBy: USER?.userName, // "Admin",//
     };
+    console.log("Menu access - > ", menuData);
     makeRequest(
       requestBody,
       (response) => {
@@ -193,54 +242,6 @@ export default function AddRole() {
         });
       }
     );
-    //-------------------------------------------------
-    // const requestBody = {
-    //   utilityType: "Role",
-    //   makerId: USER?.userId, //"1",
-    //   user_id: 1,
-    //   requestType: isEdit ? "update" : "add",
-    //   tableName: "mst_role",
-    //   updatedValue: {
-    //     role_name: values.profileName, //"John Doe",
-    //     role_description: values.profileDescription, //"1234567890123456",
-    //   },
-    //   existing_values: {
-    //     // created_by: "admin",
-    //     // created_date: "2024-06-21T09:00:00",
-    //     // last_modified_by: "admin",
-    //     // last_modified_date: "2024-06-21T09:00:00",
-    //   },
-    //   description: `${isEdit ? "Update" : "Add"} Role`,
-    //   created_by: "Admin",
-    // };
-    // if (isEdit) {
-    //   requestBody.existing_values = {
-    //     role_name: role?.role_name,
-    //     role_description: role?.role_description,
-    //   };
-    // }
-    // console.log("requestBody Role-> ", requestBody);
-    // fetchRoles(
-    //   requestBody,
-    //   (response) => {
-    //     if (response.status === 200) {
-    //       toast.success(
-    //         `${isEdit ? "Update " : "Add "}request raised successfully.`,
-    //         {
-    //           position: "top-right",
-    //           autoClose: 3000,
-    //         }
-    //       );
-    //     }
-    //   },
-    //   (error) => {
-    //     console.log("Error->", error.message);
-    //     toast.error(error.message, {
-    //       position: "top-right",
-    //       autoClose: 3000,
-    //     });
-    //   }
-    // );
   }
   //----------------------Handle submit----------------------------------------
   const handleSubmit = (values, { resetForm, setSubmitting }, actions) => {
@@ -319,7 +320,7 @@ export default function AddRole() {
                         {({ values }) => (
                           <Form>
                             <div className="row">
-                              {/* <div className="col-md-12">
+                              <div className="col-md-12">
                                 <div className="float-right">
                                   <button
                                     className="btn BackBtn me-2"
@@ -338,7 +339,7 @@ export default function AddRole() {
                                   </button>
                                   {"  "}
                                 </div>
-                              </div> */}
+                              </div>
                             </div>
                             <div className="row">
                               <div className="col-md-11 mx-auto flex">
@@ -394,7 +395,7 @@ export default function AddRole() {
                                     </div>
                                   </div>
                                 </div>
-                                <div className="col-md-12">
+                                {/* <div className="col-md-12">
                                   <div className="float-right">
                                     <button
                                       className="btn BackBtn me-2"
@@ -413,16 +414,15 @@ export default function AddRole() {
                                     </button>
                                     {"  "}
                                   </div>
-                                </div>
+                                </div> */}
                               </div>
                             </div>
                           </Form>
                         )}
                       </Formik>
-                      {/* <hr /> */}
                       {/* -----------------Profile Mapping--------------------------------------------------------- */}
-                      {/* <div className="col-md-12">
-                        <h2 className="mb-2 mt-2 pageTitle">Menu Mapping</h2>
+                      <div className="col-md-12">
+                        <h1 className="mb-2 mt-2 pageTitle">Menu Mapping</h1>
                         <div className="float-right mb-2 mt-2">
                           <button
                             className="btn addUser me-2 min-width-110px"
@@ -445,15 +445,34 @@ export default function AddRole() {
                             UnCheck All
                           </button>{" "}
                         </div>
-                      </div> */}
+                      </div>
                       {/* -------------------------------------------------------------------------------------- */}
-                      {/* <div className="">
+                      <div className="">
                         <div className="col-md-11 mx-5 flex p-2">
-                           {(menuData || []).map((m, mindex) => {
+                          {(menuData || []).map((m, mindex) => {
                             return (
                               <div className="col p-1" key={m.id}>
                                 <div className="row menuColor">
-                                  <div className="col ">{m.menuName}</div>
+                                  <div className="col-md-4 ">{m.menuName}</div>
+                                  <div className="col-md-4 "></div>
+                                  <div className="col-md-3 "></div>
+                                  <div className="col-md-1 ">
+                                    {m.subMenu.length === 0 && (
+                                      <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        id="menu"
+                                        checked={m.check}
+                                        //checked={s.check || isAllCheck}
+                                        onChange={() =>
+                                          handleCheckboxChange(mindex)
+                                        }
+                                        onClick={(e) => {
+                                          console.log("menu -> ", m);
+                                        }}
+                                      />
+                                    )}
+                                  </div>
                                 </div>
                                 {(m.subMenu || []).map((s, sindex) => {
                                   return (
@@ -539,7 +558,7 @@ export default function AddRole() {
                             );
                           })}
                         </div>
-                      </div> */}
+                      </div>
                     </div>
                   </div>
                 </div>
