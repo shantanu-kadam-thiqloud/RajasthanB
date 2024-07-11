@@ -27,3 +27,27 @@ export function loginUser(req, res) {
 export function fetchRoles(req, res) {
   return new RestDataSource().GetData(BaseUrl + Global_var.URL_FETCH_ROLE, res);
 }
+
+export function makeRequest(req, res) {
+  return new RestDataSource().PostData(
+    BaseUrl + Global_var.URL_MAKE_REQUEST,
+    res,
+    req
+  );
+}
+
+export function checkRequest(req, res) {
+  return new RestDataSource().PostData(
+    BaseUrl + Global_var.URL_CHECK_REQUEST,
+    res,
+    req
+  );
+}
+
+export function fetchRequests(req, res) {
+  return new RestDataSource().PostData(
+    BaseUrl + Global_var.URL_REQUEST_LIST,
+    res,
+    req
+  );
+}

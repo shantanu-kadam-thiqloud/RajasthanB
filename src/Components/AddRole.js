@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import sideData from "./CommonComponents/sideBarData";
 import { getSessionStorage } from "./CommonComponents/cookieData";
-import { fetchRoles } from "../Services/API-services";
+import { fetchRoles, makeRequest, saveData } from "../Services/API-services";
 export default function AddRole() {
   const [isAllCheck, setAllCheck] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -15,13 +15,15 @@ export default function AddRole() {
   const [groupId, setGroupId] = useState("");
   const [profile, setProfile] = useState({});
   const [groupList, setGroupList] = useState([]);
-  const [isActive, setIsActive] = useState(false);
+  const [is_active, setis_active] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const USER = getSessionStorage("USER");
-  const Role = location.state ? location.state.user : ""; //useParams();
-  // const locationData = location.state ? location.state.user : {};
-  //const profile = profiles.find((u) => u.id.toString() === userId);
+  const role_id = location.state ? location.state.user.role_id : "";
+  const [role, setRole] = useState(location.state ? location.state.user : {});
+  const [existingValue, setExistingValue] = useState(
+    location.state ? location.state.user : {}
+  );
   const path = window.location.pathname;
   const isEdit = path.includes("EditRole") ? true : false;
   const validationSchema = Yup.object({
@@ -37,12 +39,6 @@ export default function AddRole() {
         "Profile Description should not contain special characters"
       )
       .required("Role Description is required"),
-    // group: Yup.string()
-    //   .matches(
-    //     /^[a-zA-Z0-9\s.,/]*$/,
-    //     "Group should not contain special characters"
-    //   )
-    //   .required("Group is required"),
   });
 
   const rows = [
@@ -83,14 +79,13 @@ export default function AddRole() {
       created_by: "Admin",
     },
   ];
-  //const user = users.find((u) => u.id.toString() === userId);
   useEffect(() => {
     if (isEdit) {
       // setIsLoading(true);
     }
   }, [isEdit]);
-  const [menuData, setMenuData] = useState(sideData[0].data);
   //-----------------------Menu selection--------------------------------------
+  const [menuData, setMenuData] = useState(sideData[0].data);
   const handleCheckAll = () => {
     const updatedMenuData = menuData.map((menu) => ({
       ...menu,
@@ -162,43 +157,32 @@ export default function AddRole() {
   };
   //----------------------Add Edit Role---------------------------------------------
   function AddEditRole(values) {
+    // values.is_active = (!isEdit) ? 1 : values.is_active;
     const requestBody = {
       utilityType: "Role",
-      makerId: USER?.userId, //"1",
-      user_id: 1,
+      makerId: USER?.role_id,
+      user_id: USER?.userId, //"1",
       requestType: isEdit ? "update" : "add",
-      tableName: "mst_role",
+      tableName: "mst_sb_roles",
       updatedValue: {
-        role_name: values.profileName, //"John Doe",
-        role_description: values.profileDescription, //"1234567890123456",
+        role_name: values?.profileName, //"John Doe",
+        role_description: values?.profileDescription, //"1234567890123456",
       },
-      existing_values: {
-        // created_by: "admin",
-        // created_date: "2024-06-21T09:00:00",
-        // last_modified_by: "admin",
-        // last_modified_date: "2024-06-21T09:00:00",
-      },
-      description: `${isEdit ? "Update" : "Add"} Role`,
-      createdBy: "Admin",
+      existing_values: existingValue,
+      description: isEdit ? "Update Role" : "Creating a new Role",
+      created_by: USER?.userName, // "Admin",//
     };
-    if (isEdit) {
-      requestBody.existing_values = {
-        role_name: Role?.role_id,
-        role_description: Role?.role_description,
-      };
-    }
-    console.log("requestBody Role-> ", requestBody);
-    fetchRoles(
+    makeRequest(
       requestBody,
       (response) => {
         if (response.status === 200) {
-          toast.success(
-            `${isEdit ? "Update " : "Add "}request raised successfully.`,
-            {
-              position: "top-right",
-              autoClose: 3000,
-            }
+          showCustomToast(
+            response.data.message +
+              ". Your Request Id is " +
+              response.data.requestId,
+            response.data.requestId
           );
+          navigate("/Role");
         }
       },
       (error) => {
@@ -209,12 +193,96 @@ export default function AddRole() {
         });
       }
     );
+    //-------------------------------------------------
+    // const requestBody = {
+    //   utilityType: "Role",
+    //   makerId: USER?.userId, //"1",
+    //   user_id: 1,
+    //   requestType: isEdit ? "update" : "add",
+    //   tableName: "mst_role",
+    //   updatedValue: {
+    //     role_name: values.profileName, //"John Doe",
+    //     role_description: values.profileDescription, //"1234567890123456",
+    //   },
+    //   existing_values: {
+    //     // created_by: "admin",
+    //     // created_date: "2024-06-21T09:00:00",
+    //     // last_modified_by: "admin",
+    //     // last_modified_date: "2024-06-21T09:00:00",
+    //   },
+    //   description: `${isEdit ? "Update" : "Add"} Role`,
+    //   created_by: "Admin",
+    // };
+    // if (isEdit) {
+    //   requestBody.existing_values = {
+    //     role_name: role?.role_name,
+    //     role_description: role?.role_description,
+    //   };
+    // }
+    // console.log("requestBody Role-> ", requestBody);
+    // fetchRoles(
+    //   requestBody,
+    //   (response) => {
+    //     if (response.status === 200) {
+    //       toast.success(
+    //         `${isEdit ? "Update " : "Add "}request raised successfully.`,
+    //         {
+    //           position: "top-right",
+    //           autoClose: 3000,
+    //         }
+    //       );
+    //     }
+    //   },
+    //   (error) => {
+    //     console.log("Error->", error.message);
+    //     toast.error(error.message, {
+    //       position: "top-right",
+    //       autoClose: 3000,
+    //     });
+    //   }
+    // );
   }
   //----------------------Handle submit----------------------------------------
   const handleSubmit = (values, { resetForm, setSubmitting }, actions) => {
     console.log(values);
     setIsLoading(true);
     AddEditRole(values);
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("Request ID copied to clipboard", {
+        position: "top-right",
+        autoClose: true,
+      });
+    });
+  };
+
+  const CustomToast = ({ closeToast, requestData, requestId }) => (
+    <div>
+      <div>{requestData}</div>
+      <br />
+      <button
+        className="btn BackBtn mr-3"
+        onClick={() => copyToClipboard(requestId)}
+      >
+        Copy ID
+      </button>
+      <button className="btn addUser" onClick={() => closeToast()}>
+        OK
+      </button>
+    </div>
+  );
+
+  const showCustomToast = (response, requestId) => {
+    toast.success(
+      <CustomToast requestData={response} requestId={requestId} />,
+      {
+        position: "top-center",
+        autoClose: false,
+        className: "custom-toast",
+      }
+    );
   };
 
   return (
@@ -239,9 +307,9 @@ export default function AddRole() {
                     <div className="card-body">
                       <Formik
                         initialValues={{
-                          profileName: isEdit ? Role?.role_name : "",
+                          profileName: isEdit ? role?.role_name : "",
                           profileDescription: isEdit
-                            ? Role?.role_description
+                            ? role?.role_description
                             : "",
                         }}
                         validationSchema={validationSchema}
@@ -282,7 +350,10 @@ export default function AddRole() {
                                           htmlFor="profileName"
                                           className="form-label required"
                                         >
-                                          Role Name
+                                          Role Name{" "}
+                                          <span className="Fieldrequired">
+                                            *
+                                          </span>
                                         </label>
                                         <Field
                                           type="text"
@@ -302,7 +373,10 @@ export default function AddRole() {
                                           htmlFor="profileDescription"
                                           className="form-label required"
                                         >
-                                          Role Description
+                                          Role Description{" "}
+                                          <span className="Fieldrequired">
+                                            *
+                                          </span>
                                         </label>
                                         <Field
                                           type="text"

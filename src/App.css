@@ -302,3 +302,6 @@ a.nav-link:focus {
 .checkerDetails {
   border: 0px !important;
 }
+.role.makerFields {
+  min-height: 190px !important;
+}

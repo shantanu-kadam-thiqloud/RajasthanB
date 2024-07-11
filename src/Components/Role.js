@@ -44,7 +44,7 @@ export default function Roles() {
     {
       field: "",
       header: "Action",
-      className: "text-center",
+      // className: "text-center",
       body: "buttonsTemplate",
     },
   ];
@@ -72,40 +72,40 @@ export default function Roles() {
 
   const rows = [
     {
-      role_id: "RB001",
-      role_name: "Admin",
-      role_description: "Role Description data ",
-      created_by: "Admin",
+      roleId: "RB001",
+      roleName: "Admin",
+      roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      role_id: "RB002",
-      role_name: "Maker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
+      roleId: "RB002",
+      roleName: "Maker",
+      roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      role_id: "RB003",
-      role_name: "Checker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
+      roleId: "RB003",
+      roleName: "Checker",
+      roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      role_id: "RB004",
-      role_name: "Operation Maker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
+      roleId: "RB004",
+      roleName: "Operation Maker",
+      roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      role_id: "RB005",
-      role_name: "Admin",
-      role_description: "Role Description data ",
-      created_by: "Admin",
+      roleId: "RB005",
+      roleName: "Admin",
+      roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      role_id: "RB006",
-      role_name: "Operation checker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
+      roleId: "RB006",
+      roleName: "Operation checker",
+      roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
   ];
   const HandleAddCustomer = () => {
@@ -150,7 +150,7 @@ export default function Roles() {
                           columns={columns}
                           detailpage={"RoleDetails"}
                           editpage={"EditRole"}
-                          deletepage={"DeleteRole"}
+                          deletepage={""} //{"DeleteRole"}
                           enablePagination={false}
                         />
                       </div>

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import {
+  ConvertFormat,
+  DateFormatFunction,
+} from "./HtmlComponents/CommonFunction";
 export default function RoleDetails() {
   const [isLoading, setIsLoading] = useState(false);
   // const [role, setRole] = useState({});
@@ -56,7 +60,7 @@ export default function RoleDetails() {
       created_by: "Admin",
     },
   ];
-  // const role = rows.find((u) => u.role_id.toString() === roleId);
+  // const role = rows.find((u) => u.role_id.toString() === role_id);
 
   if (!role) {
     return <p>Role not found.</p>;
@@ -81,7 +85,7 @@ export default function RoleDetails() {
                       </div>
                     </div>
                     <div className="card-body">
-                      <div className="row UserDetails mt-3">
+                      <div className="row UserDetails mt-3 makerFields">
                         {isDelete ? (
                           <h4 className="col-md-12 mb-5 mx-5">
                             Are you sure you want to delete this ?
@@ -89,7 +93,84 @@ export default function RoleDetails() {
                         ) : (
                           ""
                         )}
-                        <div className="col-md-6 mx-auto">
+                        <div className="col-md-12 p-0">
+                          <table className="table customerDetails">
+                            <tbody>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Role ID:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {role?.role_id}
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Role Name:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {role?.role_name}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  <strong>Role Description:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  {role?.role_description}
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Is Active:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {role?.is_active ? "Yes" : "No"}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Created By :</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {role?.created_by}
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Created Date :</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {DateFormatFunction(role?.created_date)}
+                                </td>
+                              </tr>
+                              {/* <tr>
+                              <td className="col-md-3 UDCoulmns fieldColumn">
+                                <strong>Email ID:</strong>
+                              </td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">
+                                {customer.email_id}
+                              </td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">
+                                <strong>Mobile No:</strong>
+                              </td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">
+                                {customer.mobile_no}
+                              </td>
+                            </tr> 
+                            <tr>
+                              <td className="col-md-3 UDCoulmns">
+                                <strong>Remarks:</strong>
+                              </td>
+                              <td className="col-md-3 UDCoulmns">
+                                {customer.description}
+                              </td>
+                              <td className="col-md-3 UDCoulmns">
+                                <strong>Is Active:</strong>
+                              </td>
+                              <td className="col-md-3 UDCoulmns">
+                                {customer.is_active ? "Yes" : "No"}
+                              </td>
+                            </tr>*/}
+                            </tbody>
+                          </table>
+
+                          {/* ----------------------------------------------------------------------- */}
+                          {/* <div className="col-md-6 mx-auto">
                           <div className="col-md-6 UDCoulmns">
                             <strong>Role ID :</strong>
                           </div>
@@ -103,8 +184,15 @@ export default function RoleDetails() {
                           <div className="col-md-6 UDCoulmns">
                             {role?.role_description}
                           </div>
+
+                          <div className="col-md-6 UDCoulmns">
+                            <strong>Created Date :</strong>
+                          </div>
+                          <div className="col-md-6 UDCoulmns">
+                            {DateFormatFunction(role?.created_date)}
+                          </div>
                         </div>
-                        {/* -------------------------------------------------------- */}
+                      
                         <div className="col-md-5">
                           <div className="col-md-6 UDCoulmns">
                             <strong>Role Name :</strong>
@@ -119,50 +207,39 @@ export default function RoleDetails() {
                           <div className="col-md-6 UDCoulmns">
                             {role?.created_by}
                           </div>
+                         </div> */}
+                          {/* --------------------------------------------------------------------------- */}
 
-                          {/* <div className="col-md-6 UDCoulmns">
-                            <strong>Status :</strong>
+                          <div class="col-md-12">
+                            <div className="modal-footer">
+                              <button
+                                className="btn BackBtn"
+                                type="button"
+                                onClick={() => {
+                                  navigate("/Role");
+                                }}
+                              >
+                                Back to List
+                              </button>
+
+                              <button
+                                className="btn addUser"
+                                type="button"
+                                onClick={() => {
+                                  if (isDelete) {
+                                    // DeleteUser();
+                                  } else {
+                                    navigate(`/EditRole`, {
+                                      state: { user: role },
+                                    });
+                                  }
+                                }}
+                              >
+                                {isDelete ? "Delete" : "Edit"}
+                              </button>
+                            </div>
                           </div>
-                          <div className="col-md-6 UDCoulmns">
-                           {true ? "Active" : "Inactive"}
-                           <input
-                              name="isActive"
-                              className="form-check-input"
-                              type="checkbox"
-                              id="flexSwitchCheckChecked"
-                              checked={user.isActive}
-                              readOnly
-                            /> 
-                          </div> */}
                         </div>
-                      </div>
-                      <hr />
-                      <div className="row float-right">
-                        <button
-                          className="btn BackBtn"
-                          type="button"
-                          onClick={() => {
-                            navigate("/Role");
-                          }}
-                        >
-                          Back to List
-                        </button>
-
-                        <button
-                          className="btn addUser"
-                          type="button"
-                          onClick={() => {
-                            if (isDelete) {
-                              // DeleteUser();
-                            } else {
-                              navigate(`/EditRole`, {
-                                state: { user: role },
-                              });
-                            }
-                          }}
-                        >
-                          {isDelete ? "Delete" : "Edit"}
-                        </button>
                       </div>
                     </div>
                   </div>
