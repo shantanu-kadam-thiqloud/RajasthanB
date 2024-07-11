@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LOGO from "../../Assets/img/kotak-mahindra-bank-logo.png";
 import { faHouse, faFile, faCircleCheck, faUser, faUsers, faUserGear, faBars, faAngleRight, faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
+import { getUserDataFromCookie } from "../CommonComponents/cookieData";
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  const [loginData, setLoginData] = useState({});
+
+  useEffect(() => {
+    const fetchLoginData = async () => {
+        try {
+          const cookieLoginData = await getUserDataFromCookie();
+         // const decryptedData = await decryptData(cookieLoginData);
+          setLoginData(cookieLoginData);
+        } catch (error) {
+            console.error('Error fetching login data:', error);
+        }
+    };
+    fetchLoginData();
+}, []);
   const [activeMenu, setActiveMenu] = useState(window.location.pathname);
   const [isPendingApprovalOpen, setIsPendingApprovalOpen] = useState(false);
   const handlePendingApprovalClick = () => {
@@ -142,7 +157,8 @@ export default function Sidebar() {
                   />
                   <p>Report</p>
                 </Link>
-              </li>              
+              </li>
+              {loginData && loginData.userType !== undefined && loginData.userType.toLowerCase() !== 'maker' && (
               <li className="nav-item has-treeview">
                 <Link
                   to="#"
@@ -182,7 +198,8 @@ export default function Sidebar() {
                 ): (
                   ""
                 )} 
-              </li>              
+              </li>
+              )}
             </ul>
           </nav>
         </div>

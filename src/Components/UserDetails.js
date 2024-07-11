@@ -37,7 +37,7 @@ export default function UserDetails() {
       description: "Delete a user",
       createdBy: "Admin",
     };
-    const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+    const baseUrl = process.env.REACT_APP_API_URL;
     saveData(data, `${baseUrl}/makerRequest`, (response) => {
       if (response.data) {
         showCustomToast(

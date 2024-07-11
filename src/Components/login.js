@@ -18,12 +18,22 @@ const Login = () => {
   };
   const navigate = useNavigate();
 
-  const handleSubmit = async (values) => {    
-    const UserData = {
-      userName: values.username,
-      userType: "Maker",
-      token: "sdfdsfdsf",
-      firstName: "Shantanu"
+  const handleSubmit = async (values) => {
+    let UserData = {};
+    if(values.username === 'KXT70269'){
+      UserData = {
+        userName: values.username,
+        userType: "Maker",
+        token: "sdfdsfdsf",
+        firstName: "Shantanu"
+      }
+    }else{
+      UserData = {
+        userName: values.username,
+        userType: "Checker",
+        token: "sdfdsfdsf",
+        firstName: "Amol"
+      }
     }
     //let usersetData = await encryptData(JSON.stringify(UserData));
     setUserDataInCookie(JSON.stringify(UserData));

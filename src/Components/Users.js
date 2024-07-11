@@ -23,7 +23,7 @@ export default function Users() {
 
   useEffect(() => {
     function fetchList() {
-      const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+      const baseUrl = process.env.REACT_APP_API_URL;
       fetchUserList(`${baseUrl}/getallusers`, (response) => {
         if (response.status === 200) {
           setUserList(response.data.responseListObject);        

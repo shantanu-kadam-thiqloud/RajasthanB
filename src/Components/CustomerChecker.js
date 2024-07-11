@@ -64,6 +64,13 @@ useEffect(() => {
   }
 
   function CheckerApproval(action) {
+    if(action === 'Declined' && !remark){
+      toast.error("Please add Reason", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return false;
+    }
     setIsLoading(true);
     //requestData.updatedValue.user_password = "Dell@123"
     // requestData.updatedValue.is_aprove = 1
@@ -83,9 +90,10 @@ useEffect(() => {
       checkerId: 1,
       lastModifiedBy: "1", //requestData.makerId,
       existing_values: requestData.existing_values,
-      masterId: requestData.masterId
+      masterId: requestData.masterId,
+      checker_remark: remark
 };
-    const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+    const baseUrl = process.env.REACT_APP_API_URL;
     saveData(
       data,
       `${baseUrl}/checheraction`,
@@ -110,10 +118,10 @@ useEffect(() => {
     );
   }
 
-  const formatFieldLabel = (field) => {
-    return field.replace(/_/g, ' ')
-                .replace(/\b\w/g, (char) => char.toUpperCase());
-  };
+  // const formatFieldLabel = (field) => {
+  //   return field.replace(/_/g, ' ')
+  //               .replace(/\b\w/g, (char) => char.toUpperCase());
+  // };
 
   return (
     <div>
@@ -276,8 +284,8 @@ useEffect(() => {
                       <td className="col-md-4 UDCoulmns fieldColumn">
                         <strong>IsActive:</strong>
                       </td>
-                      <td className="col-md-4 UDCoulmns">{String(updatedValue.is_active)}</td>
-                      <td className="col-md-4 UDCoulmns">{String(oldValue.is_active)}</td>
+                      <td className="col-md-4 UDCoulmns">{updatedValue.is_active}</td>
+                      <td className="col-md-4 UDCoulmns">{oldValue.is_active}</td>
                     </tr>
                   </tbody>
                 </table>

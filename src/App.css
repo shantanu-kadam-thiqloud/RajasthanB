@@ -298,4 +298,9 @@ a.nav-link:focus {
 .checkerDetails{
   border: 0px !important;
 }
-
+.custom-toast{
+  text-align: center;
+}
+.float-end{
+  text-align: end;
+}
