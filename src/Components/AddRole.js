@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { toast } from "react-toastify";
 import sideData from "./CommonComponents/sideBarData";
+import { getSessionStorage } from "./CommonComponents/cookieData";
+import { fetchRoles, makeRequest, saveData } from "../Services/API-services";
 export default function AddRole() {
   const [isAllCheck, setAllCheck] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -12,12 +15,15 @@ export default function AddRole() {
   const [groupId, setGroupId] = useState("");
   const [profile, setProfile] = useState({});
   const [groupList, setGroupList] = useState([]);
-  const [isActive, setIsActive] = useState(false);
+  const [is_active, setis_active] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const userId = location.state ? location.state.user.id : ""; //useParams();
-  const locationData = location.state ? location.state.user : {};
-  //const profile = profiles.find((u) => u.id.toString() === userId);
+  const USER = getSessionStorage("USER");
+  const role_id = location.state ? location.state.user.role_id : "";
+  const [role, setRole] = useState(location.state ? location.state.user : {});
+  const [existingValue, setExistingValue] = useState(
+    location.state ? location.state.user : {}
+  );
   const path = window.location.pathname;
   const isEdit = path.includes("EditRole") ? true : false;
   const validationSchema = Yup.object({
@@ -33,66 +39,53 @@ export default function AddRole() {
         "Profile Description should not contain special characters"
       )
       .required("Role Description is required"),
-    // group: Yup.string()
-    //   .matches(
-    //     /^[a-zA-Z0-9\s.,/]*$/,
-    //     "Group should not contain special characters"
-    //   )
-    //   .required("Group is required"),
   });
 
   const rows = [
     {
-      id: "CUST001",
-      fullName: "Mohit J Sharma ",
-      accNo: "415689001",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB001",
+      role_name: "Admin",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST002",
-      fullName: "Jhonson L Roy ",
-      accNo: "415689002",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB002",
+      role_name: "Maker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST003",
-      fullName: "Martin M Starc ",
-      accNo: "415689003",
-      state: "Maharashtra",
-      isActive: false,
+      role_id: "RB003",
+      role_name: "Checker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST004",
-      fullName: "Davin N Gyle ",
-      accNo: "415689004",
-      state: "Maharashtra",
-      isActive: false,
+      role_id: "RB004",
+      role_name: "Operation Maker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST005",
-      fullName: "Ashutosh A Sharma ",
-      accNo: "415689005",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB005",
+      role_name: "Admin",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST006",
-      fullName: "Abhishek B Sharma ",
-      accNo: "415689006",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB006",
+      role_name: "Operation checker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
   ];
-  //const user = users.find((u) => u.id.toString() === userId);
   useEffect(() => {
     if (isEdit) {
       // setIsLoading(true);
     }
   }, [isEdit]);
-  const [menuData, setMenuData] = useState(sideData[0].data);
   //-----------------------Menu selection--------------------------------------
+  const [menuData, setMenuData] = useState(sideData[0].data);
   const handleCheckAll = () => {
     const updatedMenuData = menuData.map((menu) => ({
       ...menu,
@@ -162,20 +155,135 @@ export default function AddRole() {
 
     setMenuData(updatedMenuData);
   };
+  //----------------------Add Edit Role---------------------------------------------
+  function AddEditRole(values) {
+    // values.is_active = (!isEdit) ? 1 : values.is_active;
+    const requestBody = {
+      utilityType: "Role",
+      makerId: USER?.role_id,
+      user_id: USER?.userId, //"1",
+      requestType: isEdit ? "update" : "add",
+      tableName: "mst_sb_roles",
+      updatedValue: {
+        role_name: values?.profileName, //"John Doe",
+        role_description: values?.profileDescription, //"1234567890123456",
+      },
+      existing_values: existingValue,
+      description: isEdit ? "Update Role" : "Creating a new Role",
+      created_by: USER?.userName, // "Admin",//
+    };
+    makeRequest(
+      requestBody,
+      (response) => {
+        if (response.status === 200) {
+          showCustomToast(
+            response.data.message +
+              ". Your Request Id is " +
+              response.data.requestId,
+            response.data.requestId
+          );
+          navigate("/Role");
+        }
+      },
+      (error) => {
+        console.log("Error->", error.message);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    );
+    //-------------------------------------------------
+    // const requestBody = {
+    //   utilityType: "Role",
+    //   makerId: USER?.userId, //"1",
+    //   user_id: 1,
+    //   requestType: isEdit ? "update" : "add",
+    //   tableName: "mst_role",
+    //   updatedValue: {
+    //     role_name: values.profileName, //"John Doe",
+    //     role_description: values.profileDescription, //"1234567890123456",
+    //   },
+    //   existing_values: {
+    //     // created_by: "admin",
+    //     // created_date: "2024-06-21T09:00:00",
+    //     // last_modified_by: "admin",
+    //     // last_modified_date: "2024-06-21T09:00:00",
+    //   },
+    //   description: `${isEdit ? "Update" : "Add"} Role`,
+    //   created_by: "Admin",
+    // };
+    // if (isEdit) {
+    //   requestBody.existing_values = {
+    //     role_name: role?.role_name,
+    //     role_description: role?.role_description,
+    //   };
+    // }
+    // console.log("requestBody Role-> ", requestBody);
+    // fetchRoles(
+    //   requestBody,
+    //   (response) => {
+    //     if (response.status === 200) {
+    //       toast.success(
+    //         `${isEdit ? "Update " : "Add "}request raised successfully.`,
+    //         {
+    //           position: "top-right",
+    //           autoClose: 3000,
+    //         }
+    //       );
+    //     }
+    //   },
+    //   (error) => {
+    //     console.log("Error->", error.message);
+    //     toast.error(error.message, {
+    //       position: "top-right",
+    //       autoClose: 3000,
+    //     });
+    //   }
+    // );
+  }
   //----------------------Handle submit----------------------------------------
   const handleSubmit = (values, { resetForm, setSubmitting }, actions) => {
     console.log(values);
     setIsLoading(true);
-    if (isEdit) {
-      EditRole(values);
-    } else {
-      AddRole(values);
-    }
+    AddEditRole(values);
   };
-  //----------------------Add User---------------------------------------------
-  function AddRole(values) {}
-  //----------------------Edit User--------------------------------------------
-  function EditRole(values) {}
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success("Request ID copied to clipboard", {
+        position: "top-right",
+        autoClose: true,
+      });
+    });
+  };
+
+  const CustomToast = ({ closeToast, requestData, requestId }) => (
+    <div>
+      <div>{requestData}</div>
+      <br />
+      <button
+        className="btn BackBtn mr-3"
+        onClick={() => copyToClipboard(requestId)}
+      >
+        Copy ID
+      </button>
+      <button className="btn addUser" onClick={() => closeToast()}>
+        OK
+      </button>
+    </div>
+  );
+
+  const showCustomToast = (response, requestId) => {
+    toast.success(
+      <CustomToast requestData={response} requestId={requestId} />,
+      {
+        position: "top-center",
+        autoClose: false,
+        className: "custom-toast",
+      }
+    );
+  };
 
   return (
     <div>
@@ -199,10 +307,10 @@ export default function AddRole() {
                     <div className="card-body">
                       <Formik
                         initialValues={{
-                          profileName: isEdit ? profileName : "",
-                          profileDescription: isEdit ? profileDescription : "",
-                          group: isEdit ? groupId : "",
-                          isActive: isEdit ? isActive : "",
+                          profileName: isEdit ? role?.role_name : "",
+                          profileDescription: isEdit
+                            ? role?.role_description
+                            : "",
                         }}
                         validationSchema={validationSchema}
                         onSubmit={handleSubmit}
@@ -211,10 +319,7 @@ export default function AddRole() {
                         {({ values }) => (
                           <Form>
                             <div className="row">
-                              <div className="col-md-12">
-                                {/* <h2 className="mb-3 mt-3 pageTitle">
-                                  {isEdit ? "Edit" : "Add"} Role
-                                </h2> */}
+                              {/* <div className="col-md-12">
                                 <div className="float-right">
                                   <button
                                     className="btn BackBtn me-2"
@@ -233,7 +338,7 @@ export default function AddRole() {
                                   </button>
                                   {"  "}
                                 </div>
-                              </div>
+                              </div> */}
                             </div>
                             <div className="row">
                               <div className="col-md-11 mx-auto flex">
@@ -245,7 +350,10 @@ export default function AddRole() {
                                           htmlFor="profileName"
                                           className="form-label required"
                                         >
-                                          Role Name
+                                          Role Name{" "}
+                                          <span className="Fieldrequired">
+                                            *
+                                          </span>
                                         </label>
                                         <Field
                                           type="text"
@@ -265,7 +373,10 @@ export default function AddRole() {
                                           htmlFor="profileDescription"
                                           className="form-label required"
                                         >
-                                          Role Description
+                                          Role Description{" "}
+                                          <span className="Fieldrequired">
+                                            *
+                                          </span>
                                         </label>
                                         <Field
                                           type="text"
@@ -283,14 +394,34 @@ export default function AddRole() {
                                     </div>
                                   </div>
                                 </div>
+                                <div className="col-md-12">
+                                  <div className="float-right">
+                                    <button
+                                      className="btn BackBtn me-2"
+                                      type="submit"
+                                      onClick={() => {
+                                        navigate("/Role");
+                                      }}
+                                    >
+                                      Back to List
+                                    </button>
+                                    <button
+                                      className="btn addUser min me-2"
+                                      type="submit"
+                                    >
+                                      Submit
+                                    </button>
+                                    {"  "}
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </Form>
                         )}
                       </Formik>
-                      <hr />
+                      {/* <hr /> */}
                       {/* -----------------Profile Mapping--------------------------------------------------------- */}
-                      <div className="col-md-12">
+                      {/* <div className="col-md-12">
                         <h2 className="mb-2 mt-2 pageTitle">Menu Mapping</h2>
                         <div className="float-right mb-2 mt-2">
                           <button
@@ -314,24 +445,11 @@ export default function AddRole() {
                             UnCheck All
                           </button>{" "}
                         </div>
-                      </div>
+                      </div> */}
                       {/* -------------------------------------------------------------------------------------- */}
-                      <div className="">
+                      {/* <div className="">
                         <div className="col-md-11 mx-5 flex p-2">
-                          {/* <div className="row">
-                          <div className="col-md-4">Admin</div>
-                          <div className="col-md-4">User</div>
-                          <div className="col-md-3">ADD</div>
-                          <div className="col-md-1">
-                            <input
-                              name="isActive"
-                              className="form-check-input"
-                              type="checkbox"
-                              checked={true}
-                            />
-                          </div>
-                        </div> */}
-                          {(menuData || []).map((m, mindex) => {
+                           {(menuData || []).map((m, mindex) => {
                             return (
                               <div className="col p-1" key={m.id}>
                                 <div className="row menuColor">
@@ -421,7 +539,7 @@ export default function AddRole() {
                             );
                           })}
                         </div>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

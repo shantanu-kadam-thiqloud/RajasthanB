@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import LOGO from "../../Assets/img/kotak-mahindra-bank-logo.png";
-import { faHouse, faFile, faCircleCheck, faUser, faUsers, faUserGear, faBars, faAngleRight, faAngleDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHouse,
+  faFile,
+  faCircleCheck,
+  faUser,
+  faUsers,
+  faUserGear,
+  faBars,
+  faAngleRight,
+  faAngleDown,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserDataFromCookie } from "../CommonComponents/cookieData";
@@ -162,40 +172,68 @@ export default function Sidebar() {
               <li className="nav-item has-treeview">
                 <Link
                   to="#"
-                  className={activeMenu.includes("PendingApproval") ? `custom-link nav-link` : `nav-link`}
+                  className={
+                    activeMenu.includes("PendingApproval")
+                      ? `custom-link nav-link`
+                      : `nav-link`
+                  }
                   onClick={handlePendingApprovalClick}
-                  >
-                    <FontAwesomeIcon className="fontIcon" icon={faCircleCheck} />
-                    <p>
-                      Pending Approval
-                      {"  "} <FontAwesomeIcon icon={isPendingApprovalOpen ? faAngleDown : faAngleRight} />
-                    </p>
+                >
+                  <FontAwesomeIcon className="fontIcon" icon={faCircleCheck} />
+                  <p>
+                    Pending Approval
+                    {"  "}{" "}
+                    <FontAwesomeIcon
+                      icon={isPendingApprovalOpen ? faAngleDown : faAngleRight}
+                    />
+                  </p>
                 </Link>
-                {isPendingApprovalOpen ? (               
-                <ul className="nav">
-                  <li className="nav-item">
-                    <Link
-                      to="/CustomerRequest"
-                      className={activeMenu === "/CustomerRequest" ? `custom-link nav-link` : `nav-link`}
-                      onClick={() => setActiveMenu("/CustomerRequest")}
-                    >
-                      <FontAwesomeIcon icon={faAngleRight} />
-                      {"  "} Customer Requests
-                     
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link
-                      to="/UserChecker"
-                      className={activeMenu === "/UserChecker" ? `custom-link nav-link` : `nav-link`}
-                      onClick={() => setActiveMenu("/UserChecker")}
-                    >
-                     <FontAwesomeIcon icon={faAngleRight} />
-                       {"  "} User Request
-                    </Link>
-                  </li>
-                </ul>
-                ): (
+                {isPendingApprovalOpen ? (
+                  <ul className="nav">
+                    <li className="nav-item">
+                      <Link
+                        to="/CustomerRequest"
+                        className={
+                          activeMenu === "/CustomerRequest"
+                            ? `custom-link nav-link`
+                            : `nav-link`
+                        }
+                        onClick={() => setActiveMenu("/CustomerRequest")}
+                      >
+                        <FontAwesomeIcon icon={faAngleRight} />
+                        {"  "} Customer Requests
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link
+                        to="/UserChecker"
+                        className={
+                          activeMenu === "/UserChecker"
+                            ? `custom-link nav-link`
+                            : `nav-link`
+                        }
+                        onClick={() => setActiveMenu("/UserChecker")}
+                      >
+                        <FontAwesomeIcon icon={faAngleRight} />
+                        {"  "} User Request
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link
+                        to="/RoleRequest"
+                        className={
+                          activeMenu === "/RoleRequest"
+                            ? `custom-link nav-link`
+                            : `nav-link`
+                        }
+                        onClick={() => setActiveMenu("/RoleRequest")}
+                      >
+                        <FontAwesomeIcon icon={faAngleRight} />
+                        {"  "} Role Requests
+                      </Link>
+                    </li>
+                  </ul>
+                ) : (
                   ""
                 )} 
               </li>

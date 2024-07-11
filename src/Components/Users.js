@@ -10,23 +10,77 @@ export default function Users() {
   const [userList, setUserList] = useState(null);
 
   const columns = [
-    { field: "user_id", sortable: true, filter: true, showFilterMenu: false, header: "User ID" },
-    { field: "first_name", sortable: true, filter: true, showFilterMenu: false, header: "First Name" },
-    { field: "last_name", sortable: true, filter: true, showFilterMenu: false, header: "Last Name" },
-    { field: "contact_no", sortable: true, filter: true, showFilterMenu: false, header: "Contact No" },
-    { field: "email_id", sortable: true, filter: true, showFilterMenu: false, header: "Email ID" },
-    { field: "user_name", sortable: true, filter: true, showFilterMenu: false, header: "Username" },
-    { field: "is_active", sortable: true, filter: true, showFilterMenu: false, header: "Active Status", className: "text-center" },
-    { field: "role_id", sortable: true, filter: true, showFilterMenu: false, header: "Role ID" },
-    { field: "", header: "Action", className: "text-center", body: "buttonsTemplate" },
-];
+    {
+      field: "user_id",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "User ID",
+    },
+    {
+      field: "first_name",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "First Name",
+    },
+    {
+      field: "last_name",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "Last Name",
+    },
+    {
+      field: "contact_no",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "Contact No",
+    },
+    {
+      field: "email_id",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "Email ID",
+    },
+    {
+      field: "user_name",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "Username",
+    },
+    {
+      field: "is_active",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "Active Status",
+      className: "text-center",
+    },
+    {
+      field: "role_id",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "Role ID",
+    },
+    {
+      field: "",
+      header: "Action",
+      className: "text-center",
+      body: "buttonsTemplate",
+    },
+  ];
 
   useEffect(() => {
     function fetchList() {
       const baseUrl = process.env.REACT_APP_API_URL;
       fetchUserList(`${baseUrl}/getallusers`, (response) => {
         if (response.status === 200) {
-          setUserList(response.data.responseListObject);        
+          setUserList(response.data.responseListObject);
         }
       });
     }
@@ -58,7 +112,10 @@ export default function Users() {
                               type="button"
                               onClick={HandleAddCustomer}
                             >
-                              <FontAwesomeIcon icon={faCirclePlus} className="fontIcon" />
+                              <FontAwesomeIcon
+                                icon={faCirclePlus}
+                                className="fontIcon"
+                              />
                               Add New User
                             </button>
                           </div>

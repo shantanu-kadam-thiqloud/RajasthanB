@@ -1,81 +1,111 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import GenericDataTable from "./CommonComponents/GenericDataTable";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Spinner from "../Components/HtmlComponents/Spinner";
+import { fetchRoles } from "../Services/API-services";
 
 export default function Roles() {
   const navigate = useNavigate();
+  const [Rows, setRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const columns = [
     {
-      field: "id",
+      field: "role_id",
       sortable: true,
       filter: true,
       showFilterMenu: false,
       header: "Role ID",
     },
     {
-      field: "roleName",
+      field: "role_name",
       sortable: true,
       filter: true,
       showFilterMenu: false,
       header: "Role Name",
     },
-
     {
-      field: "roleDescription",
+      field: "role_description",
       sortable: true,
       filter: true,
       showFilterMenu: false,
       header: "Role Description",
     },
-    // {
-    //   field: "status",
-    //   sortable: true,
-    //   filter: true,
-    //   showFilterMenu: false,
-    //   header: "Status",
-    //   className: "text-center",
-
-    //   //body: "switchTemplate",
+    {
+      field: "created_by",
+      sortable: true,
+      filter: true,
+      showFilterMenu: false,
+      header: "Created By",
+      // className: "text-center",
+    },
     {
       field: "",
       header: "Action",
-      className: "text-center",
+      // className: "text-center",
       body: "buttonsTemplate",
     },
   ];
 
+  useEffect(() => {
+    setIsLoading(true);
+    const requestBody = {};
+    fetchRoles(
+      requestBody,
+      (response) => {
+        if (response.status === 200) {
+          const list = response.data.responseListObject;
+          setRows(list);
+        }
+      },
+      (error) => {
+        console.log("Error->", error.message);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    );
+  }, []);
+
   const rows = [
     {
-      id: "RB001",
+      roleId: "RB001",
       roleName: "Admin",
       roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      id: "RB002",
+      roleId: "RB002",
       roleName: "Maker",
       roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      id: "RB003",
+      roleId: "RB003",
       roleName: "Checker",
       roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      id: "RB004",
+      roleId: "RB004",
       roleName: "Operation Maker",
       roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      id: "RB005",
+      roleId: "RB005",
       roleName: "Admin",
       roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
     {
-      id: "RB006",
+      roleId: "RB006",
       roleName: "Operation checker",
       roleDescription: "Role Description data ",
+      createdBy: "Admin",
     },
   ];
   const HandleAddCustomer = () => {
@@ -84,6 +114,7 @@ export default function Roles() {
   return (
     <div>
       <div className="content-wrapper ">
+        <Spinner isLoading={isLoading} />
         <div className="content-header">
           <div className="content">
             <div className="container-fluid">
@@ -115,11 +146,11 @@ export default function Roles() {
                     <div className="card-body">
                       <div className="tableDiv">
                         <GenericDataTable
-                          data={rows} //{data} //
+                          data={Rows} //{data} //
                           columns={columns}
                           detailpage={"RoleDetails"}
                           editpage={"EditRole"}
-                          deletepage={"DeleteRole"}
+                          deletepage={""} //{"DeleteRole"}
                           enablePagination={false}
                         />
                       </div>

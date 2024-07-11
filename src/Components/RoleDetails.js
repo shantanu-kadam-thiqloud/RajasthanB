@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import {
+  ConvertFormat,
+  DateFormatFunction,
+} from "./HtmlComponents/CommonFunction";
 export default function RoleDetails() {
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState({});
+  // const [role, setRole] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
-
-  // const user = users.find((u) => u.id.toString() === userId);
   const path = window.location.pathname;
-  const userId = location.state ? location.state.user.id : ""; //useParams();
-  const locationData = location.state ? location.state.user : {};
+  const role = location.state ? location.state?.user : ""; //?.role_id
   const isDelete = path.includes("DeleteRole") ? true : false;
 
   useEffect(() => {
@@ -18,59 +18,53 @@ export default function RoleDetails() {
     // fetchUserById();
   }, []);
 
-  if (!user) {
-    return <p>User not found.</p>;
-  }
   //----------------------Get User--------------------------------------------
   function fetchUserById() {}
   //----------------------Delete User-----------------------------------------
   function DeleteUser() {}
   const rows = [
     {
-      id: "CUST001",
-      fullName: "Mohit J Sharma ",
-      accNo: "415689001",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB001",
+      role_name: "Admin",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST002",
-      fullName: "Jhonson L Roy ",
-      accNo: "415689002",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB002",
+      role_name: "Maker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST003",
-      fullName: "Martin M Starc ",
-      accNo: "415689003",
-      state: "Maharashtra",
-      isActive: false,
+      role_id: "RB003",
+      role_name: "Checker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST004",
-      fullName: "Davin N Gyle ",
-      accNo: "415689004",
-      state: "Maharashtra",
-      isActive: false,
+      role_id: "RB004",
+      role_name: "Operation Maker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST005",
-      fullName: "Ashutosh A Sharma ",
-      accNo: "415689005",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB005",
+      role_name: "Admin",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
     {
-      id: "CUST006",
-      fullName: "Abhishek B Sharma ",
-      accNo: "415689006",
-      state: "Maharashtra",
-      isActive: true,
+      role_id: "RB006",
+      role_name: "Operation checker",
+      role_description: "Role Description data ",
+      created_by: "Admin",
     },
   ];
-  //const user = users.find((u) => u.id.toString() === userId);
+  // const role = rows.find((u) => u.role_id.toString() === role_id);
 
+  if (!role) {
+    return <p>Role not found.</p>;
+  }
   return (
     <div>
       <div className="content-wrapper ">
@@ -91,7 +85,7 @@ export default function RoleDetails() {
                       </div>
                     </div>
                     <div className="card-body">
-                      <div className="row UserDetails mt-3">
+                      <div className="row UserDetails mt-3 makerFields">
                         {isDelete ? (
                           <h4 className="col-md-12 mb-5 mx-5">
                             Are you sure you want to delete this ?
@@ -99,92 +93,153 @@ export default function RoleDetails() {
                         ) : (
                           ""
                         )}
-                        <div className="col-md-6 mx-auto">
+                        <div className="col-md-12 p-0">
+                          <table className="table customerDetails">
+                            <tbody>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Role ID:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {role?.role_id}
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Role Name:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {role?.role_name}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  <strong>Role Description:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  {role?.role_description}
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Is Active:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {role?.is_active ? "Yes" : "No"}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Created By :</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {role?.created_by}
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Created Date :</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {DateFormatFunction(role?.created_date)}
+                                </td>
+                              </tr>
+                              {/* <tr>
+                              <td className="col-md-3 UDCoulmns fieldColumn">
+                                <strong>Email ID:</strong>
+                              </td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">
+                                {customer.email_id}
+                              </td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">
+                                <strong>Mobile No:</strong>
+                              </td>
+                              <td className="col-md-3 UDCoulmns fieldColumn">
+                                {customer.mobile_no}
+                              </td>
+                            </tr> 
+                            <tr>
+                              <td className="col-md-3 UDCoulmns">
+                                <strong>Remarks:</strong>
+                              </td>
+                              <td className="col-md-3 UDCoulmns">
+                                {customer.description}
+                              </td>
+                              <td className="col-md-3 UDCoulmns">
+                                <strong>Is Active:</strong>
+                              </td>
+                              <td className="col-md-3 UDCoulmns">
+                                {customer.is_active ? "Yes" : "No"}
+                              </td>
+                            </tr>*/}
+                            </tbody>
+                          </table>
+
+                          {/* ----------------------------------------------------------------------- */}
+                          {/* <div className="col-md-6 mx-auto">
                           <div className="col-md-6 UDCoulmns">
-                            <strong>User Full Name :</strong>
+                            <strong>Role ID :</strong>
                           </div>
                           <div className="col-md-6 UDCoulmns">
-                            {user.fullName}
+                            {role?.role_id}
                           </div>
 
                           <div className="col-md-6 UDCoulmns">
-                            <strong>Mobile Number :</strong>
+                            <strong>Role Description :</strong>
                           </div>
                           <div className="col-md-6 UDCoulmns">
-                            {user.mobileNumber}
+                            {role?.role_description}
                           </div>
-
-                          <div className="col-md-6 UDCoulmns">
-                            <strong>EMail :</strong>
-                          </div>
-                          <div className="col-md-6 UDCoulmns">{user.email}</div>
 
                           <div className="col-md-6 UDCoulmns">
                             <strong>Created Date :</strong>
                           </div>
                           <div className="col-md-6 UDCoulmns">
-                            {"createdDate"}
+                            {DateFormatFunction(role?.created_date)}
                           </div>
                         </div>
-                        {/* -------------------------------------------------------- */}
+                      
                         <div className="col-md-5">
-                          {/* <div className="col-md-6 UDCoulmns">
-              <strong>User ID:</strong>
-            </div>
-            <div className="col-md-6 UDCoulmns">{user.userId}</div> */}
                           <div className="col-md-6 UDCoulmns">
-                            <strong>User ID :</strong>
+                            <strong>Role Name :</strong>
                           </div>
-                          <div className="col-md-6 UDCoulmns">{"User@123"}</div>
                           <div className="col-md-6 UDCoulmns">
-                            <strong>Role :</strong>
+                            {role?.role_name}
                           </div>
-                          <div className="col-md-6 UDCoulmns">{"Admin"}</div>
 
                           <div className="col-md-6 UDCoulmns">
-                            <strong>Status :</strong>
+                            <strong>Created By :</strong>
                           </div>
                           <div className="col-md-6 UDCoulmns">
-                            {/* {user.isActive ? "Yes" : "No"} */}
-                            {true ? "Active" : "Inactive"}
-                            {/* <input
-                              name="isActive"
-                              className="form-check-input"
-                              type="checkbox"
-                              id="flexSwitchCheckChecked"
-                              checked={user.isActive}
-                              readOnly
-                            /> */}
+                            {role?.created_by}
+                          </div>
+                         </div> */}
+                          {/* --------------------------------------------------------------------------- */}
+
+                          <div class="col-md-12">
+                            <div className="modal-footer">
+                              <button
+                                className="btn BackBtn"
+                                type="button"
+                                onClick={() => {
+                                  navigate("/Role");
+                                }}
+                              >
+                                Back to List
+                              </button>
+
+                              <button
+                                className="btn addUser"
+                                type="button"
+                                onClick={() => {
+                                  if (isDelete) {
+                                    // DeleteUser();
+                                  } else {
+                                    navigate(`/EditRole`, {
+                                      state: { user: role },
+                                    });
+                                  }
+                                }}
+                              >
+                                {isDelete ? "Delete" : "Edit"}
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <hr />
-                      <div className="row float-right">
-                        <button
-                          className="btn BackBtn"
-                          type="button"
-                          onClick={() => {
-                            navigate("/Role");
-                          }}
-                        >
-                          Back to List
-                        </button>
-
-                        <button
-                          className="btn addUser"
-                          type="button"
-                          onClick={() => {
-                            if (isDelete) {
-                              // DeleteUser();
-                            } else {
-                              navigate(`/EditUser`, {
-                                state: { user },
-                              });
-                            }
-                          }}
-                        >
-                          {isDelete ? "Delete" : "Edit"}
-                        </button>
                       </div>
                     </div>
                   </div>
