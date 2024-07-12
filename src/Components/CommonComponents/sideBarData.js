@@ -9,7 +9,7 @@ const sideData = [
         menuName: "Home",
         url: "/Dashboard",
         subMenu: [],
-        check: false,
+        check: true,
         oldCheck: false,
       },
       {
@@ -17,7 +17,7 @@ const sideData = [
         menuName: "User Management",
         url: "/User",
         subMenu: [],
-        check: false,
+        check: true,
         oldCheck: false,
       },
       {
@@ -25,7 +25,7 @@ const sideData = [
         menuName: "Customer Maintenance",
         url: "/Customers",
         subMenu: [],
-        check: false,
+        check: true,
         oldCheck: false,
       },
       {
@@ -33,7 +33,7 @@ const sideData = [
         menuName: "Role Management",
         url: "/Role",
         subMenu: [],
-        check: false,
+        check: true,
         oldCheck: false,
       },
       {
@@ -48,7 +48,7 @@ const sideData = [
             name: "User Report",
             url: "/UserReport",
             action: [],
-            check: false,
+            check: true,
             oldCheck: false,
           },
           {
@@ -56,7 +56,7 @@ const sideData = [
             name: "Customer Report",
             url: "/CustomerReport",
             action: [],
-            check: false,
+            check: true,
             oldCheck: false,
           },
           {
@@ -64,7 +64,7 @@ const sideData = [
             name: "Finacal Report",
             url: "/FinacalReport",
             action: [],
-            check: false,
+            check: true,
             oldCheck: false,
           },
           {
@@ -72,7 +72,7 @@ const sideData = [
             name: "EV Report",
             url: "/EVReport",
             action: [],
-            check: false,
+            check: true,
             oldCheck: false,
           },
         ],
@@ -89,7 +89,7 @@ const sideData = [
             name: "Customer Requests",
             url: "/CustomerRequest",
             action: [],
-            check: false,
+            check: true,
             oldCheck: false,
           },
           {
@@ -97,7 +97,7 @@ const sideData = [
             name: "User Requests",
             url: "/UserRequest",
             action: [],
-            check: false,
+            check: true,
             oldCheck: false,
           },
           {
@@ -105,7 +105,7 @@ const sideData = [
             name: "Role Requests",
             url: "/RoleRequest",
             action: [],
-            check: false,
+            check: true,
             oldCheck: false,
           },
         ],

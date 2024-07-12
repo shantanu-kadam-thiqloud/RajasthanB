@@ -32,7 +32,7 @@ export default function Header() {
 
   useEffect(() => {
     if (!USER && !isLogin) {
-      window.location.href = "/";
+      // window.location.href = "/";
     }
   }, []);
 

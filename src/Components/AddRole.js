@@ -81,7 +81,8 @@ export default function AddRole() {
   useEffect(() => {
     if (isEdit) {
       // setIsLoading(true);
-      setMenuData(role?.menu_access);
+      const jsonMenu = JSON.parse(role?.menu_access || "[]");
+      setMenuData(sideData[0].data || jsonMenu);
     }
   }, [isEdit]);
   //-----------------------Menu selection--------------------------------------
@@ -203,18 +204,18 @@ export default function AddRole() {
     setMenuData(updatedMenuData);
   };
   function AddEditRole(values) {
-    // values.is_active = (!isEdit) ? 1 : values.is_active;
+    const stringifyMenu = JSON.stringify(menuData);
     const requestBody = {
       utilityType: "Role",
       makerId: USER?.role_id,
-      user_id: USER?.userId, //"1",
+      user_id: USER?.userId,
       requestType: isEdit ? "Update" : "Add",
       tableName: "mst_sb_roles",
       updatedValue: {
-        role_name: values?.profileName, //"John Doe",
-        role_description: values?.profileDescription, //"1234567890123456",
+        role_name: values?.profileName,
+        role_description: values?.profileDescription,
         created_by: USER?.userName,
-        menu_access: menuData || [],
+        menu_access: stringifyMenu || [],
       },
       existing_values: existingValue,
       description: isEdit ? "Update Role" : "Creating a new Role",
@@ -423,7 +424,7 @@ export default function AddRole() {
                       {/* -----------------Profile Mapping--------------------------------------------------------- */}
                       <div className="col-md-12">
                         <h1 className="mb-2 mt-2 pageTitle">Menu Mapping</h1>
-                        <div className="float-right mb-2 mt-2">
+                        {/* <div className="float-right mb-2 mt-2">
                           <button
                             className="btn addUser me-2 min-width-110px"
                             type="button"
@@ -444,7 +445,7 @@ export default function AddRole() {
                           >
                             UnCheck All
                           </button>{" "}
-                        </div>
+                        </div> */}
                       </div>
                       {/* -------------------------------------------------------------------------------------- */}
                       <div className="">

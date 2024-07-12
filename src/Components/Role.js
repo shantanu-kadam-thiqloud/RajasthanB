@@ -70,44 +70,6 @@ export default function Roles() {
     );
   }, []);
 
-  const rows = [
-    {
-      roleId: "RB001",
-      roleName: "Admin",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB002",
-      roleName: "Maker",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB003",
-      roleName: "Checker",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB004",
-      roleName: "Operation Maker",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB005",
-      roleName: "Admin",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB006",
-      roleName: "Operation checker",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-  ];
   const HandleAddCustomer = () => {
     navigate("/AddRole");
   };

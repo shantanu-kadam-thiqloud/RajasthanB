@@ -4,6 +4,7 @@ import {
   ConvertFormat,
   DateFormatFunction,
 } from "./HtmlComponents/CommonFunction";
+import sideData from "./CommonComponents/sideBarData";
 export default function RoleDetails() {
   const [isLoading, setIsLoading] = useState(false);
   // const [role, setRole] = useState({});
@@ -12,7 +13,8 @@ export default function RoleDetails() {
   const path = window.location.pathname;
   const role = location.state ? location.state?.user : ""; //?.role_id
   const isDelete = path.includes("DeleteRole") ? true : false;
-  const [menuData, setMenuData] = useState(role?.menu_access);
+  const jsonMenu = JSON.parse(role?.menu_access || "[]");
+  const [menuData, setMenuData] = useState(sideData[0].data); //jsonMenu ||
   useEffect(() => {
     // setIsLoading(true);
     // fetchUserById();
@@ -63,7 +65,7 @@ export default function RoleDetails() {
   // const role = rows.find((u) => u.role_id.toString() === role_id);
 
   if (!role) {
-    return <p>Role not found.</p>;
+    // return <p>Role not found.</p>;
   }
   return (
     <div>
@@ -85,7 +87,7 @@ export default function RoleDetails() {
                       </div>
                     </div>
                     <div className="card-body">
-                      <div className="row UserDetails mt-3 makerFields">
+                      <div className="row UserDetails mt-3 makerFields role">
                         {isDelete ? (
                           <h4 className="col-md-12 mb-5 mx-5">
                             Are you sure you want to delete this ?

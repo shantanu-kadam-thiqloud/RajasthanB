@@ -303,5 +303,8 @@ a.nav-link:focus {
   border: 0px !important;
 }
 .role.makerFields {
-  min-height: 190px !important;
+  min-height: 150px !important;
+}
+.ml40 {
+  margin-left: 40px;
 }

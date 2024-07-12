@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import Spinner from "./HtmlComponents/Spinner";
+import sideData from "./CommonComponents/sideBarData";
 import { checkRequest, saveData } from "../Services/API-services";
 import { getSessionStorage } from "./CommonComponents/cookieData";
 
@@ -30,9 +31,8 @@ const RoleChecker = () => {
     requestData?.updatedValue || {}
   );
   const [oldValue, setOldValue] = useState(requestData?.existing_values || {});
-  const [menuData, setMenuData] = useState(
-    requestData?.updatedValue?.menu_access
-  );
+  const jsonMenu = JSON.parse(requestData?.updatedValue?.menu_access || "[]");
+  const [menuData, setMenuData] = useState(sideData[0].data || jsonMenu);
   const getDateTime = (datestring) => {
     const dateTime = new Date(datestring);
 
@@ -360,11 +360,11 @@ const RoleChecker = () => {
                             <div className="col-md-11 mx-5 flex p-2">
                               <div className="col p-1">
                                 <div className="row menuColor ">
-                                  <div className="col-md-4 "></div>
-                                  <div className="col-md-4 "></div>
-                                  <div className="col-md-2"> </div>
-                                  <div className="col-md-1">Updated</div>
-                                  <div className="col-md-1">Old </div>
+                                  <div className="col-md-9"></div>
+                                  <div className="col-md-3">
+                                    <span className="ml40">Updated</span>
+                                    <span className="ml40">Old</span>
+                                  </div>
                                 </div>
                               </div>
                               {(menuData || []).map((m, mindex) => {
