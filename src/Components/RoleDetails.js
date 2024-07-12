@@ -17,53 +17,7 @@ export default function RoleDetails() {
   const [menuData, setMenuData] = useState(sideData[0].data); //jsonMenu ||
   useEffect(() => {
     // setIsLoading(true);
-    // fetchUserById();
   }, []);
-
-  //----------------------Get User--------------------------------------------
-  function fetchUserById() {}
-  //----------------------Delete User-----------------------------------------
-  function DeleteUser() {}
-  const rows = [
-    {
-      role_id: "RB001",
-      role_name: "Admin",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB002",
-      role_name: "Maker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB003",
-      role_name: "Checker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB004",
-      role_name: "Operation Maker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB005",
-      role_name: "Admin",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB006",
-      role_name: "Operation checker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-  ];
-  // const role = rows.find((u) => u.role_id.toString() === role_id);
-
   if (!role) {
     // return <p>Role not found.</p>;
   }

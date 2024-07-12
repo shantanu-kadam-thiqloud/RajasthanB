@@ -5,7 +5,7 @@ import GenericDataTable from "./CommonComponents/GenericDataTable";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../Components/HtmlComponents/Spinner";
-import { fetchRoles } from "../Services/API-services";
+import { saveData } from "../Services/API-services";
 
 export default function Roles() {
   const navigate = useNavigate();
@@ -52,8 +52,10 @@ export default function Roles() {
   useEffect(() => {
     setIsLoading(true);
     const requestBody = {};
-    fetchRoles(
+    const baseUrl = process.env.REACT_APP_API_URL;
+    saveData(
       requestBody,
+      `${baseUrl}/role`,
       (response) => {
         if (response.status === 200) {
           const list = response.data.responseListObject;
@@ -76,8 +78,8 @@ export default function Roles() {
   return (
     <div>
       <div className="content-wrapper ">
-        <Spinner isLoading={isLoading} />
         <div className="content-header">
+          <Spinner isLoading={isLoading} />
           <div className="content">
             <div className="container-fluid">
               <div className="row">

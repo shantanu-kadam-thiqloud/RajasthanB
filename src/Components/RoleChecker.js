@@ -11,7 +11,7 @@ import {
 import { toast } from "react-toastify";
 import Spinner from "./HtmlComponents/Spinner";
 import sideData from "./CommonComponents/sideBarData";
-import { checkRequest, saveData } from "../Services/API-services";
+import { saveData } from "../Services/API-services";
 import { getSessionStorage } from "./CommonComponents/cookieData";
 
 const RoleChecker = () => {
@@ -77,9 +77,8 @@ const RoleChecker = () => {
 
   function CheckerApproval(action) {
     setIsLoading(true);
-    // requestData.updatedValue.is_aprove = 1
-    // requestData.updatedValue.state = "Maharashtra";
-    const data = {
+
+    const requestBody = {
       utilityType: "Role",
       makerId: requestData?.makerId,
       requestType: requestData?.requestType,
@@ -93,11 +92,10 @@ const RoleChecker = () => {
       existing_values: requestData?.existing_values,
       masterId: requestData?.masterId,
     };
-    // const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
-    checkRequest(
-      // saveData(
-      data,
-      // `${baseUrl}/checheraction`,
+    const baseUrl = process.env.REACT_APP_API_URL;
+    saveData(
+      requestBody,
+      `${baseUrl}/checheraction`,
       (res) => {
         if (res.status === 200) {
           setIsLoading(false);
@@ -219,17 +217,6 @@ const RoleChecker = () => {
                                     </th>
                                   </tr>
                                 </thead>
-                                {/* <tbody>
-                        {requestTableData.map(({ field, existingValue, newValue }) => (
-                          <tr key={field}>
-                            <td className="col-md-4 UDCoulmns fieldColumn">
-                              <strong>{formatFieldLabel(field)}:</strong>
-                            </td>
-                            <td className="col-md-4 UDCoulmns">{newValue}</td>
-                            <td className="col-md-4 UDCoulmns">{existingValue}</td>
-                          </tr>
-                        ))}
-                      </tbody> */}
                                 <tbody>
                                   <tr>
                                     <td className="col-md-4 UDCoulmns fieldColumn">
@@ -255,95 +242,6 @@ const RoleChecker = () => {
                                         oldValue?.roleDescription}
                                     </td>
                                   </tr>
-                                  {/* <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>IFSC Code:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.ifsc_code}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.ifsc_code}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>E-collection Merchant ID:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.merchant_name}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.merchant_name}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Client ID:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.client_id}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.client_id}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Secret Key:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.client_secret}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.client_secret}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Email ID:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.email_id}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.email_id}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Mobile No:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.mobile_no}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.mobile_no}
-                                    </td>
-                                  </tr> 
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Remark:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.description}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.description}
-                                    </td>
-                                  </tr>
-                               
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>is_active:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      Active
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      Active
-                                    </td>
-                                  </tr>   */}
                                 </tbody>
                               </table>
                             </div>

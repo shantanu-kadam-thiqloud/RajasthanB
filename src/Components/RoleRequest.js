@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "./HtmlComponents/DataTable";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "./HtmlComponents/Spinner";
-import { fetchRequests, saveData } from "../Services/API-services";
+import { saveData } from "../Services/API-services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
@@ -14,13 +14,6 @@ const RoleRequest = () => {
   const [action, setAction] = useState("RoleChecker");
   const [isLoading, setIsLoading] = useState(false);
   const [rows, setRows] = useState([]);
-  //-----------------------------------------------------------------
-  // const reduxData = useGetReduxData();
-  // const reduxUser = reduxData.length != 0 ? reduxData.userData : "";
-  // const cookieUser = getCookie("USER");
-  // const USER =
-  //   reduxUser === "" || reduxUser === undefined ? cookieUser : reduxUser;
-  //-----------------------------------------------------------------
   useEffect(() => {
     setIsLoading(true);
     fetchRoleRequsts();
@@ -74,65 +67,20 @@ const RoleRequest = () => {
       ),
     },
   ];
-  const rowsRole = [
-    {
-      masterId: 58,
-      utilityType: "Role",
-      makerId: 1,
-      makerTimestamp: "2024-07-08T19:20:28",
-      requestType: "update",
-      tableName: "mst_role",
-      existing_values: {
-        role_id: 1,
-        role_name: "Administrator",
-        role_description: "Role for system administrators",
-        is_active: 1,
-        created_by: "Admin",
-        created_date: "2024-06-11T01:31:26",
-        last_modified_by: "Admin",
-        lastModified_date: "2024-06-11T01:31:26",
-      },
-      updatedValue: {
-        role_id: 1,
-        role_name: "Administrator",
-        role_description: "Role for system administrators",
-        is_active: 1,
-        created_by: "Admin",
-        created_date: "2024-06-11T01:31:26",
-        lastModified_by: "Admin",
-        last_modified_date: "2024-06-11T01:31:26",
-      },
-      status: "Initiated",
-      description: "Update Customer",
-      checkerId: 0,
-      checkerTimestamp: null,
-      is_active: null,
-      created_by: "Admin",
-      created_date: "2024-07-08T19:20:28",
-      lastModifiedBy: "Admin",
-      lastModifiedDate: "2024-07-08T19:20:28",
-      makerName: "johndoe",
-      requestId: "2024070828495",
-    },
-  ];
-  //-------------------User Request List--------------------------------------------------------
   function fetchRoleRequsts() {
     var reqList = [];
     const requestBody = { userid: 1 };
-    // const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
-    fetchRequests(
-      //saveData(
+    const baseUrl = process.env.REACT_APP_API_URL;
+    saveData(
       requestBody,
-      //   `${baseUrl}/checkerListing`,
+      `${baseUrl}/checkerListing`,
       (res) => {
         if (res.data) {
           reqList = res.data.responseListObject;
-          const addList = (reqList || []).filter((x) => {
+          const roleReqList = (reqList || []).filter((x) => {
             if (x.tableName === "mst_sb_roles") return x;
           });
-          setRows(addList);
-          // setRows(reqList);
-          //mb2 console.log("reqList", reqList);
+          setRows(roleReqList);
           setIsLoading(false);
         }
       },

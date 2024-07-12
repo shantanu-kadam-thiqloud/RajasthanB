@@ -5,15 +5,9 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import sideData from "./CommonComponents/sideBarData";
 import { getSessionStorage } from "./CommonComponents/cookieData";
-import { fetchRoles, makeRequest, saveData } from "../Services/API-services";
-import { DateFormatFunction } from "./HtmlComponents/CommonFunction";
+import { saveData } from "../Services/API-services";
 export default function AddRole() {
-  const [isAllCheck, setAllCheck] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [profileName, setProfileName] = useState("");
-  const [profileDescription, setProfileDescription] = useState("");
-  const [profile, setProfile] = useState({});
-  const [is_active, setis_active] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const USER = getSessionStorage("USER");
@@ -39,45 +33,6 @@ export default function AddRole() {
       )
       .required("Role Description is required"),
   });
-
-  const rows = [
-    {
-      role_id: "RB001",
-      role_name: "Admin",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB002",
-      role_name: "Maker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB003",
-      role_name: "Checker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB004",
-      role_name: "Operation Maker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB005",
-      role_name: "Admin",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB006",
-      role_name: "Operation checker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-  ];
   useEffect(() => {
     if (isEdit) {
       // setIsLoading(true);
@@ -86,7 +41,6 @@ export default function AddRole() {
     }
   }, [isEdit]);
   //-----------------------Menu selection--------------------------------------
-
   const handleCheckAll = () => {
     const updatedMenuData = menuData.map((menu) => ({
       ...menu,
@@ -104,7 +58,6 @@ export default function AddRole() {
 
     setMenuData(updatedMenuData);
   };
-
   const handleUnCheckAll = () => {
     const updatedMenuData = menuData.map((menu) => ({
       ...menu,
@@ -119,10 +72,8 @@ export default function AddRole() {
         })),
       })),
     }));
-
     setMenuData(updatedMenuData);
   };
-
   // const handleCheckboxChange = (menuIndex, subMenuIndex, actionIndex) => {
   //   const updatedMenuData = [...menuData];
 
@@ -222,8 +173,10 @@ export default function AddRole() {
       createdBy: USER?.userName, // "Admin",//
     };
     console.log("Menu access - > ", menuData);
-    makeRequest(
+    const baseUrl = process.env.REACT_APP_API_URL;
+    saveData(
       requestBody,
+      `${baseUrl}/makerRequest`,
       (response) => {
         if (response.status === 200) {
           showCustomToast(

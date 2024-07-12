@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import loginImage from "../Assets/img/slogin.avif";
-import {  setSessionStorage } from "../Components/CommonComponents/cookieData";
+import { setSessionStorage } from "../Components/CommonComponents/cookieData";
 import { useNavigate } from "react-router-dom";
 import "./CommonComponents/style.css";
 import LOGO from "../Assets/img/kotak-mahindra-bank-logo.png";
-import { loginUser } from "../Services/API-services";
 import { toast } from "react-toastify";
-import { encryptData, encryptValue } from "./HtmlComponents/CommonFunction";
+import { encryptValue } from "./HtmlComponents/CommonFunction";
+import { saveData } from "../Services/API-services";
 const LoginSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
   password: Yup.string().required("Password is required"),
@@ -27,8 +27,9 @@ const Login = () => {
       userName: encryptedUserName, //"kxt71325",
       userPassword: encryptedPassword, //"password123",
     };
-    loginUser(
+    saveData(
       requestBody,
+      `${baseUrl}/userlogin`,
       (response) => {
         if (response.status === 200) {
           const user = response.data.responseObject;
