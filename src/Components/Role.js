@@ -85,10 +85,10 @@ export default function Roles() {
                   <div className="card">
                     <div className="card-header">
                       <div className="row alignCenter">
-                        <div className="col-sm-10">
+                        <div className="col-sm-9">
                           <h1 className="m-0 pageTitle">Role Management</h1>
                         </div>
-                        <div className="col-sm-2">
+                        <div className="col-sm-3">
                           <div className="addUserBtnDiv">
                             <button
                               className="btn addUser"

@@ -119,10 +119,10 @@ export default function RoleDetails() {
                                 <td className="col-md-3 UDCoulmns fieldColumn">
                                   {role?.role_description}
                                 </td>
-                                <td className="col-md-3 UDCoulmns">
+                                <td className="col-md-3 UDCoulmns fieldColumn">
                                   <strong>Is Active:</strong>
                                 </td>
-                                <td className="col-md-3 UDCoulmns">
+                                <td className="col-md-3 UDCoulmns fieldColumn">
                                   {role?.is_active ? "Yes" : "No"}
                                 </td>
                               </tr>

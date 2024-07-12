@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveData } from "./../Services/API-services";
 import { toast } from "react-toastify";
+import { getSessionStorage } from "./CommonComponents/cookieData";
 
 export default function AddCustomer() {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,7 @@ export default function AddCustomer() {
   const path = window.location.pathname;
   const isEdit = path.includes("EditCustomer");
   const navigate = useNavigate();
-
+  const USER = getSessionStorage("USER");
   const validationSchema = Yup.object({
     customer_name: Yup.string().max(255, "Must be 255 characters or less").required("Account Name is required"),
     customer_account_no: Yup.string()
@@ -59,6 +60,35 @@ export default function AddCustomer() {
     }
   }, [isEdit]);
 
+  useEffect(() => {
+    const preventPaste = (event) => {
+      event.preventDefault();
+      return false;
+    };
+
+    const accountNoField = document.getElementById('customer_account_no');
+    const confirmAccountNoField = document.getElementById('confirm_account_number');
+
+    if (accountNoField) {
+      accountNoField.onpaste = preventPaste;
+    }
+
+    if (confirmAccountNoField) {
+      confirmAccountNoField.onpaste = preventPaste;
+    }
+
+    // Cleanup function to remove event listeners
+    return () => {
+      if (accountNoField) {
+        accountNoField.onpaste = null;
+      }
+
+      if (confirmAccountNoField) {
+        confirmAccountNoField.onpaste = null;
+      }
+    };
+  }, []);
+
   const handleSubmit = (values) => {
     setIsLoading(true);
     addCustomer(values);
@@ -68,21 +98,23 @@ export default function AddCustomer() {
     values.is_active = (!isEdit) ? 1 : values.is_active;
     const data = {
       utilityType: "Customer",
-      makerId: "1",
-      user_id: customerid,
+      makerId: USER.userId,
+      //user_id: customerid,
+      columnname: "customer_id",
+      searchvalue: customerid, 
       requestType: isEdit ? "update" : "add",
       tableName: "mst_customer",
       updatedValue: values,
      // requestData: requestData,
       existing_values: existingValue,
       description: isEdit ? "Update Customer" : "Creating a new Customer",
-      createdBy: "Admin",
+      createdBy: USER.userName,
     };
-    const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+    const baseUrl = process.env.REACT_APP_API_URL;
     saveData(data, `${baseUrl}/makerRequest`, (response) => {
       if (response.data) {
         showCustomToast(
-          response.data.message + ". Your Request Id is " + response.data.requestId,
+          response.data.message + " Your Request Id is " + response.data.requestId,
           response.data.requestId
         );
       }
@@ -157,48 +189,17 @@ export default function AddCustomer() {
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="customer_account_no" className="form-label required">Account Number <span className="Fieldrequired">*</span></label>
-                                    <Field type="text" className="form-control" id="customer_account_no" name="customer_account_no" placeholder="Enter account number" maxLength="50" />
+                                    <Field type="text" className="form-control" id="customer_account_no" name="customer_account_no" placeholder="Enter account number" maxLength="50"  disabled={isEdit} />
                                     <ErrorMessage name="customer_account_no" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="confirm_account_number" className="form-label required">Confirm Account Number <span className="Fieldrequired">*</span></label>
-                                    <Field type="text" className="form-control" id="confirm_account_number" name="confirm_account_number" placeholder="Confirm account number" maxLength="50" />
+                                    <Field type="text" className="form-control" id="confirm_account_number" name="confirm_account_number" placeholder="Confirm account number" maxLength="50"  disabled={isEdit} />
                                     <ErrorMessage name="confirm_account_number" component="div" className="error" />
                                   </div>
-                                </div>
-                                {/* <div className="col-md-6">
-                                  <div className="mb-3">
-                                    <label htmlFor="is_account_valid" className="form-label">Is Account Valid</label>                                   
-                                  <Field
-                                      as="select"
-                                      className="form-control form-select"
-                                      id="is_account_valid"
-                                      name="is_account_valid"
-                                      onChange={(e) => setFieldValue("is_account_valid",parseInt(e.target.value, 10))}
-                                    >
-                                      <option value="" className="greyText">Select status</option>
-                                      <option value="1">Active</option>
-                                      <option value="2">Inactive</option>
-                                    </Field>
-                                    <ErrorMessage name="is_account_valid" component="div" className="error" />
-                                  </div>
-                                </div> */}
-                                {/* <div className="col-md-6">
-                                  <div className="mb-3">
-                                    <label htmlFor="invalid_reason" className="form-label">Invalid Reason</label>
-                                    <Field type="text" className="form-control" id="invalid_reason" name="invalid_reason" placeholder="Enter reason for invalidity" maxLength="255" />
-                                    <ErrorMessage name="invalid_reason" component="div" className="error" />
-                                  </div>
-                                </div>
-                                <div className="col-md-6">
-                                  <div className="mb-3">
-                                    <label htmlFor="validate_date" className="form-label">Validate Date</label>
-                                    <Field type="datetime-local" className="form-control" id="validate_date" name="validate_date" />
-                                    <ErrorMessage name="validate_date" component="div" className="error" />
-                                  </div>
-                                </div> */}
+                                </div>                              
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="ifsc_code" className="form-label required">IFSC Code <span className="Fieldrequired">*</span></label>
@@ -240,21 +241,7 @@ export default function AddCustomer() {
                                     <Field type="text" className="form-control" id="mobile_no" name="mobile_no" placeholder="Enter mobile number" maxLength="15" />
                                     <ErrorMessage name="mobile_no" component="div" className="error" />
                                   </div>
-                                </div>                                                               
-                                {/* <div className="col-md-6">
-                                  <div className="mb-3">
-                                    <label htmlFor="state" className="form-label required">State</label>
-                                    <Field type="text" className="form-control" id="state" name="state" placeholder="Enter state" maxLength="100" />
-                                    <ErrorMessage name="state" component="div" className="error" />
-                                  </div>
                                 </div>
-                                <div className="col-md-6">
-                                  <div className="mb-3">
-                                    <label htmlFor="scheme_name" className="form-label">Scheme Name</label>
-                                    <Field type="text" className="form-control" id="scheme_name" name="scheme_name" placeholder="Enter scheme name" maxLength="255" />
-                                    <ErrorMessage name="scheme_name" component="div" className="error" />
-                                  </div>
-                                </div> */}
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="description" className="form-label">Remarks</label>
@@ -275,7 +262,7 @@ export default function AddCustomer() {
                                     >
                                       <option value="" className="greyText">Select status</option>
                                       <option value="1">Active</option>
-                                      <option value="2">Inactive</option>
+                                      <option value="0">Inactive</option>
                                     </Field>
                                   </div>
                                 </div>

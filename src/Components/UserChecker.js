@@ -121,7 +121,7 @@ useEffect(() => {
       existing_values: requestData.existing_values,
       masterId: requestData.masterId
 };
-    const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+    const baseUrl = process.env.REACT_APP_API_URL;
     saveData(
       data,
       `${baseUrl}/checheraction`,

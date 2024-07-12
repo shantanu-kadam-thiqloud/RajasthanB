@@ -60,7 +60,7 @@ export default function Sidebar() {
         },
         (error) => {
           console.log("Error->", error.message);
-          toast.error("Failed to get role details.", {
+          toast.error("Failed to get role ", {
             position: "top-right",
             autoClose: 3000,
           });

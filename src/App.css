@@ -308,3 +308,9 @@ a.nav-link:focus {
 .ml40 {
   margin-left: 40px;
 }
+.custom-toast {
+  text-align: center;
+}
+.float-end {
+  text-align: end;
+}

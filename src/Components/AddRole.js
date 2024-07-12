@@ -246,7 +246,6 @@ export default function AddRole() {
   }
   //----------------------Handle submit----------------------------------------
   const handleSubmit = (values, { resetForm, setSubmitting }, actions) => {
-    console.log(values);
     setIsLoading(true);
     AddEditRole(values);
   };
