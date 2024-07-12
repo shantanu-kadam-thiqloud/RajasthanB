@@ -6,8 +6,8 @@ import Spinner from "./HtmlComponents/Spinner";
 import { saveData } from "../Services/API-services";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import moment from 'moment';
 
-import { v4 as uuid } from "uuid";
 const CustomerRequest = () => {
   const navigate = useNavigate();
   const [action, setAction] = useState("CustomerChecker");
@@ -47,16 +47,16 @@ const CustomerRequest = () => {
     {
       Header: <div className="float-center">Request Date</div>,
       accessor: "createdDate",
-      Cell: ({ row }) => <div>{row.values.createdDate}</div>,
+      Cell: ({ row }) => <div>{moment(row.values.createdDate).format('DD-MM-YY hh:mm:ss A')}</div>,
     },
     {
       Header: <div className="float-center">Requested By</div>,
       accessor: "makerName",
     },
-    {
-      Header: <div className="float-center">Status</div>,
-      accessor: "status",
-    },    
+    // {
+    //   Header: <div className="float-center">Status</div>,
+    //   accessor: "status",
+    // },    
     {
       Header: "Actions",
       accessor: "id",
@@ -81,7 +81,8 @@ const CustomerRequest = () => {
   function fetchUserRequsts() {
     var reqList = [];
     const data = {userid: 1};
-    const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+    
+    const baseUrl = process.env.REACT_APP_API_URL;
     saveData(data, `${baseUrl}/checkerListing`, (res) => {
       if (res.data) {
         reqList = res.data.responseListObject;

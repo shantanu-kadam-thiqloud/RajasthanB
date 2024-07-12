@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import loginImage from "../Assets/img/slogin.avif";
-import {
-  setSessionStorage,
-  setUserDataInCookie,
-} from "../Components/CommonComponents/cookieData";
+import {  setSessionStorage } from "../Components/CommonComponents/cookieData";
 import { useNavigate } from "react-router-dom";
 import "./CommonComponents/style.css";
 import LOGO from "../Assets/img/kotak-mahindra-bank-logo.png";
@@ -24,16 +21,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (values) => {
-    const UserData = {
-      userName: values.username,
-      userType: "Maker",
-      token: "sdfdsfdsf",
-      firstName: "Shantanu",
-    };
-    //let usersetData = await encryptData(JSON.stringify(UserData));
-    setUserDataInCookie(JSON.stringify(UserData));
-    // navigate("/Dashboard");
-    // // userLogin(dataToSend, values);
     const encryptedPassword = encryptValue(values.password);
     const encryptedUserName = encryptValue(values.username);
     const requestBody = {

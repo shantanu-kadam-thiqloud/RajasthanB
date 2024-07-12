@@ -302,6 +302,11 @@ a.nav-link:focus {
 .checkerDetails {
   border: 0px !important;
 }
-.role.makerFields {
+.custom-toast{
+  text-align: center;
+}
+.float-end{
+  text-align: end;
+}.role.makerFields {
   min-height: 190px !important;
 }

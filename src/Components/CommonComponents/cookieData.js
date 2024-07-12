@@ -41,13 +41,11 @@ export function removeUserDataCookie() {
 
 export function setSessionStorage(name, value) {
   const encryptedValues = encryptData(value);
-  sessionStorage.setItem(name, encryptedValues);
-  console.log(`${name} session storage set.`);
+  sessionStorage.setItem(name, encryptedValues);  
 }
 
 export function getSessionStorage(name) {
   const sessionData = sessionStorage.getItem(name);
   const unencryptedData = decryptData(sessionData);
-  console.log(`${name} session storage get.`);
   return unencryptedData;
 }

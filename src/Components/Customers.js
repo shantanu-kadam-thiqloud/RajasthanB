@@ -95,7 +95,7 @@ export default function Customers() {
   useEffect(() => {
     const data = "";
     function fetchList() {
-      const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+      const baseUrl = process.env.REACT_APP_API_URL;
       saveData(data,`${baseUrl}/getallcustomers`, (response) => {
         if (response.status === 200) {
           setCustomerList(response.data.responseListObject);        

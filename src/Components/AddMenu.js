@@ -38,7 +38,6 @@ export default function AddMenu() {
   }, [isEdit]);
 
   const handleSubmit = (values, { resetForm, setSubmitting }) => {
-    console.log(values);
     setIsLoading(true);
     if (isEdit) {
       EditMenu(values);

@@ -6,6 +6,7 @@ import { faTimes, faRotateLeft, faThumbsDown, faCheck } from "@fortawesome/free-
 import { toast } from "react-toastify";
 import Spinner from "./HtmlComponents/Spinner";
 import { saveData } from "../Services/API-services";
+import { getSessionStorage } from "./CommonComponents/cookieData";
 
 const CustomerChecker = () => {
   const path = window.location.pathname;
@@ -15,6 +16,7 @@ const CustomerChecker = () => {
   const navigate = useNavigate();
   const [reqDate, setReqDate] = useState('');
   const [reqTime, setReqTime] = useState('');
+  const USER = getSessionStorage("USER");
 
 const [requestData, setRequestData] = useState(location.state.requestData || {});
   //const [requestTableData, setRequestTableData] = useState(requestData1)
@@ -64,30 +66,25 @@ useEffect(() => {
   }
 
   function CheckerApproval(action) {
+    if(action === 'Declined' && !remark){
+      toast.error("Please add Reason", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+      return false;
+    }
     setIsLoading(true);
-    //requestData.updatedValue.user_password = "Dell@123"
-    // requestData.updatedValue.is_aprove = 1
-    // requestData.updatedValue.is_login = 1
-    //requestData.updatedValue.login_attempt = 1
-    // requestData.updatedValue.is_locked = 0
     requestData.updatedValue.state  = "Maharashtra"
+    requestData.lastModifiedBy = USER.userId
     const data = {
-      utilityType: "Customer",
-      makerId: requestData.masterId,
-      requestType: requestData.requestType,
-      tableName: "mst_customer",
-      updatedValue: requestData.updatedValue,
-      description: "Creating a new Customer",
       status: action,
-      createdBy: "makerName",
-      checkerId: 1,
-      lastModifiedBy: "1", //requestData.makerId,
-      existing_values: requestData.existing_values,
-      masterId: requestData.masterId
-};
-    const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
+      checkerId: USER.userId,
+      checker_remark: remark
+    };
+    const newdata = { ...requestData, ...data };
+    const baseUrl = process.env.REACT_APP_API_URL;
     saveData(
-      data,
+      newdata,
       `${baseUrl}/checheraction`,
       (res) => {
         setIsLoading(false);
@@ -110,10 +107,10 @@ useEffect(() => {
     );
   }
 
-  const formatFieldLabel = (field) => {
-    return field.replace(/_/g, ' ')
-                .replace(/\b\w/g, (char) => char.toUpperCase());
-  };
+  // const formatFieldLabel = (field) => {
+  //   return field.replace(/_/g, ' ')
+  //               .replace(/\b\w/g, (char) => char.toUpperCase());
+  // };
 
   return (
     <div>
@@ -276,8 +273,8 @@ useEffect(() => {
                       <td className="col-md-4 UDCoulmns fieldColumn">
                         <strong>IsActive:</strong>
                       </td>
-                      <td className="col-md-4 UDCoulmns">{String(updatedValue.is_active)}</td>
-                      <td className="col-md-4 UDCoulmns">{String(oldValue.is_active)}</td>
+                      <td className="col-md-4 UDCoulmns">{updatedValue.is_active}</td>
+                      <td className="col-md-4 UDCoulmns">{oldValue.is_active}</td>
                     </tr>
                   </tbody>
                 </table>
