@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveData } from "./../Services/API-services";
 import { toast } from "react-toastify";
+import { getSessionStorage } from "./CommonComponents/cookieData";
 
 export default function AddCustomer() {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,7 @@ export default function AddCustomer() {
   const path = window.location.pathname;
   const isEdit = path.includes("EditCustomer");
   const navigate = useNavigate();
-
+  const USER = getSessionStorage("USER");
   const validationSchema = Yup.object({
     customer_name: Yup.string().max(255, "Must be 255 characters or less").required("Account Name is required"),
     customer_account_no: Yup.string()
@@ -97,15 +98,17 @@ export default function AddCustomer() {
     values.is_active = (!isEdit) ? 1 : values.is_active;
     const data = {
       utilityType: "Customer",
-      makerId: "1",
-      user_id: customerid,
+      makerId: USER.userId,
+      //user_id: customerid,
+      columnname: "customer_id",
+      searchvalue: customerid, 
       requestType: isEdit ? "update" : "add",
       tableName: "mst_customer",
       updatedValue: values,
      // requestData: requestData,
       existing_values: existingValue,
       description: isEdit ? "Update Customer" : "Creating a new Customer",
-      createdBy: "Admin",
+      createdBy: USER.userName,
     };
     const baseUrl = process.env.REACT_APP_API_URL;
     saveData(data, `${baseUrl}/makerRequest`, (response) => {
@@ -259,7 +262,7 @@ export default function AddCustomer() {
                                     >
                                       <option value="" className="greyText">Select status</option>
                                       <option value="1">Active</option>
-                                      <option value="2">Inactive</option>
+                                      <option value="0">Inactive</option>
                                     </Field>
                                   </div>
                                 </div>

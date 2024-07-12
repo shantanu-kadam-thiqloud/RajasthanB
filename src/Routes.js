@@ -15,6 +15,7 @@ import CustomerRequest from "./Components/CustomerRequest";
 import CustomerChecker from "./Components/CustomerChecker";
 import RoleRequest from "./Components/RoleRequest";
 import RoleChecker from "./Components/RoleChecker";
+import ReportEcollection from "./Components/ReportEcollection";
 
 const Routers = () => {
   return (
@@ -43,6 +44,8 @@ const Routers = () => {
       <Route path="/CustomerDetails" element={<CustomerDetails />} />
       <Route path="/Customers" element={<Customers />} />
       <Route path="/EditCustomer" element={<AddCustomer />} />
+      {/* --------------------------------------------------------------- */}
+      <Route path="/ReportEcollection" element={<ReportEcollection />} />
     </Routes>
   );
 };

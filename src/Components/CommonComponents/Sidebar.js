@@ -13,16 +13,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
-import { getUserDataFromCookie } from "../CommonComponents/cookieData";
+import { getSessionStorage } from "../CommonComponents/cookieData";
 
 export default function Sidebar() {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({});
+  //const USER = getSessionStorage("USER");
 
   useEffect(() => {
     const fetchLoginData = async () => {
         try {
-          const cookieLoginData = await getUserDataFromCookie();
+          const cookieLoginData = await getSessionStorage("USER");
          // const decryptedData = await decryptData(cookieLoginData);
           setLoginData(cookieLoginData);
         } catch (error) {
@@ -33,9 +34,15 @@ export default function Sidebar() {
 }, []);
   const [activeMenu, setActiveMenu] = useState(window.location.pathname);
   const [isPendingApprovalOpen, setIsPendingApprovalOpen] = useState(false);
+  const [isReportOpen, setIsisReportOpen] = useState(false);
+  
   const handlePendingApprovalClick = () => {
     setIsPendingApprovalOpen(!isPendingApprovalOpen);
     setActiveMenu("/PendingApproval");
+  };
+  const handleReportClick = () => {
+    setIsisReportOpen(!isReportOpen);
+    setActiveMenu("/Report");
   };
   return (
     <div>
@@ -129,46 +136,76 @@ export default function Sidebar() {
                   />
                   <p>Role Management</p>
                 </Link>
-              </li>
-              {/* <li className="nav-item">
-                <Link
-                  to="/Menus"
-                  className={
-                    activeMenu === "/Menus" ? `custom-link nav-link` : `nav-link`
-                  }
-                  onClick={() => {
-                    setActiveMenu("/Menus");
-                  }}
-                >
-                  <FontAwesomeIcon
-                    className="fontIcon"
-                    icon={faBars}
-                    onClick={() => {}}
-                  />
-                  <p>Menu Management</p>
-                </Link>
-              </li> */}
-              <li className="nav-item">
+              </li>             
+              <li className="nav-item has-treeview">
                 <Link
                   to="#"
                   className={
-                    activeMenu === "Report"
+                    activeMenu.includes("Report")
                       ? `custom-link nav-link`
                       : `nav-link`
                   }
-                  onClick={() => {
-                    setActiveMenu("/Report");
-                  }}
+                  onClick={handleReportClick}
                 >
-                  <FontAwesomeIcon
-                    className="fontIcon"
-                    icon={faFile}
-                    onClick={() => {}}
-                  />
-                  <p>Report</p>
+                  <FontAwesomeIcon className="fontIcon" icon={faFile} />
+                  <p>
+                    Report
+                    {"  "}{" "}
+                    <FontAwesomeIcon
+                      icon={isReportOpen ? faAngleDown : faAngleRight}
+                    />
+                  </p>
                 </Link>
+                {isReportOpen ? (
+                  <ul className="nav">
+                    <li className="nav-item">
+                      <Link
+                        to="/ReportEcollection"
+                        className={
+                          activeMenu === "/ReportEcollection"
+                            ? `custom-link nav-link`
+                            : `nav-link`
+                        }
+                        onClick={() => setActiveMenu("/ReportEcollection")}
+                      >
+                        <FontAwesomeIcon icon={faAngleRight} />
+                        {"  "} E-Collection Reports
+                      </Link>
+                    </li>
+                    {/* <li className="nav-item">
+                      <Link
+                        to="/UserChecker"
+                        className={
+                          activeMenu === "/UserChecker"
+                            ? `custom-link nav-link`
+                            : `nav-link`
+                        }
+                        onClick={() => setActiveMenu("/UserChecker")}
+                      >
+                        <FontAwesomeIcon icon={faAngleRight} />
+                        {"  "} User Request
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link
+                        to="/RoleRequest"
+                        className={
+                          activeMenu === "/RoleRequest"
+                            ? `custom-link nav-link`
+                            : `nav-link`
+                        }
+                        onClick={() => setActiveMenu("/RoleRequest")}
+                      >
+                        <FontAwesomeIcon icon={faAngleRight} />
+                        {"  "} Role Requests
+                      </Link>
+                    </li> */}
+                  </ul>
+                ) : (
+                  ""
+                )} 
               </li>
-              {loginData && loginData.userType !== undefined && loginData.userType.toLowerCase() !== 'maker' && (
+              {loginData && loginData.role_name !== undefined && loginData.role_name.toLowerCase() !== 'maker' && (
               <li className="nav-item has-treeview">
                 <Link
                   to="#"

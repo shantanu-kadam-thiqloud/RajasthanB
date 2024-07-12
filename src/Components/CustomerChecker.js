@@ -6,6 +6,7 @@ import { faTimes, faRotateLeft, faThumbsDown, faCheck } from "@fortawesome/free-
 import { toast } from "react-toastify";
 import Spinner from "./HtmlComponents/Spinner";
 import { saveData } from "../Services/API-services";
+import { getSessionStorage } from "./CommonComponents/cookieData";
 
 const CustomerChecker = () => {
   const path = window.location.pathname;
@@ -15,6 +16,7 @@ const CustomerChecker = () => {
   const navigate = useNavigate();
   const [reqDate, setReqDate] = useState('');
   const [reqTime, setReqTime] = useState('');
+  const USER = getSessionStorage("USER");
 
 const [requestData, setRequestData] = useState(location.state.requestData || {});
   //const [requestTableData, setRequestTableData] = useState(requestData1)
@@ -72,30 +74,17 @@ useEffect(() => {
       return false;
     }
     setIsLoading(true);
-    //requestData.updatedValue.user_password = "Dell@123"
-    // requestData.updatedValue.is_aprove = 1
-    // requestData.updatedValue.is_login = 1
-    //requestData.updatedValue.login_attempt = 1
-    // requestData.updatedValue.is_locked = 0
     requestData.updatedValue.state  = "Maharashtra"
+    requestData.lastModifiedBy = USER.userId
     const data = {
-      utilityType: "Customer",
-      makerId: requestData.masterId,
-      requestType: requestData.requestType,
-      tableName: "mst_customer",
-      updatedValue: requestData.updatedValue,
-      description: "Creating a new Customer",
       status: action,
-      createdBy: "makerName",
-      checkerId: 1,
-      lastModifiedBy: "1", //requestData.makerId,
-      existing_values: requestData.existing_values,
-      masterId: requestData.masterId,
+      checkerId: USER.userId,
       checker_remark: remark
-};
+    };
+    const newdata = { ...requestData, ...data };
     const baseUrl = process.env.REACT_APP_API_URL;
     saveData(
-      data,
+      newdata,
       `${baseUrl}/checheraction`,
       (res) => {
         setIsLoading(false);
