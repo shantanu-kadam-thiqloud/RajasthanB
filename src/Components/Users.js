@@ -3,7 +3,7 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import GenericDataTable from "./CommonComponents/GenericDataTable";
 import { useNavigate } from "react-router-dom";
-import { saveData } from "../Services/API-services";
+import { getData, saveData } from "../Services/API-services";
 
 export default function Users() {
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ export default function Users() {
   useEffect(() => {
     function fetchList() {
       const baseUrl = process.env.REACT_APP_API_URL;
-      saveData({}, `${baseUrl}/getallusers`, (response) => {
+      getData(`${baseUrl}/getallusers`, (response) => {
         if (response.status === 200) {
           setUserList(response.data.responseListObject);
         }

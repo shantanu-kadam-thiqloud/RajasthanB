@@ -25,8 +25,9 @@ const Login = () => {
     const encryptedUserName = encryptValue(values.username);
     const requestBody = {
       userName: encryptedUserName, //"kxt71325",
-      userPassword: encryptedPassword, //"password123",
+      userPassword: encryptedPassword, //"Dell@123",
     };
+    const baseUrl = process.env.REACT_APP_API_URL;
     saveData(
       requestBody,
       `${baseUrl}/userlogin`,
