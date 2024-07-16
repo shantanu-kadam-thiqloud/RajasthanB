@@ -314,3 +314,8 @@ a.nav-link:focus {
 .float-end {
   text-align: end;
 }
+/* Ensure custom-link styles are not overridden */
+.custom-link.nav-link:focus {
+  background-color: #4470b1 !important;
+  color: #fff !important;
+}

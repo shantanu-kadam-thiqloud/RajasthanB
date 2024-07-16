@@ -11,3 +11,7 @@ export function getData(QueryStringData, APIURL, res) {
 export function saveData(MappingData, APIURL, res) {
   return new RestDataSource().PostData(APIURL, res, MappingData);
 }
+
+export function fetchList(APIURL, res) {
+  return new RestDataSource().GetData(APIURL, res);
+}
