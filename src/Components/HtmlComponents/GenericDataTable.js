@@ -25,10 +25,10 @@ const GenericDataTable = ({
   first,
 }) => {
   const [switchStates, setSwitchStates] = useState({});
-  const [pageSize, setPageSize] = useState(20);
-  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [rowdata, setRData] = useState("");
+  const [pageSize, setPageSize] = useState(20);
+  const navigate = useNavigate();
   const location = useLocation();
   const switchTemplate = (row) => (
     <Switch
@@ -156,7 +156,7 @@ const GenericDataTable = ({
         // "FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
         onFilter={onFilter}
         onPage={onPage}
-        totalRecords={totalRecords}        
+        totalRecords={totalRecords}
       >
         {columns.map((column) => (
           <Column

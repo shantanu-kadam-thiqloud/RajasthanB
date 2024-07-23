@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { FilterMatchMode } from 'primereact/api'; // Import FilterMatchMode
+import { FilterMatchMode } from "primereact/api"; // Import FilterMatchMode
 import Switch from "@mui/material/Switch";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,6 +18,9 @@ const GenericDataTable = ({
   onFilter,
 }) => {
   const navigate = useNavigate();
+  const [switchStates, setSwitchStates] = useState({});
+  const [isOpen, setIsOpen] = useState(false);
+  const [rowdata, setRData] = useState("");
   const [filterValue, setFilterValue] = useState({});
   const [filteredData, setFilteredData] = useState(data);
 
@@ -42,16 +45,20 @@ const GenericDataTable = ({
 
         // Handle different matchModes if applicable
         if (filter.matchMode === FilterMatchMode.CONTAINS) {
-          filtered = filtered.filter(item =>
-            String(item[field] || '').toLowerCase().includes(filterValue)
+          filtered = filtered.filter((item) =>
+            String(item[field] || "")
+              .toLowerCase()
+              .includes(filterValue)
           );
         } else if (filter.matchMode === FilterMatchMode.STARTS_WITH) {
-          filtered = filtered.filter(item =>
-            String(item[field] || '').toLowerCase().startsWith(filterValue)
+          filtered = filtered.filter((item) =>
+            String(item[field] || "")
+              .toLowerCase()
+              .startsWith(filterValue)
           );
         } else if (filter.matchMode === FilterMatchMode.EQUALS) {
-          filtered = filtered.filter(item =>
-            String(item[field] || '').toLowerCase() === filterValue
+          filtered = filtered.filter(
+            (item) => String(item[field] || "").toLowerCase() === filterValue
           );
         }
       }
@@ -98,12 +105,17 @@ const GenericDataTable = ({
     </>
   );
 
-  const handleEyeAction = (user) => navigate(`/${detailpage}`, { state: { user } });
-  const handleEditAction = (user) => navigate(`/${editpage}`, { state: { user } });
-  const handleTrashAction = (user) => navigate(`/${deletepage}`, { state: { user } });
+  const handleEyeAction = (user) =>
+    navigate(`/${detailpage}`, { state: { user } });
+  const handleEditAction = (user) =>
+    navigate(`/${editpage}`, { state: { user } });
+  const handleTrashAction = (user) =>
+    navigate(`/${deletepage}`, { state: { user } });
 
-  const accountValidityTemplate = (row) => (row.is_account_valid ? "Active" : "Inactive");
-  const accountIsActiveTemplate = (row) => (row.is_active ? "Active" : "Inactive");
+  const accountValidityTemplate = (row) =>
+    row.is_account_valid ? "Active" : "Inactive";
+  const accountIsActiveTemplate = (row) =>
+    row.is_active ? "Active" : "Inactive";
 
   const getTemplate = (field, template) => {
     if (field === "isActive") return switchTemplate;
@@ -113,18 +125,19 @@ const GenericDataTable = ({
     if (field === "is_active") return accountIsActiveTemplate;
   };
 
-  const createTemplate = (fieldName) => (row) => (
-    <a
-      href="#"
-      onClick={() => {
-        setRData(row);
-        setIsOpen(true);
-      }}
-      style={{ color: "black" }}
-    >
-      {row[fieldName]}
-    </a>
-  );
+  const createTemplate = (fieldName) => (row) =>
+    (
+      <a
+        href="#"
+        onClick={() => {
+          setRData(row);
+          setIsOpen(true);
+        }}
+        style={{ color: "black" }}
+      >
+        {row[fieldName]}
+      </a>
+    );
 
   return (
     <DataTable
