@@ -15,6 +15,8 @@ import CustomerRequest from "./Components/CustomerRequest";
 import CustomerChecker from "./Components/CustomerChecker";
 import RoleRequest from "./Components/RoleRequest";
 import RoleChecker from "./Components/RoleChecker";
+import UserRequest from "./Components/UserRequest";
+import UserChecker from "./Components/UserChecker";
 import ReportCustomer from "./Components/ReportCustomer";
 import ReportTransactionDetail from "./Components/ReportTransactionDetail";
 
@@ -24,10 +26,13 @@ const Routers = () => {
       <Route path="/" element={<Login />} />
       <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/login" element={<Login />} />
+      {/* --------------------------------------------------------------- */}
       <Route path="/CustomerRequest" element={<CustomerRequest />} />
       <Route path="/CustomerChecker" element={<CustomerChecker />} />
       <Route path="/RoleRequest" element={<RoleRequest />} />
       <Route path="/RoleChecker" element={<RoleChecker />} />
+      <Route path="/UserRequest" element={<UserRequest />} />
+      <Route path="/UserChecker" element={<UserChecker />} />
       {/* --------------------------------------------------------------- */}
       <Route path="/User" element={<Users />} />
       <Route path="/AddUser" element={<AddUser />} />
@@ -47,7 +52,10 @@ const Routers = () => {
       <Route path="/EditCustomer" element={<AddCustomer />} />
       {/* --------------------------------------------------------------- */}
       <Route path="/ReportCustomer" element={<ReportCustomer />} />
-      <Route path="/ReportTransactionDetail" element={<ReportTransactionDetail />} />
+      <Route
+        path="/ReportTransactionDetail"
+        element={<ReportTransactionDetail />}
+      />
     </Routes>
   );
 };

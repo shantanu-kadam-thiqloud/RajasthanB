@@ -5,7 +5,7 @@ import GenericDataTable from "./CommonComponents/GenericDataTable";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../Components/HtmlComponents/Spinner";
-import { fetchRoles } from "../Services/API-services";
+import { fetchList, saveData } from "../Services/API-services";
 
 export default function Roles() {
   const navigate = useNavigate();
@@ -51,9 +51,10 @@ export default function Roles() {
 
   useEffect(() => {
     setIsLoading(true);
-    const requestBody = {};
-    fetchRoles(
-      requestBody,
+    const requestBody = "";
+    const baseUrl = process.env.REACT_APP_API_URL;
+    fetchList(
+      `${baseUrl}/role`,
       (response) => {
         if (response.status === 200) {
           const list = response.data.responseListObject;
@@ -70,52 +71,14 @@ export default function Roles() {
     );
   }, []);
 
-  const rows = [
-    {
-      roleId: "RB001",
-      roleName: "Admin",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB002",
-      roleName: "Maker",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB003",
-      roleName: "Checker",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB004",
-      roleName: "Operation Maker",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB005",
-      roleName: "Admin",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-    {
-      roleId: "RB006",
-      roleName: "Operation checker",
-      roleDescription: "Role Description data ",
-      createdBy: "Admin",
-    },
-  ];
   const HandleAddCustomer = () => {
     navigate("/AddRole");
   };
   return (
     <div>
       <div className="content-wrapper ">
-        <Spinner isLoading={isLoading} />
         <div className="content-header">
+          <Spinner isLoading={isLoading} />
           <div className="content">
             <div className="container-fluid">
               <div className="row">

@@ -9,9 +9,9 @@ import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuid } from "uuid";
 import { DateFormatFunction } from "./HtmlComponents/CommonFunction";
 
-const RoleRequest = () => {
+const UserRequest = () => {
   const navigate = useNavigate();
-  const [action, setAction] = useState("RoleChecker");
+  const [action, setAction] = useState("UserChecker");
   const [isLoading, setIsLoading] = useState(false);
   const [rows, setRows] = useState([]);
   useEffect(() => {
@@ -24,11 +24,11 @@ const RoleRequest = () => {
       Header: <div className="float-center">Request Id</div>,
       accessor: "requestId",
     },
-    // {
-    //   Header: <div className="float-center">Role Name</div>,
-    //   accessor: "updatedValue.role_name",
-    //   Cell: ({ row }) => <div>{row.original.updatedValue.role_name}</div>,
-    // },
+    {
+      Header: <div className="float-center">Username</div>,
+      accessor: "updatedValue.role_name",
+      Cell: ({ row }) => <div>{row?.original?.updatedValue?.user_name}</div>,
+    },
     {
       Header: <div className="float-center">Request Type</div>,
       accessor: "requestType",
@@ -37,7 +37,7 @@ const RoleRequest = () => {
       Header: <div className="float-center">Request Date</div>,
       accessor: "makerTimestamp",
       Cell: ({ row }) => (
-        <div>{DateFormatFunction(row.values.makerTimestamp)}</div>
+        <div>{DateFormatFunction(row?.values?.makerTimestamp)}</div>
       ),
     },
     {
@@ -58,7 +58,7 @@ const RoleRequest = () => {
             className="ViewIcon"
             onClick={() => {
               navigate(`/${action}`, {
-                state: { requestData: row.original },
+                state: { requestData: row?.original },
               });
             }}
             style={{ cursor: "pointer", marginRight: "8px" }}
@@ -76,9 +76,9 @@ const RoleRequest = () => {
       `${baseUrl}/checkerListing`,
       (res) => {
         if (res.data) {
-          reqList = res.data.responseListObject;
+          reqList = res?.data?.responseListObject;
           const roleReqList = (reqList || []).filter((x) => {
-            if (x.tableName === "mst_sb_roles") return x;
+            if (x.tableName === "txn_sb_users") return x;
           });
           setRows(roleReqList);
           setIsLoading(false);
@@ -107,7 +107,7 @@ const RoleRequest = () => {
                     <div className="card-header">
                       <div className="row alignCenter">
                         <div className="col-sm-10">
-                          <h1 className="m-0 pageTitle">Role Requests</h1>
+                          <h1 className="m-0 pageTitle">User Requests</h1>
                         </div>
                         <div className="col-sm-2"></div>
                       </div>
@@ -138,4 +138,4 @@ const RoleRequest = () => {
   );
 };
 
-export default RoleRequest;
+export default UserRequest;

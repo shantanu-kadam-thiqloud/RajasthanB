@@ -41,7 +41,7 @@ export function removeUserDataCookie() {
 
 export function setSessionStorage(name, value) {
   const encryptedValues = encryptData(value);
-  sessionStorage.setItem(name, encryptedValues);  
+  sessionStorage.setItem(name, encryptedValues);
 }
 
 export function getSessionStorage(name) {

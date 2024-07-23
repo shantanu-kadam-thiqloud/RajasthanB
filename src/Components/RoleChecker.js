@@ -10,7 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import Spinner from "./HtmlComponents/Spinner";
-import { checkRequest, saveData } from "../Services/API-services";
+import { sideData, unCheckSideData } from "./CommonComponents/sideBarData";
+import { saveData } from "../Services/API-services";
 import { getSessionStorage } from "./CommonComponents/cookieData";
 
 const RoleChecker = () => {
@@ -30,7 +31,10 @@ const RoleChecker = () => {
     requestData?.updatedValue || {}
   );
   const [oldValue, setOldValue] = useState(requestData?.existing_values || {});
-
+  const jsonMenu = JSON.parse(requestData?.updatedValue?.menu_access || "[]"); //
+  const [menuData, setMenuData] = useState(
+    jsonMenu.length !== 0 ? jsonMenu : unCheckSideData[0].data
+  );
   const getDateTime = (datestring) => {
     const dateTime = new Date(datestring);
 
@@ -75,27 +79,30 @@ const RoleChecker = () => {
 
   function CheckerApproval(action) {
     setIsLoading(true);
-    // requestData.updatedValue.is_aprove = 1
-    // requestData.updatedValue.state = "Maharashtra";
+    // const requestBody = {
+    //   utilityType: "Role",
+    //   makerId: requestData?.makerId,
+    //   requestType: requestData?.requestType,
+    //   tableName: "mst_sb_roles",
+    //   updatedValue: requestData?.updatedValue,
+    //   description: remark, //requestData?.description, //"Creating a new Role",
+    //   status: action,
+    //   created_by: requestData?.existing_values?.created_by, //"makerName",
+    //   checkerId: USER?.userId, //1,
+    //   lastModifiedBy: requestData?.existing_values?.last_modified_by, //"1", //requestData.makerId,
+    //   existing_values: requestData?.existing_values,
+    //   masterId: requestData?.masterId,
+    // };
     const data = {
-      utilityType: "Role",
-      makerId: requestData?.makerId,
-      requestType: requestData?.requestType,
-      tableName: "mst_sb_roles",
-      updatedValue: requestData?.updatedValue,
-      description: remark, //requestData?.description, //"Creating a new Role",
       status: action,
-      created_by: requestData?.existing_values?.created_by, //"makerName",
-      checkerId: USER?.userId, //1,
-      lastModifiedBy: requestData?.existing_values?.last_modified_by, //"1", //requestData.makerId,
-      existing_values: requestData?.existing_values,
-      masterId: requestData?.masterId,
+      checkerId: USER?.userId,
+      checker_remark: remark,
     };
-    // const baseUrl = "http://172.16.16.113:8080/kmbl-rsbcl-api";
-    checkRequest(
-      // saveData(
-      data,
-      // `${baseUrl}/checheraction`,
+    const requestBody = { ...requestData, ...data };
+    const baseUrl = process.env.REACT_APP_API_URL;
+    saveData(
+      requestBody,
+      `${baseUrl}/checheraction`,
       (res) => {
         if (res.status === 200) {
           setIsLoading(false);
@@ -217,17 +224,6 @@ const RoleChecker = () => {
                                     </th>
                                   </tr>
                                 </thead>
-                                {/* <tbody>
-                        {requestTableData.map(({ field, existingValue, newValue }) => (
-                          <tr key={field}>
-                            <td className="col-md-4 UDCoulmns fieldColumn">
-                              <strong>{formatFieldLabel(field)}:</strong>
-                            </td>
-                            <td className="col-md-4 UDCoulmns">{newValue}</td>
-                            <td className="col-md-4 UDCoulmns">{existingValue}</td>
-                          </tr>
-                        ))}
-                      </tbody> */}
                                 <tbody>
                                   <tr>
                                     <td className="col-md-4 UDCoulmns fieldColumn">
@@ -253,99 +249,162 @@ const RoleChecker = () => {
                                         oldValue?.roleDescription}
                                     </td>
                                   </tr>
-                                  {/* <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>IFSC Code:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.ifsc_code}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.ifsc_code}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>E-collection Merchant ID:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.merchant_name}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.merchant_name}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Client ID:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.client_id}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.client_id}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Secret Key:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.client_secret}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.client_secret}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Email ID:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.email_id}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.email_id}
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Mobile No:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.mobile_no}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.mobile_no}
-                                    </td>
-                                  </tr> 
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>Remark:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {updatedValue.description}
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      {oldValue.description}
-                                    </td>
-                                  </tr>
-                               
-                                  <tr>
-                                    <td className="col-md-4 UDCoulmns fieldColumn">
-                                      <strong>is_active:</strong>
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      Active
-                                    </td>
-                                    <td className="col-md-4 UDCoulmns">
-                                      Active
-                                    </td>
-                                  </tr>   */}
                                 </tbody>
                               </table>
                             </div>
                           </div>
+                          <hr />
+                          {/* -----------------Profile Mapping--------------------------------------------------------- */}
+                          <div className="col-md-12">
+                            <h1 className="mb-2 mt-2 pageTitle">
+                              Menu Mapping
+                            </h1>
+                          </div>
+                          {/* -------------------------------------------------------------------------------------- */}
+                          <div className="">
+                            <div className="col-md-11 mx-5 flex p-2">
+                              <div className="col p-1">
+                                <div className="row menuColor ">
+                                  <div className="col-md-9"></div>
+                                  <div className="col-md-3">
+                                    <span className="ml40">Updated</span>
+                                    <span className="ml40">Old</span>
+                                  </div>
+                                </div>
+                              </div>
+                              {(menuData || []).map((m, mindex) => {
+                                return (
+                                  <div className="col p-1" key={m.id}>
+                                    <div className="row menuColor">
+                                      <div className="col-md-4 ">
+                                        {m.menuName}
+                                      </div>
+                                      <div className="col-md-4 "></div>
+                                      <div className="col-md-2 "></div>
+                                      <div className="col-md-1">
+                                        {m.subMenu.length === 0 && (
+                                          <input
+                                            readOnly
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            id="menu"
+                                            checked={m.check}
+                                            onClick={(e) => {
+                                              console.log("menu -> ", m);
+                                            }}
+                                          />
+                                        )}
+                                      </div>
+                                      <div className="col-md-1">
+                                        {m.subMenu.length === 0 && (
+                                          <input
+                                            readOnly
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            id="menu"
+                                            checked={m.oldCheck}
+                                            onClick={(e) => {
+                                              console.log("menu -> ", m);
+                                            }}
+                                          />
+                                        )}
+                                      </div>
+                                    </div>
+                                    {(m.subMenu || []).map((s, sindex) => {
+                                      return (
+                                        <>
+                                          <div className="row p-1">
+                                            <div className="col-md-4 submenuColor"></div>
+                                            <div className="col-md-4 submenuColor ">
+                                              {s.name}
+                                            </div>
+                                            <div className="col-md-2 submenuColor"></div>
+                                            {s.action.length === 0 ? (
+                                              <>
+                                                {" "}
+                                                <div
+                                                  className="col-md-1 submenuColor"
+                                                  key={s.id}
+                                                >
+                                                  {" "}
+                                                  <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="submenu"
+                                                    checked={s.check}
+                                                    readOnly
+                                                  />
+                                                </div>
+                                                <div
+                                                  className="col-md-1 submenuColor"
+                                                  key={s.id}
+                                                >
+                                                  {" "}
+                                                  <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="submenu"
+                                                    checked={s.oldCheck}
+                                                    readOnly
+                                                  />
+                                                </div>
+                                              </>
+                                            ) : (
+                                              <div
+                                                className="col-md-2 submenuColor"
+                                                key={s.id}
+                                              ></div>
+                                            )}
+                                          </div>
+                                          {(s.action || []).map((a, aindex) => {
+                                            return (
+                                              <div
+                                                className="row p-1"
+                                                key={a.id}
+                                              >
+                                                <div className="col-md-4 submenuColor"></div>
+                                                <div className="col-md-4 submenuColor"></div>
+                                                <div className="col-md-2 submenuColor">
+                                                  {a.actionName}
+                                                </div>
+                                                <div
+                                                  className="col-md-1 submenuColor"
+                                                  key={a.id}
+                                                >
+                                                  {" "}
+                                                  <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="submenu"
+                                                    checked={a.check}
+                                                    readOnly
+                                                  />
+                                                </div>
+                                                <div
+                                                  className="col-md-1 submenuColor"
+                                                  key={a.id}
+                                                >
+                                                  {" "}
+                                                  <input
+                                                    className="form-check-input"
+                                                    type="checkbox"
+                                                    id="submenu"
+                                                    checked={a.oldCheck}
+                                                    readOnly
+                                                  />
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                        </>
+                                      );
+                                    })}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
                           <div className="row mb-5">
                             <div className="col-md-12">
                               <div className="modal-footer">

@@ -2,20 +2,24 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { saveData } from "./../Services/API-services";
+import { fetchList, saveData } from "./../Services/API-services";
 import { toast } from "react-toastify";
+import { getSessionStorage } from "./CommonComponents/cookieData";
 
 export default function AddUser() {
   const [isLoading, setIsLoading] = useState(false);
+  const USER = getSessionStorage("USER");
+  const [roleList, setRoleList] = useState([]);
   const location = useLocation();
   const userId = location.state ? location.state.user.user_id : "";
   const [user, setUser] = useState(location.state ? location.state.user : {});
-  const [existingValue, setExistingValue] = useState(location.state ? location.state.user : {});
+  const [existingValue, setExistingValue] = useState(
+    location.state ? location.state.user : {}
+  );
   const [profileList, setProfileList] = useState([]);
   const navigate = useNavigate();
   const phoneRegExp = /^\d{10}$/;
   const [pageTitle, setPageTitle] = useState("Add User");
-
   const validationSchema = Yup.object({
     first_name: Yup.string()
       .matches(
@@ -32,12 +36,12 @@ export default function AddUser() {
     email_id: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
-    role_id: Yup.number()
-      .required("Role is required"),
-    contact_no: Yup.string()
-      .matches(phoneRegExp, "Contact number is not valid"),
-    user_name: Yup.string()
-      .required("Username is required"),
+    // role_id: Yup.number().required("Role is required"),
+    contact_no: Yup.string().matches(
+      phoneRegExp,
+      "Contact number is not valid"
+    ),
+    user_name: Yup.string().required("Username is required"),
   });
 
   const isEdit = Boolean(userId);
@@ -45,7 +49,7 @@ export default function AddUser() {
   useEffect(() => {
     if (isEdit) {
       setIsLoading(true);
-      setPageTitle("Edit User")
+      setPageTitle("Edit User");
       // Fetch user details logic
       // Assume we have a function fetchUserDetails to get user details by ID
       // fetchUserDetails(userId).then(data => {
@@ -54,6 +58,28 @@ export default function AddUser() {
       // });
     }
   }, [isEdit, userId]);
+
+  useEffect(() => {
+    // setIsLoading(true);
+    const requestBody = "";
+    const baseUrl = process.env.REACT_APP_API_URL;
+    fetchList(
+      `${baseUrl}/role`,
+      (response) => {
+        if (response.status === 200) {
+          const list = response.data.responseListObject;
+          setRoleList(list);
+        }
+      },
+      (error) => {
+        console.log("Error->", error.message);
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    );
+  }, []);
 
   const handleSubmit = (values, { resetForm, setSubmitting }) => {
     setIsLoading(true);
@@ -65,12 +91,13 @@ export default function AddUser() {
     // }
   };
 
-  const  AddUser = async (values) => {
-    values.is_active = (values.is_active === true || values.is_active === 1) ? 1 : 0;
-   // const requestData = await createRequestData(existingValue, values);
-    const data = {
+  const AddUser = async (values) => {
+    values.is_active =
+      values.is_active === true || values.is_active === 1 ? 1 : 0;
+    // const requestData = await createRequestData(existingValue, values);
+    const requestBody = {
       utilityType: "user",
-      makerId: "1",
+      makerId: USER?.role_id,
       user_id: userId,
       requestType: isEdit ? "update" : "add",
       tableName: "txn_sb_users",
@@ -78,15 +105,22 @@ export default function AddUser() {
       //requestData: requestData,
       existing_values: existingValue,
       description: isEdit ? "Update user" : "Creating a new user",
-      createdBy: "Admin",
+      createdBy: USER?.userName, //"Admin",
     };
     const baseUrl = process.env.REACT_APP_API_URL;
-    saveData(data, `${baseUrl}/makerRequest`, (response) => {
+    if (isEdit) {
+      requestBody.columnname = "user_id";
+      requestBody.searchvalue = userId;
+    }
+    saveData(requestBody, `${baseUrl}/makerRequest`, (response) => {
       if (response.data) {
         showCustomToast(
-          response.data.message + ". Your Request Id is " + response.data.requestId,
+          response.data.message +
+            ". Your Request Id is " +
+            response.data.requestId,
           response.data.requestId
         );
+        navigate("/User");
       }
     });
   };
@@ -102,7 +136,6 @@ export default function AddUser() {
   //   });
   //   return requestData;
   // }
-  
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -115,20 +148,29 @@ export default function AddUser() {
 
   const CustomToast = ({ closeToast, requestData, requestId }) => (
     <div>
-      <div>{requestData}</div><br />
-      <button className="btn BackBtn mr-3" onClick={() => copyToClipboard(requestId)}>
+      <div>{requestData}</div>
+      <br />
+      <button
+        className="btn BackBtn mr-3"
+        onClick={() => copyToClipboard(requestId)}
+      >
         Copy ID
       </button>
-      <button className="btn addUser" onClick={() => closeToast()}>OK</button>
+      <button className="btn addUser" onClick={() => closeToast()}>
+        OK
+      </button>
     </div>
   );
 
   const showCustomToast = (response, requestId) => {
-    toast.success(<CustomToast requestData={response} requestId={requestId} />, {
-      position: "top-center",
-      autoClose: false,
-      className: "custom-toast",
-    });
+    toast.success(
+      <CustomToast requestData={response} requestId={requestId} />,
+      {
+        position: "top-center",
+        autoClose: false,
+        className: "custom-toast",
+      }
+    );
   };
 
   return (
@@ -143,9 +185,7 @@ export default function AddUser() {
                     <div className="card-header">
                       <div className="row alignCenter">
                         <div className="col-sm-10">
-                          <h1 className="m-0 pageTitle">
-                           {pageTitle}                            
-                          </h1>
+                          <h1 className="m-0 pageTitle">{pageTitle}</h1>
                         </div>
                       </div>
                     </div>
@@ -170,7 +210,10 @@ export default function AddUser() {
                               <div className="row">
                                 <div className="col">
                                   <div className="mb-3">
-                                    <label htmlFor="first_name" className="form-label required">
+                                    <label
+                                      htmlFor="first_name"
+                                      className="form-label required"
+                                    >
                                       First Name
                                     </label>
                                     <Field
@@ -181,11 +224,18 @@ export default function AddUser() {
                                       placeholder="Enter first name"
                                       maxLength="100"
                                     />
-                                    <ErrorMessage name="first_name" component="div" className="error" />
+                                    <ErrorMessage
+                                      name="first_name"
+                                      component="div"
+                                      className="error"
+                                    />
                                   </div>
 
                                   <div className="mb-3">
-                                    <label htmlFor="email_id" className="form-label required">
+                                    <label
+                                      htmlFor="email_id"
+                                      className="form-label required"
+                                    >
                                       Email
                                     </label>
                                     <Field
@@ -196,11 +246,18 @@ export default function AddUser() {
                                       placeholder="Enter email"
                                       maxLength="50"
                                     />
-                                    <ErrorMessage name="email_id" component="div" className="error" />
+                                    <ErrorMessage
+                                      name="email_id"
+                                      component="div"
+                                      className="error"
+                                    />
                                   </div>
-                                  
+
                                   <div className="mb-3">
-                                    <label htmlFor="user_name" className="form-label required">
+                                    <label
+                                      htmlFor="user_name"
+                                      className="form-label required"
+                                    >
                                       Username
                                     </label>
                                     <Field
@@ -211,26 +268,41 @@ export default function AddUser() {
                                       placeholder="Enter username"
                                       maxLength="100"
                                     />
-                                    <ErrorMessage name="user_name" component="div" className="error" />
+                                    <ErrorMessage
+                                      name="user_name"
+                                      component="div"
+                                      className="error"
+                                    />
                                   </div>
 
-                                    <div className="mb-3">
-                                      <label htmlFor="is_active" className="form-label">
-                                        Is Active
-                                      </label>
-                                      <br />
-                                      <Field
+                                  <div className="mb-3">
+                                    <label
+                                      htmlFor="is_active"
+                                      className="form-label"
+                                    >
+                                      Is Active
+                                    </label>
+                                    <br />
+                                    <Field
                                       name="is_active"
                                       className="form-check-input checkbox-custom"
                                       type="checkbox"
                                       id="flexSwitchCheckChecked"
-                                      onChange={(e) => setFieldValue("is_active", e.target.checked ? 1 : 0)}
+                                      onChange={(e) =>
+                                        setFieldValue(
+                                          "is_active",
+                                          e.target.checked ? 1 : 0
+                                        )
+                                      }
                                     />
-                                    </div>                                  
+                                  </div>
                                 </div>
                                 <div className="col">
                                   <div className="mb-3">
-                                    <label htmlFor="last_name" className="form-label required">
+                                    <label
+                                      htmlFor="last_name"
+                                      className="form-label required"
+                                    >
                                       Last Name
                                     </label>
                                     <Field
@@ -241,11 +313,18 @@ export default function AddUser() {
                                       placeholder="Enter last name"
                                       maxLength="100"
                                     />
-                                    <ErrorMessage name="last_name" component="div" className="error" />
+                                    <ErrorMessage
+                                      name="last_name"
+                                      component="div"
+                                      className="error"
+                                    />
                                   </div>
 
                                   <div className="mb-3">
-                                    <label htmlFor="contact_no" className="form-label">
+                                    <label
+                                      htmlFor="contact_no"
+                                      className="form-label"
+                                    >
                                       Contact Number
                                     </label>
                                     <Field
@@ -256,28 +335,50 @@ export default function AddUser() {
                                       placeholder="Enter contact number"
                                       maxLength="10"
                                     />
-                                    <ErrorMessage name="contact_no" component="div" className="error" />
+                                    <ErrorMessage
+                                      name="contact_no"
+                                      component="div"
+                                      className="error"
+                                    />
                                   </div>
 
                                   <div className="mb-3">
-                                    <label htmlFor="role_id" className="form-label required">
+                                    <label
+                                      htmlFor="role_id"
+                                      className="form-label required"
+                                    >
                                       Role
                                     </label>
                                     <Field
+                                      required
                                       as="select"
                                       className="form-control form-select"
                                       id="role_id"
                                       name="role_id"
-                                      onChange={(e) => setFieldValue("role_id",parseInt(e.target.value, 10))}
+                                      onChange={(e) =>
+                                        setFieldValue(
+                                          "role_id",
+                                          parseInt(e.target.value, 10)
+                                        )
+                                      }
                                     >
-                                      <option value="" className="greyText">Select role</option>
-                                      <option value="1">Checker</option>
-                                      <option value="2">Maker</option>
-                                      {/* <option value="3">Admin</option>
-                                      <option value="4">Operation Checker</option> */}
+                                      <option value="" className="greyText">
+                                        Select role
+                                      </option>
+                                      {(roleList || []).map((x) => {
+                                        return (
+                                          <option value={x.role_id}>
+                                            {x.role_name}
+                                          </option>
+                                        );
+                                      })}
                                     </Field>
-                                    <ErrorMessage name="role_id" component="div" className="error" />
-                                  </div>                                  
+                                    <ErrorMessage
+                                      name="role_id"
+                                      component="div"
+                                      className="error"
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>

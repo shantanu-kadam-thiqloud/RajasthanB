@@ -12,42 +12,6 @@ export function saveData(MappingData, APIURL, res) {
   return new RestDataSource().PostData(APIURL, res, MappingData);
 }
 
-export function fetchUserList(APIURL, res) {
+export function fetchList(APIURL, res) {
   return new RestDataSource().GetData(APIURL, res);
-}
-
-export function loginUser(req, res) {
-  return new RestDataSource().PostData(
-    BaseUrl + Global_var.URL_LOGIN,
-    res,
-    req
-  );
-}
-
-export function fetchRoles(req, res) {
-  return new RestDataSource().GetData(BaseUrl + Global_var.URL_FETCH_ROLE, res);
-}
-
-export function makeRequest(req, res) {
-  return new RestDataSource().PostData(
-    BaseUrl + Global_var.URL_MAKE_REQUEST,
-    res,
-    req
-  );
-}
-
-export function checkRequest(req, res) {
-  return new RestDataSource().PostData(
-    BaseUrl + Global_var.URL_CHECK_REQUEST,
-    res,
-    req
-  );
-}
-
-export function fetchRequests(req, res) {
-  return new RestDataSource().PostData(
-    BaseUrl + Global_var.URL_REQUEST_LIST,
-    res,
-    req
-  );
 }

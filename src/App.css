@@ -305,17 +305,28 @@ a.nav-link:focus {
 .checkerDetails {
   border: 0px !important;
 }
-.custom-toast{
+.role.makerFields {
+  min-height: 150px !important;
+}
+.ml40 {
+  margin-left: 40px;
+}
+.custom-toast {
   text-align: center;
 }
-.float-end{
+.float-end {
   text-align: end;
-
-}.role.makerFields {
+}
+/* Ensure custom-link styles are not overridden */
+.custom-link.nav-link:focus {
+  background-color: #4470b1 !important;
+  color: #fff !important;
+}
+.role.makerFields {
   min-height: 190px !important;
 }
 
-.mt-20{
+.mt-20 {
   margin-top: 3%;
 }
 

@@ -3,7 +3,7 @@ import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import GenericDataTable from "./CommonComponents/GenericDataTable";
 import { useNavigate } from "react-router-dom";
-import { fetchUserList } from "../Services/API-services";
+import { fetchList } from "../Services/API-services";
 
 export default function Users() {
   const navigate = useNavigate();
@@ -76,15 +76,15 @@ export default function Users() {
   ];
 
   useEffect(() => {
-    function fetchList() {
+    function fetchUserList() {
       const baseUrl = process.env.REACT_APP_API_URL;
-      fetchUserList(`${baseUrl}/getallusers`, (response) => {
+      fetchList(`${baseUrl}/getallusers`, (response) => {
         if (response.status === 200) {
           setUserList(response.data.responseListObject);
         }
       });
     }
-    fetchList();
+    fetchUserList();
   }, []);
 
   const HandleAddCustomer = () => {
@@ -130,7 +130,7 @@ export default function Users() {
                             columns={columns}
                             detailpage={"UserDetails"}
                             editpage={"EditUser"}
-                            deletepage={"DeleteUser"}
+                            deletepage={""} //DeleteUser
                             enablePagination={false}
                           />
                         </div>

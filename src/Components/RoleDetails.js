@@ -4,6 +4,7 @@ import {
   ConvertFormat,
   DateFormatFunction,
 } from "./HtmlComponents/CommonFunction";
+import { unCheckSideData, sideData } from "./CommonComponents/sideBarData";
 export default function RoleDetails() {
   const [isLoading, setIsLoading] = useState(false);
   // const [role, setRole] = useState({});
@@ -12,58 +13,15 @@ export default function RoleDetails() {
   const path = window.location.pathname;
   const role = location.state ? location.state?.user : ""; //?.role_id
   const isDelete = path.includes("DeleteRole") ? true : false;
-
+  const jsonMenu = JSON.parse(role?.menu_access || "[]");
+  const [menuData, setMenuData] = useState(
+    jsonMenu.length !== 0 ? jsonMenu : unCheckSideData[0].data
+  ); //
   useEffect(() => {
     // setIsLoading(true);
-    // fetchUserById();
   }, []);
-
-  //----------------------Get User--------------------------------------------
-  function fetchUserById() {}
-  //----------------------Delete User-----------------------------------------
-  function DeleteUser() {}
-  const rows = [
-    {
-      role_id: "RB001",
-      role_name: "Admin",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB002",
-      role_name: "Maker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB003",
-      role_name: "Checker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB004",
-      role_name: "Operation Maker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB005",
-      role_name: "Admin",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-    {
-      role_id: "RB006",
-      role_name: "Operation checker",
-      role_description: "Role Description data ",
-      created_by: "Admin",
-    },
-  ];
-  // const role = rows.find((u) => u.role_id.toString() === role_id);
-
   if (!role) {
-    return <p>Role not found.</p>;
+    // return <p>Role not found.</p>;
   }
   return (
     <div>
@@ -85,7 +43,7 @@ export default function RoleDetails() {
                       </div>
                     </div>
                     <div className="card-body">
-                      <div className="row UserDetails mt-3 makerFields">
+                      <div className="row UserDetails mt-3 makerFields role">
                         {isDelete ? (
                           <h4 className="col-md-12 mb-5 mx-5">
                             Are you sure you want to delete this ?
@@ -138,107 +96,129 @@ export default function RoleDetails() {
                                   {DateFormatFunction(role?.created_date)}
                                 </td>
                               </tr>
-                              {/* <tr>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
-                                <strong>Email ID:</strong>
-                              </td>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
-                                {customer.email_id}
-                              </td>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
-                                <strong>Mobile No:</strong>
-                              </td>
-                              <td className="col-md-3 UDCoulmns fieldColumn">
-                                {customer.mobile_no}
-                              </td>
-                            </tr> 
-                            <tr>
-                              <td className="col-md-3 UDCoulmns">
-                                <strong>Remarks:</strong>
-                              </td>
-                              <td className="col-md-3 UDCoulmns">
-                                {customer.description}
-                              </td>
-                              <td className="col-md-3 UDCoulmns">
-                                <strong>Is Active:</strong>
-                              </td>
-                              <td className="col-md-3 UDCoulmns">
-                                {customer.is_active ? "Yes" : "No"}
-                              </td>
-                            </tr>*/}
                             </tbody>
                           </table>
-
-                          {/* ----------------------------------------------------------------------- */}
-                          {/* <div className="col-md-6 mx-auto">
-                          <div className="col-md-6 UDCoulmns">
-                            <strong>Role ID :</strong>
-                          </div>
-                          <div className="col-md-6 UDCoulmns">
-                            {role?.role_id}
-                          </div>
-
-                          <div className="col-md-6 UDCoulmns">
-                            <strong>Role Description :</strong>
-                          </div>
-                          <div className="col-md-6 UDCoulmns">
-                            {role?.role_description}
-                          </div>
-
-                          <div className="col-md-6 UDCoulmns">
-                            <strong>Created Date :</strong>
-                          </div>
-                          <div className="col-md-6 UDCoulmns">
-                            {DateFormatFunction(role?.created_date)}
-                          </div>
                         </div>
-                      
-                        <div className="col-md-5">
-                          <div className="col-md-6 UDCoulmns">
-                            <strong>Role Name :</strong>
-                          </div>
-                          <div className="col-md-6 UDCoulmns">
-                            {role?.role_name}
-                          </div>
+                      </div>
+                      {/* -----------------Profile Mapping--------------------------------------------------------- */}
+                      <div className="col-md-12">
+                        <h1 className="mb-2 mt-2 pageTitle">Menu Mapping</h1>
+                      </div>
+                      {/* -------------------------------------------------------------------------------------- */}
+                      <div className="">
+                        <div className="col-md-11 mx-5 flex p-2">
+                          {(menuData || []).map((m, mindex) => {
+                            return (
+                              <div className="col p-1" key={m.id}>
+                                <div className="row menuColor">
+                                  <div className="col-md-4 ">{m.menuName}</div>
+                                  <div className="col-md-4 "></div>
+                                  <div className="col-md-3 "></div>
+                                  <div className="col-md-1 ">
+                                    {m.subMenu.length === 0 && (
+                                      <input
+                                        readOnly
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        id="menu"
+                                        checked={m.check}
+                                        onClick={(e) => {
+                                          console.log("menu -> ", m);
+                                        }}
+                                      />
+                                    )}
+                                  </div>
+                                </div>
+                                {(m.subMenu || []).map((s, sindex) => {
+                                  return (
+                                    <>
+                                      <div className="row p-1">
+                                        <div className="col-md-4 submenuColor"></div>
+                                        <div className="col-md-4 submenuColor ">
+                                          {s.name}
+                                        </div>
+                                        <div className="col-md-3 submenuColor"></div>
+                                        {s.action.length === 0 ? (
+                                          <div
+                                            className="col-md-1 submenuColor"
+                                            key={s.id}
+                                          >
+                                            {" "}
+                                            <input
+                                              className="form-check-input"
+                                              type="checkbox"
+                                              id="submenu"
+                                              checked={s.check}
+                                              readOnly
+                                            />
+                                          </div>
+                                        ) : (
+                                          <div
+                                            className="col-md-1 submenuColor"
+                                            key={s.id}
+                                          ></div>
+                                        )}
+                                      </div>
+                                      {(s.action || []).map((a, aindex) => {
+                                        return (
+                                          <div className="row p-1" key={a.id}>
+                                            <div className="col-md-4 submenuColor"></div>
+                                            <div className="col-md-4 submenuColor"></div>
+                                            <div className="col-md-3  submenuColor">
+                                              {a.actionName}
+                                            </div>
+                                            <div
+                                              className="col-md-1 submenuColor"
+                                              key={a.id}
+                                            >
+                                              {" "}
+                                              <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                id="submenu"
+                                                checked={a.check}
+                                                readOnly
+                                              />
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </>
+                                  );
+                                })}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
 
-                          <div className="col-md-6 UDCoulmns">
-                            <strong>Created By :</strong>
-                          </div>
-                          <div className="col-md-6 UDCoulmns">
-                            {role?.created_by}
-                          </div>
-                         </div> */}
-                          {/* --------------------------------------------------------------------------- */}
+                      <div class="col-md-12">
+                        <div className="modal-footer">
+                          <button
+                            className="btn BackBtn"
+                            type="button"
+                            onClick={() => {
+                              navigate("/Role");
+                            }}
+                          >
+                            Back to List
+                          </button>
 
-                          <div class="col-md-12">
-                            <div className="modal-footer">
-                              <button
-                                className="btn BackBtn"
-                                type="button"
-                                onClick={() => {
-                                  navigate("/Role");
-                                }}
-                              >
-                                Back to List
-                              </button>
-
-                              <button
-                                className="btn addUser"
-                                type="button"
-                                onClick={() => {
-                                  if (isDelete) {
-                                    // DeleteUser();
-                                  } else {
-                                    navigate(`/EditRole`, {
-                                      state: { user: role },
-                                    });
-                                  }
-                                }}
-                              >
-                                {isDelete ? "Delete" : "Edit"}
-                              </button>
-                            </div>
-                          </div>
+                          <button
+                            className="btn addUser"
+                            type="button"
+                            onClick={() => {
+                              if (isDelete) {
+                                // DeleteUser();
+                              } else {
+                                navigate(`/EditRole`, {
+                                  state: { user: role },
+                                });
+                              }
+                            }}
+                          >
+                            {isDelete ? "Delete" : "Edit"}
+                          </button>
                         </div>
                       </div>
                     </div>
