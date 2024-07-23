@@ -130,7 +130,7 @@ export default function Users() {
                             columns={columns}
                             detailpage={"UserDetails"}
                             editpage={"EditUser"}
-                            deletepage={"DeleteUser"}
+                            deletepage={""} //DeleteUser
                             enablePagination={false}
                           />
                         </div>

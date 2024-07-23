@@ -4,7 +4,7 @@ import { saveData } from "./../Services/API-services";
 import { toast } from "react-toastify";
 
 export default function UserDetails() {
-  const [isLoading, setIsLoading] = useState(false);  
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,7 +32,7 @@ export default function UserDetails() {
       makerId: "1",
       requestType: "delete",
       tableName: "txn_sb_users",
-      existingValue: { user_id : userId },
+      existingValue: { user_id: userId },
       updatedValue: null,
       description: "Delete a user",
       createdBy: "Admin",
@@ -41,9 +41,12 @@ export default function UserDetails() {
     saveData(data, `${baseUrl}/makerRequest`, (response) => {
       if (response.data) {
         showCustomToast(
-          response.data.message + ". Your Request Id is " + response.data.requestId,
+          response.data.message +
+            ". Your Request Id is " +
+            response.data.requestId,
           response.data.requestId
         );
+        navigate("/User");
       }
     });
 
@@ -58,23 +61,30 @@ export default function UserDetails() {
 
     const CustomToast = ({ closeToast, requestData, requestId }) => (
       <div>
-        <div>{requestData}</div><br />
-        <button className="btn BackBtn mr-3" onClick={() => copyToClipboard(requestId)}>
+        <div>{requestData}</div>
+        <br />
+        <button
+          className="btn BackBtn mr-3"
+          onClick={() => copyToClipboard(requestId)}
+        >
           Copy ID
         </button>
-        <button className="btn addUser" onClick={() => closeToast()}>OK</button>
+        <button className="btn addUser" onClick={() => closeToast()}>
+          OK
+        </button>
       </div>
     );
-  
+
     const showCustomToast = (response, requestId) => {
-      toast.success(<CustomToast requestData={response} requestId={requestId} />, {
-        position: "top-center",
-        autoClose: false,
-        className: "custom-toast",
-      });
+      toast.success(
+        <CustomToast requestData={response} requestId={requestId} />,
+        {
+          position: "top-center",
+          autoClose: false,
+          className: "custom-toast",
+        }
+      );
     };
-
-
   }
 
   return (
@@ -97,7 +107,7 @@ export default function UserDetails() {
                       </div>
                     </div>
                     <div className="card-body">
-                    <div className="row UserDetails mt-3">
+                      {/* <div className="row UserDetails mt-3">
                         {isDelete ? (
                           <h4 className="col-md-12 mb-5 mx-5">
                             Are you sure you want to delete this?
@@ -141,7 +151,6 @@ export default function UserDetails() {
                             {"created_date"}
                           </div>
                         </div>
-                        {/* -------------------------------------------------------- */}
                         <div className="col-md-5">
                           <div className="col-md-6 UDCoulmns">
                             <strong>User ID:</strong>
@@ -163,34 +172,109 @@ export default function UserDetails() {
                             {user.is_active ? "Active" : "Inactive"}
                           </div>
                         </div>
-                      </div>
-                     
-                      <div className="modal-footer">
-                        <button
-                          className="btn BackBtn"
-                          type="button"
-                          onClick={() => {
-                            navigate("/User");
-                          }}
-                        >
-                          Back to List
-                        </button>
+                      </div> */}
+                      <div className="row UserDetails mt-3 makerFields">
+                        <div className="col-md-12 p-0">
+                          <table className="table customerDetails">
+                            <tbody>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>First Name:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {user?.first_name}
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Last Name:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {user?.last_name}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  <strong>Mobile Number:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  {user?.contact_no}
+                                </td>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  <strong>Email:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  {user?.email_id}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>User ID:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {user?.user_id}
+                                </td>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  <strong>Role:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  {user?.role_id}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  <strong>Username :</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns fieldColumn">
+                                  {user?.user_name}
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong>Status:</strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">
+                                  {user?.is_active == 1 ? "Active" : "Inactive"}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong></strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns"></td>
+                                <td className="col-md-3 UDCoulmns">
+                                  <strong></strong>
+                                </td>
+                                <td className="col-md-3 UDCoulmns">{}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <div className="col-md-12">
+                            <div className="modal-footer">
+                              <button
+                                className="btn BackBtn"
+                                type="button"
+                                onClick={() => {
+                                  navigate("/User");
+                                }}
+                              >
+                                Back to List
+                              </button>
 
-                        <button
-                          className="btn addUser"
-                          type="button"
-                          onClick={() => {
-                            if (isDelete) {
-                               DeleteUser();
-                            } else {
-                              navigate(`/EditUser`, {
-                                state: { user },
-                              });
-                            }
-                          }}
-                        >
-                          {isDelete ? "Delete" : "Edit"}
-                        </button>
+                              <button
+                                className="btn addUser"
+                                type="button"
+                                onClick={() => {
+                                  if (isDelete) {
+                                    DeleteUser();
+                                  } else {
+                                    navigate(`/EditUser`, {
+                                      state: { user },
+                                    });
+                                  }
+                                }}
+                              >
+                                {isDelete ? "Delete" : "Edit"}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

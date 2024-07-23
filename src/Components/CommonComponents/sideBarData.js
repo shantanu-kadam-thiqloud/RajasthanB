@@ -1,6 +1,5 @@
 //import { useState } from "react";
-
-const sideData = [
+export const sideData = [
   {
     type: "menuData",
     data: [
@@ -114,6 +113,128 @@ const sideData = [
             url: "/RoleRequest",
             action: [],
             check: true,
+            oldCheck: false,
+          },
+        ],
+      },
+    ],
+  },
+];
+
+export const unCheckSideData = [
+  {
+    type: "menuData",
+    data: [
+      {
+        id: 1,
+        menuName: "Home",
+        url: "/Dashboard",
+        subMenu: [],
+        check: false,
+        oldCheck: false,
+      },
+      {
+        id: 2,
+        menuName: "User Management",
+        url: "/User",
+        subMenu: [],
+        check: false,
+        oldCheck: false,
+      },
+      {
+        id: 3,
+        menuName: "Customer Maintenance",
+        url: "/Customers",
+        subMenu: [],
+        check: false,
+        oldCheck: false,
+      },
+      {
+        id: 4,
+        menuName: "Role Management",
+        url: "/Role",
+        subMenu: [],
+        check: false,
+        oldCheck: false,
+      },
+      {
+        id: 5,
+        menuName: "Report",
+        url: "#",
+        check: false,
+        oldCheck: true,
+        subMenu: [
+          {
+            id: 1,
+            name: "E-Collections Report",
+            url: "/ReportEcollection",
+            action: [],
+            check: false,
+            oldCheck: false,
+          },
+          // {
+          //   id: 5,
+          //   name: "User Report",
+          //   url: "/UserReport",
+          //   action: [],
+          //   check: false,
+          //   oldCheck: false,
+          // },
+          // {
+          //   id: 6,
+          //   name: "Customer Report",
+          //   url: "/CustomerReport",
+          //   action: [],
+          //   check: false,
+          //   oldCheck: false,
+          // },
+          // {
+          //   id: 7,
+          //   name: "Finacal Report",
+          //   url: "/FinacalReport",
+          //   action: [],
+          //   check: false,
+          //   oldCheck: false,
+          // },
+          // {
+          //   id: 8,
+          //   name: "EV Report",
+          //   url: "/EVReport",
+          //   action: [],
+          //   check: false,
+          //   oldCheck: false,
+          // },
+        ],
+      },
+      {
+        id: 6,
+        menuName: "Pending Approval",
+        url: "#",
+        check: false,
+        oldCheck: true,
+        subMenu: [
+          {
+            id: 9,
+            name: "Customer Requests",
+            url: "/CustomerRequest",
+            action: [],
+            check: false,
+            oldCheck: false,
+          },
+          {
+            id: 10,
+            name: "User Requests",
+            url: "/UserRequest",
+            action: [],
+            check: false,
+            oldCheck: false,
+          },
+          {
+            id: 11,
+            name: "Role Requests",
+            url: "/RoleRequest",
+            action: [],
+            check: false,
             oldCheck: false,
           },
         ],
@@ -237,4 +358,4 @@ const sideData = [
 // }
 // //----------------------------------------------------------------------------------------------------------
 
-export default sideData;
+// export default { unCheckSideData, sideData };

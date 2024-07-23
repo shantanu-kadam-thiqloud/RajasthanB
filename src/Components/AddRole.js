@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import sideData from "./CommonComponents/sideBarData";
+import { unCheckSideData, sideData } from "./CommonComponents/sideBarData";
 import { getSessionStorage } from "./CommonComponents/cookieData";
 import { saveData } from "../Services/API-services";
 export default function AddRole() {
@@ -16,7 +16,7 @@ export default function AddRole() {
   const [existingValue, setExistingValue] = useState(
     location.state ? location.state.user : {}
   );
-  const [menuData, setMenuData] = useState(sideData[0].data);
+  const [menuData, setMenuData] = useState(unCheckSideData[0].data);
   const path = window.location.pathname;
   const isEdit = path.includes("EditRole") ? true : false;
   const validationSchema = Yup.object({
@@ -37,7 +37,9 @@ export default function AddRole() {
     if (isEdit) {
       // setIsLoading(true);
       const jsonMenu = JSON.parse(role?.menu_access || "[]");
-      setMenuData(sideData[0].data || jsonMenu);
+      setMenuData(jsonMenu.length !== 0 ? jsonMenu : unCheckSideData[0].data);
+    } else {
+      handleUnCheckAll();
     }
   }, [isEdit]);
   //-----------------------Menu selection--------------------------------------
@@ -157,23 +159,28 @@ export default function AddRole() {
   function AddEditRole(values) {
     const stringifyMenu = JSON.stringify(menuData);
     const requestBody = {
-      utilityType: "Role",
-      makerId: USER?.role_id,
-      user_id: USER?.userId,
+      utilityType: "role",
       requestType: isEdit ? "Update" : "Add",
       tableName: "mst_sb_roles",
+      description: isEdit ? "Update Role" : "Creat a new Role",
+      makerId: USER?.role_id,
+      user_id: USER?.userId,
+      createdBy: USER?.userName,
       updatedValue: {
         role_name: values?.profileName,
         role_description: values?.profileDescription,
         created_by: USER?.userName,
-        menu_access: stringifyMenu || [],
+        menu_access: stringifyMenu || "[]", //"abcdefghijk", //
       },
       existing_values: existingValue,
-      description: isEdit ? "Update Role" : "Creating a new Role",
-      createdBy: USER?.userName, // "Admin",//
     };
     console.log("Menu access - > ", menuData);
     const baseUrl = process.env.REACT_APP_API_URL;
+    if (isEdit) {
+      requestBody.columnname = "role_id";
+      requestBody.searchvalue = role_id;
+      requestBody.updatedValue.last_modified_by = USER?.userName;
+    }
     saveData(
       requestBody,
       `${baseUrl}/makerRequest`,

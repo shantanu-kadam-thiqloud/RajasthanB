@@ -14,15 +14,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import { getSessionStorage } from "../CommonComponents/cookieData";
-import sideData from "./sideBarData";
-import { saveData } from "../../Services/API-services";
+import { sideData } from "./sideBarData";
+import { fetchList, saveData } from "../../Services/API-services";
 import { toast } from "react-toastify";
 export default function Sidebar() {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({});
   const USER = getSessionStorage("USER");
   const [toggleStates, setToggleStates] = useState({});
-  const [menuData, setMenuData] = useState(sideData[0].data);
+  const [menuData, setMenuData] = useState([]);
   useEffect(() => {
     const fetchLoginData = async () => {
       try {
@@ -38,33 +38,13 @@ export default function Sidebar() {
   const [activeMenu, setActiveMenu] = useState(window.location.pathname);
   const [isPendingApprovalOpen, setIsPendingApprovalOpen] = useState(false);
   const [isReportOpen, setIsisReportOpen] = useState(false);
-  const [forceUpdate, setForceUpdate] = useState(0);
-
-  const handlePendingApprovalClick = () => {
-    setIsPendingApprovalOpen(!isPendingApprovalOpen);
-    setActiveMenu("/PendingApproval");
-  };
-  const handleReportClick = () => {
-    setIsisReportOpen(!isReportOpen);
-    setActiveMenu("/Report");
-  };
-
-  const initializeToggleStates = () => {
-    const initialState = {};
-    (menuData || []).forEach((item) => {
-      //data
-      initialState[`item_${item.id}`] = false; // Initialize as false (not toggled)
-    });
-    setToggleStates(initialState);
-  };
 
   // Call the initialization function when the component mounts
   React.useEffect(() => {
     if (menuData.length === 0) {
       const requestBody = {};
       const baseUrl = process.env.REACT_APP_API_URL;
-      saveData(
-        requestBody,
+      fetchList(
         `${baseUrl}/role`,
         (response) => {
           if (response.status === 200) {
@@ -73,7 +53,9 @@ export default function Sidebar() {
             const menu_access = (list || []).find((x) => {
               if (x.role_id === USER?.roleId) {
                 const jsonMenu = JSON.parse(x?.menu_access || "[]");
-                setMenuData(jsonMenu);
+                setMenuData(
+                  jsonMenu.length !== 0 ? jsonMenu : sideData[0].data
+                );
                 return x.menu_access;
               }
             });
@@ -94,6 +76,25 @@ export default function Sidebar() {
     initializeToggleStates();
   }, [menuData]);
 
+  const handlePendingApprovalClick = () => {
+    setIsPendingApprovalOpen(!isPendingApprovalOpen);
+    setActiveMenu("/PendingApproval");
+  };
+  const handleReportClick = () => {
+    setIsisReportOpen(!isReportOpen);
+    setActiveMenu("/Report");
+  };
+
+  const initializeToggleStates = () => {
+    const initialState = {};
+    (menuData || []).forEach((item) => {
+      //data
+      initialState[`item_${item.id}`] = false; // Initialize as false (not toggled)
+    });
+    setToggleStates(initialState);
+    console.log("Menus - ", menuData);
+  };
+
   const handleToggle = (itemId) => {
     setToggleStates((prevState) => ({
       ...prevState,
@@ -105,10 +106,6 @@ export default function Sidebar() {
     setActiveMenu(url === "#" ? name : url);
     handleToggle(id);
   };
-
-  useEffect(() => {
-    console.log("Active - ", activeMenu);
-  }, [activeMenu]);
 
   return (
     <div>

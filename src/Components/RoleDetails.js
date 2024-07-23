@@ -4,7 +4,7 @@ import {
   ConvertFormat,
   DateFormatFunction,
 } from "./HtmlComponents/CommonFunction";
-import sideData from "./CommonComponents/sideBarData";
+import { unCheckSideData, sideData } from "./CommonComponents/sideBarData";
 export default function RoleDetails() {
   const [isLoading, setIsLoading] = useState(false);
   // const [role, setRole] = useState({});
@@ -14,7 +14,9 @@ export default function RoleDetails() {
   const role = location.state ? location.state?.user : ""; //?.role_id
   const isDelete = path.includes("DeleteRole") ? true : false;
   const jsonMenu = JSON.parse(role?.menu_access || "[]");
-  const [menuData, setMenuData] = useState(sideData[0].data); //jsonMenu ||
+  const [menuData, setMenuData] = useState(
+    jsonMenu.length !== 0 ? jsonMenu : unCheckSideData[0].data
+  ); //
   useEffect(() => {
     // setIsLoading(true);
   }, []);

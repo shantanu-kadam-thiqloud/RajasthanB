@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import Spinner from "./HtmlComponents/Spinner";
-import sideData from "./CommonComponents/sideBarData";
+import { sideData, unCheckSideData } from "./CommonComponents/sideBarData";
 import { saveData } from "../Services/API-services";
 import { getSessionStorage } from "./CommonComponents/cookieData";
 
@@ -31,8 +31,10 @@ const RoleChecker = () => {
     requestData?.updatedValue || {}
   );
   const [oldValue, setOldValue] = useState(requestData?.existing_values || {});
-  const jsonMenu = JSON.parse(requestData?.updatedValue?.menu_access || "[]");
-  const [menuData, setMenuData] = useState(sideData[0].data || jsonMenu);
+  const jsonMenu = JSON.parse(requestData?.updatedValue?.menu_access || "[]"); //
+  const [menuData, setMenuData] = useState(
+    jsonMenu.length !== 0 ? jsonMenu : unCheckSideData[0].data
+  );
   const getDateTime = (datestring) => {
     const dateTime = new Date(datestring);
 
@@ -77,21 +79,26 @@ const RoleChecker = () => {
 
   function CheckerApproval(action) {
     setIsLoading(true);
-
-    const requestBody = {
-      utilityType: "Role",
-      makerId: requestData?.makerId,
-      requestType: requestData?.requestType,
-      tableName: "mst_sb_roles",
-      updatedValue: requestData?.updatedValue,
-      description: remark, //requestData?.description, //"Creating a new Role",
+    // const requestBody = {
+    //   utilityType: "Role",
+    //   makerId: requestData?.makerId,
+    //   requestType: requestData?.requestType,
+    //   tableName: "mst_sb_roles",
+    //   updatedValue: requestData?.updatedValue,
+    //   description: remark, //requestData?.description, //"Creating a new Role",
+    //   status: action,
+    //   created_by: requestData?.existing_values?.created_by, //"makerName",
+    //   checkerId: USER?.userId, //1,
+    //   lastModifiedBy: requestData?.existing_values?.last_modified_by, //"1", //requestData.makerId,
+    //   existing_values: requestData?.existing_values,
+    //   masterId: requestData?.masterId,
+    // };
+    const data = {
       status: action,
-      created_by: requestData?.existing_values?.created_by, //"makerName",
-      checkerId: USER?.userId, //1,
-      lastModifiedBy: requestData?.existing_values?.last_modified_by, //"1", //requestData.makerId,
-      existing_values: requestData?.existing_values,
-      masterId: requestData?.masterId,
+      checkerId: USER?.userId,
+      checker_remark: remark,
     };
+    const requestBody = { ...requestData, ...data };
     const baseUrl = process.env.REACT_APP_API_URL;
     saveData(
       requestBody,
