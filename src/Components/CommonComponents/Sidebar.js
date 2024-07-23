@@ -335,6 +335,7 @@ export default function Sidebar() {
                             ? `nav-item has-treeview`
                             : `nav-item`
                         }
+                        key={index}
                       >
                         <Link
                           to={x.url}
@@ -386,9 +387,9 @@ export default function Sidebar() {
                         </Link>
                         {toggleStates[`item_${x.id}`] ? (
                           <ul className="nav" key={x.id}>
-                            {(x.subMenu || []).map((z) => {
+                            {(x.subMenu || []).map((z, index) => {
                               return x.subMenu.length !== 0 && z.check ? (
-                                <li className="nav-item">
+                                <li className="nav-item" key={index}>
                                   <Link
                                     to={z.url}
                                     className={

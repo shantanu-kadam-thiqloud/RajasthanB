@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import GenericDataTable from "./CommonComponents/GenericDataTable";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../Components/HtmlComponents/Spinner";
-import { fetchList, saveData } from "../Services/API-services";
+import { fetchList } from "../Services/API-services";
+import GenericDataTable from "./CommonComponents/GenericDataTable";
 
 export default function Roles() {
   const navigate = useNavigate();
-  const [Rows, setRows] = useState([]);
+  const [roleList, setRoleList] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  let list = [];
   const columns = [
     {
       field: "role_id",
@@ -44,31 +45,22 @@ export default function Roles() {
     {
       field: "",
       header: "Action",
-      // className: "text-center",
+      className: "text-center",
       body: "buttonsTemplate",
     },
   ];
 
   useEffect(() => {
-    setIsLoading(true);
-    const requestBody = "";
-    const baseUrl = process.env.REACT_APP_API_URL;
-    fetchList(
-      `${baseUrl}/role`,
-      (response) => {
+    function fetchRoleList() {
+      const baseUrl = process.env.REACT_APP_API_URL;
+      fetchList(`${baseUrl}/role`, (response) => {
         if (response.status === 200) {
-          const list = response.data.responseListObject;
-          setRows(list);
+          list = response.data.responseListObject;
+          setRoleList(response.data.responseListObject);
         }
-      },
-      (error) => {
-        console.log("Error->", error.message);
-        toast.error(error.message, {
-          position: "top-right",
-          autoClose: 3000,
-        });
-      }
-    );
+      });
+    }
+    fetchRoleList();
   }, []);
 
   const HandleAddCustomer = () => {
@@ -106,18 +98,24 @@ export default function Roles() {
                         </div>
                       </div>
                     </div>
-                    <div className="card-body">
-                      <div className="tableDiv">
-                        <GenericDataTable
-                          data={Rows} //{data} //
-                          columns={columns}
-                          detailpage={"RoleDetails"}
-                          editpage={"EditRole"}
-                          deletepage={""} //{"DeleteRole"}
-                          enablePagination={false}
-                        />
+                    {roleList ? (
+                      <div className="card-body">
+                        <div className="tableDiv">
+                          <GenericDataTable
+                            data={roleList || []}
+                            columns={columns}
+                            detailpage={"RoleDetails"}
+                            editpage={"EditRole"}
+                            deletepage={""} //{"DeleteRole"}
+                            enablePagination={false}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="card-body">
+                        <p>Loading data...</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

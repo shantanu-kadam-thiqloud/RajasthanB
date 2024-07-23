@@ -58,7 +58,7 @@ export default function Users() {
       filter: true,
       showFilterMenu: false,
       header: "Active Status",
-      className: "text-center",
+      // className: "text-center",
     },
     {
       field: "role_id",
