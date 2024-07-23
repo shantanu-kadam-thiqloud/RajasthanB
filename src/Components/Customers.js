@@ -136,6 +136,7 @@ export default function Customers() {
                         </div>
                       </div>
                     </div>
+                    {customerList && (
                     <div className="card-body">
                       <div className="tableDiv">
                         <GenericDataTable
@@ -148,6 +149,7 @@ export default function Customers() {
                         />
                       </div>
                     </div>
+                    )}
                   </div>
                 </div>
               </div>

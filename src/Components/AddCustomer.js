@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { saveData } from "./../Services/API-services";
 import { toast } from "react-toastify";
 import { getSessionStorage } from "./CommonComponents/cookieData";
+// import StateData from "./../StateData";
 
 export default function AddCustomer() {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,6 +13,7 @@ export default function AddCustomer() {
   const customerid = location.state ? location.state.user.customer_id  : "";
   const [customer, setCustomer] = useState(location.state ? location.state.user : {});
   const [existingValue, setExistingValue] = useState(location.state ? location.state.user : {});
+  const [isStatusChanged, setIsStatusChanged] = React.useState(false);
   // const [customer, setCustomer] = useState({});
   const path = window.location.pathname;
   const isEdit = path.includes("EditCustomer");
@@ -35,6 +37,7 @@ export default function AddCustomer() {
     client_id: Yup.string().max(255, "Must be 255 characters or less").required("Client ID is required"),
     client_secret: Yup.string().max(255, "Must be 255 characters or less").required("Secret Key is required"),
     merchant_name: Yup.string().max(100, "Must be 100 characters or less").required("E-collection Merchant ID is required"),
+    description: isEdit && isStatusChanged ? Yup.string().max(255, "Must be 255 characters or less").required("Remarks are required") : Yup.string().max(255, "Must be 255 characters or less"),
   });
 
   const initialValues={
@@ -49,7 +52,47 @@ export default function AddCustomer() {
     merchant_name: isEdit ? customer.merchant_name : "",
     description: isEdit ? customer.description : "",
     is_active: isEdit ? customer.is_active : 0,
+    state: isEdit ? customer.state : "",
   }
+
+  const StateData = [
+    "Andaman And Nicobar Islands",
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chandigarh",
+    "Chhattisgarh",
+    "Delhi",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jammu And Kashmir",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Ladakh",
+    "Lakshadweep",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Puducherry",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "The Dadra And Nagar Haveli And Daman And Diu",
+    "Tripura",
+    "Uttarakhand",
+    "Uttar Pradesh",
+    "West Bengal"
+  ] 
 
   useEffect(() => {
     if (isEdit) {
@@ -117,6 +160,7 @@ export default function AddCustomer() {
           response.data.message + " Your Request Id is " + response.data.requestId,
           response.data.requestId
         );
+        navigate("/Customers");
       }
     });
   };
@@ -199,11 +243,33 @@ export default function AddCustomer() {
                                     <Field type="text" className="form-control" id="confirm_account_number" name="confirm_account_number" placeholder="Confirm account number" maxLength="50"  disabled={isEdit} />
                                     <ErrorMessage name="confirm_account_number" component="div" className="error" />
                                   </div>
-                                </div>                              
+                                </div>
+
+                                <div className="col-md-6">
+                                  <div className="mb-3">
+                                    <label htmlFor="is_active" className="form-label required">State</label>                                 
+                                    <Field
+                                      as="select"
+                                      className="form-control form-select"
+                                      id="state"
+                                      name="state"
+                                      disabled={isEdit}
+                                      onChange={(e) => setFieldValue("state", e.target.value)}
+                                    >
+                                      <option value="" className="greyText">Select State</option>
+                                      {StateData.map((state, index) => (
+                                        <option key={index} value={state}>
+                                          {state}
+                                        </option>
+                                      ))}
+                                    </Field>
+                                  </div>
+                                </div>
+
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="ifsc_code" className="form-label required">IFSC Code <span className="Fieldrequired">*</span></label>
-                                    <Field type="text" className="form-control" id="ifsc_code" name="ifsc_code" placeholder="Enter IFSC code" maxLength="100" />
+                                    <Field type="text" className="form-control" id="ifsc_code" name="ifsc_code" placeholder="Enter IFSC code" maxLength="100" disabled={isEdit} />
                                     <ErrorMessage name="ifsc_code" component="div" className="error" />
                                   </div>
                                 </div>
@@ -217,28 +283,28 @@ export default function AddCustomer() {
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="client_id" className="form-label required">Client ID <span className="Fieldrequired">*</span></label>
-                                    <Field type="text" className="form-control" id="client_id" name="client_id" placeholder="Enter client ID" maxLength="255" />
+                                    <Field type="text" className="form-control" id="client_id" name="client_id" placeholder="Enter client ID" maxLength="255" disabled={isEdit} />
                                     <ErrorMessage name="client_id" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="client_secret" className="form-label required">Secret Key <span className="Fieldrequired">*</span></label>
-                                    <Field type="text" className="form-control" id="client_secret" name="client_secret" placeholder="Enter client secret" maxLength="255" />
+                                    <Field type="text" className="form-control" id="client_secret" name="client_secret" placeholder="Enter client secret" maxLength="255" disabled={isEdit} />
                                     <ErrorMessage name="client_secret" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="email_id" className="form-label">Email ID</label>
-                                    <Field type="text" className="form-control" id="email_id" name="email_id" placeholder="Enter email ID" maxLength="255" />
+                                    <Field type="text" className="form-control" id="email_id" name="email_id" placeholder="Enter email ID" maxLength="255" disabled={isEdit} />
                                     <ErrorMessage name="email_id" component="div" className="error" />
                                   </div>
                                 </div>
                                 <div className="col-md-6">
                                   <div className="mb-3">
                                     <label htmlFor="mobile_no" className="form-label">Mobile No</label>
-                                    <Field type="text" className="form-control" id="mobile_no" name="mobile_no" placeholder="Enter mobile number" maxLength="15" />
+                                    <Field type="text" className="form-control" id="mobile_no" name="mobile_no" placeholder="Enter mobile number" maxLength="15" disabled={isEdit} />
                                     <ErrorMessage name="mobile_no" component="div" className="error" />
                                   </div>
                                 </div>
@@ -258,7 +324,10 @@ export default function AddCustomer() {
                                       className="form-control form-select"
                                       id="is_active"
                                       name="is_active"
-                                      onChange={(e) => setFieldValue("is_active", parseInt(e.target.value, 10))}
+                                      onChange={(e) => {
+                                        setFieldValue("is_active", parseInt(e.target.value, 10));
+                                        setIsStatusChanged(true); // Set status change flag
+                                      }}
                                     >
                                       <option value="" className="greyText">Select status</option>
                                       <option value="1">Active</option>

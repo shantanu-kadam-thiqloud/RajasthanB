@@ -220,19 +220,19 @@ export default function Sidebar() {
                   </p>
                 </Link>
                 {isReportOpen ? (
-                  <ul className="nav">
-                    <li className="nav-item">
+                  <ul className="nav">                    
+                     <li className="nav-item">
                       <Link
-                        to="/ReportEcollection"
+                        to="/ReportTransactionDetail"
                         className={
-                          activeMenu === "/ReportEcollection"
+                          activeMenu === "/ReportTransactionDetail"
                             ? `custom-link nav-link`
                             : `nav-link`
                         }
-                        onClick={() => setActiveMenu("/ReportEcollection")}
+                        onClick={() => setActiveMenu("/ReportTransactionDetail")}
                       >
                         <FontAwesomeIcon icon={faAngleRight} />
-                        {"  "} E-Collection Reports
+                        {"  "} Transaction Detail
                       </Link>
                     </li>
                   </ul>

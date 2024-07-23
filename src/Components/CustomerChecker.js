@@ -74,7 +74,7 @@ useEffect(() => {
       return false;
     }
     setIsLoading(true);
-    requestData.updatedValue.state  = "Maharashtra"
+    //requestData.updatedValue.state  = "Maharashtra"
     requestData.lastModifiedBy = USER.userId
     const data = {
       status: action,
@@ -187,12 +187,21 @@ useEffect(() => {
             <div className="row mt-4 makerFields">
               <div className="col-md-12 p-0">
                 <table className="table">
-                  <thead>
-                    <tr className="">
+                  <thead>                    
+                    {requestData.requestType === 'add' && (
+                      <tr className="">
+                      <th className="col-md-4 UDCoulmns">Field Name</th>
+                      <th className="col-md-4 UDCoulmns">Values</th>
+                      <th className="col-md-4 UDCoulmns"></th>           
+                      </tr>
+                      )}
+                      {requestData.requestType !== 'add' && (
+                      <tr className="">
                       <th className="col-md-4 UDCoulmns">Field Name</th>
                       <th className="col-md-4 UDCoulmns">Updated Value</th>
                       <th className="col-md-4 UDCoulmns">Old Value</th>
-                    </tr>
+                      </tr>
+                      )}
                   </thead>
                   {/* <tbody>
                         {requestTableData.map(({ field, existingValue, newValue }) => (
@@ -219,6 +228,13 @@ useEffect(() => {
                       </td>
                       <td className="col-md-4 UDCoulmns">{updatedValue.customer_account_no}</td>
                       <td className="col-md-4 UDCoulmns">{oldValue.customer_account_no}</td>
+                    </tr>
+                    <tr>
+                      <td className="col-md-4 UDCoulmns fieldColumn">
+                        <strong>State:</strong>
+                      </td>
+                      <td className="col-md-4 UDCoulmns">{updatedValue.state}</td>
+                      <td className="col-md-4 UDCoulmns">{oldValue.state}</td>
                     </tr>
                     <tr>
                       <td className="col-md-4 UDCoulmns fieldColumn">
