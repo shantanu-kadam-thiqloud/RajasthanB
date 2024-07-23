@@ -18,13 +18,11 @@ import { getSessionStorage } from "../CommonComponents/cookieData";
 export default function Sidebar() {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({});
-  //const USER = getSessionStorage("USER");
 
   useEffect(() => {
     const fetchLoginData = async () => {
         try {
           const cookieLoginData = await getSessionStorage("USER");
-         // const decryptedData = await decryptData(cookieLoginData);
           setLoginData(cookieLoginData);
         } catch (error) {
             console.error('Error fetching login data:', error);
@@ -157,36 +155,36 @@ export default function Sidebar() {
                   </p>
                 </Link>
                 {isReportOpen ? (
-                  <ul className="nav">
-                    <li className="nav-item">
+                  <ul className="nav">                    
+                     <li className="nav-item">
                       <Link
-                        to="/ReportEcollection"
+                        to="/ReportTransactionDetail"
                         className={
-                          activeMenu === "/ReportEcollection"
+                          activeMenu === "/ReportTransactionDetail"
                             ? `custom-link nav-link`
                             : `nav-link`
                         }
-                        onClick={() => setActiveMenu("/ReportEcollection")}
+                        onClick={() => setActiveMenu("/ReportTransactionDetail")}
                       >
                         <FontAwesomeIcon icon={faAngleRight} />
-                        {"  "} E-Collection Reports
+                        {"  "} Transaction Detail
                       </Link>
                     </li>
                     {/* <li className="nav-item">
                       <Link
-                        to="/UserChecker"
+                        to="/ReportCustomer"
                         className={
-                          activeMenu === "/UserChecker"
+                          activeMenu === "/ReportCustomer"
                             ? `custom-link nav-link`
                             : `nav-link`
                         }
-                        onClick={() => setActiveMenu("/UserChecker")}
+                        onClick={() => setActiveMenu("/ReportCustomer")}
                       >
                         <FontAwesomeIcon icon={faAngleRight} />
-                        {"  "} User Request
+                        {"  "} Customer Maintenance
                       </Link>
-                    </li>
-                    <li className="nav-item">
+                    </li> */}
+                   {/* <li className="nav-item">
                       <Link
                         to="/RoleRequest"
                         className={

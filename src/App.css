@@ -134,7 +134,8 @@ label {
   background-color: #c7d6ed !important;
   font-size: 14px;
   align-items: center;
-  /* text-align: center !important; */
+  white-space: nowrap;
+  border-right: 1px solid gray;
 }
 
 .tableDiv td {
@@ -143,6 +144,7 @@ label {
   align-items: left !important;
   font-size: 14px;
   background-color: white !important;
+  border-right: 1px solid gray;
 }
 
 .css-byenzh-MuiButtonBase-root-MuiSwitch-switchBase.Mui-checked {
@@ -259,6 +261,7 @@ svg.svg-inline--fa {
   border-bottom: 0px;
   background-color: #003466 !important;
   color: white;
+  min-height: 40px;
 }
 
 .makerFields .UDCoulmns,
@@ -307,6 +310,20 @@ a.nav-link:focus {
 }
 .float-end{
   text-align: end;
+
 }.role.makerFields {
   min-height: 190px !important;
+}
+
+.mt-20{
+  margin-top: 3%;
+}
+
+.wrapper.text-end.exportDiv {
+  text-align: end;
+  margin: 20px;
+}
+
+button.p-column-filter-clear-button.p-link {
+  display: none;
 }

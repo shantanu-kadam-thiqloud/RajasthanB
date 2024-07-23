@@ -14,25 +14,25 @@ export default function Header() {
   const isLogin = location.pathname === "/" ? true : false;
   const lastSessionStorage = sessionStorage.getItem("USER");
   const USER = getSessionStorage("USER");
-  useEffect(() => {
-    const fetchLoginData = async () => {
-      try {
-        const cookieLoginData = await getUserDataFromCookie();
-        // const decryptedData = await decryptData(cookieLoginData);
-        // if(!cookieLoginData && !isLogin){
-        //  window.location.href = "/SupportTool";
-        // }
-        setLoginData(cookieLoginData);
-      } catch (error) {
-        console.error("Error fetching login data:", error);
-      }
-    };
-    fetchLoginData();
-  }, [isLogin]);
+  // useEffect(() => {
+  //   const fetchLoginData = async () => {
+  //     try {
+  //       const cookieLoginData = await getUserDataFromCookie();
+  //       // const decryptedData = await decryptData(cookieLoginData);
+  //       // if(!cookieLoginData && !isLogin){
+  //       //  window.location.href = "/SupportTool";
+  //       // }
+  //       setLoginData(cookieLoginData);
+  //     } catch (error) {
+  //       console.error("Error fetching login data:", error);
+  //     }
+  //   };
+  //   fetchLoginData();
+  // }, [isLogin]);
 
   useEffect(() => {
     if (!USER && !isLogin) {
-      window.location.href = "/";
+      window.location.href = "/rjsbcl";
     }
   }, []);
 
@@ -42,7 +42,7 @@ export default function Header() {
         const currentSessionValue = sessionStorage.getItem("USER");
         if (currentSessionValue !== lastSessionStorage) {
           removeUserDataSession();
-          window.location.href = "/";
+          window.location.href = "/rjsbcl";
         }
       }
     };

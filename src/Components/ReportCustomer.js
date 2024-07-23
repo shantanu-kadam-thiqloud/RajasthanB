@@ -5,7 +5,7 @@ import GenericDataTable from "./CommonComponents/GenericDataTable";
 import { useNavigate } from "react-router-dom";
 import { saveData } from "../Services/API-services";
 
-export default function ReportEcollection() {
+export default function ReportCustomer() {
   const navigate = useNavigate();
   const [customerList, setCustomerList] = useState(null);
   const columns = [
@@ -266,7 +266,7 @@ export default function ReportEcollection() {
                     <div className="card-header">
                       <div className="row alignCenter">
                         <div className="col-sm-12">
-                          <h1 className="m-0 pageTitle">E-Collection Reports</h1>
+                          <h1 className="m-0 pageTitle">Customer Maintenance Reports</h1>
                         </div>                        
                       </div>
                     </div>

@@ -15,7 +15,8 @@ import CustomerRequest from "./Components/CustomerRequest";
 import CustomerChecker from "./Components/CustomerChecker";
 import RoleRequest from "./Components/RoleRequest";
 import RoleChecker from "./Components/RoleChecker";
-import ReportEcollection from "./Components/ReportEcollection";
+import ReportCustomer from "./Components/ReportCustomer";
+import ReportTransactionDetail from "./Components/ReportTransactionDetail";
 
 const Routers = () => {
   return (
@@ -45,7 +46,8 @@ const Routers = () => {
       <Route path="/Customers" element={<Customers />} />
       <Route path="/EditCustomer" element={<AddCustomer />} />
       {/* --------------------------------------------------------------- */}
-      <Route path="/ReportEcollection" element={<ReportEcollection />} />
+      <Route path="/ReportCustomer" element={<ReportCustomer />} />
+      <Route path="/ReportTransactionDetail" element={<ReportTransactionDetail />} />
     </Routes>
   );
 };
