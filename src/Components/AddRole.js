@@ -322,6 +322,7 @@ export default function AddRole() {
                                           id="profileName"
                                           name="profileName"
                                           placeholder="Enter role name"
+                                          maxLength="50"
                                         />
                                         <ErrorMessage
                                           name="profileName"
@@ -344,6 +345,7 @@ export default function AddRole() {
                                           className="form-control"
                                           id="profileDescription"
                                           name="profileDescription"
+                                          maxLength="100"
                                           placeholder="Enter role description"
                                         />
                                         <ErrorMessage

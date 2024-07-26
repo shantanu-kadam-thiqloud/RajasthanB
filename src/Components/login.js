@@ -70,7 +70,7 @@ const Login = () => {
               <img
                 src={LOGO} //"dist/img/AdminLTELogo.png"
                 alt="AdminLTE Logo"
-                className="brand-image  "
+                className="brand-image "
               />
               <div className="brand-text font-weight-light"></div>
             </a>
@@ -105,6 +105,7 @@ const Login = () => {
                                 name="username"
                                 className="form-control"
                                 placeholder="Enter your username"
+                                maxLength="50"
                               />
                               <ErrorMessage
                                 name="username"
@@ -121,6 +122,7 @@ const Login = () => {
                                 name="password"
                                 className="form-control"
                                 placeholder="Enter your password"
+                                maxLength="50"
                               />
                               <ErrorMessage
                                 name="password"

@@ -34,6 +34,10 @@ export default function AddUser() {
       )
       .required("Last Name is required"),
     email_id: Yup.string()
+      .matches(
+        /^[a-zA-Z0-9\s.,/_@.]*$/,
+        "email should not contain special characters"
+      )
       .email("Invalid email address")
       .required("Email is required"),
     // role_id: Yup.number().required("Role is required"),
@@ -41,7 +45,12 @@ export default function AddUser() {
       phoneRegExp,
       "Contact number is not valid"
     ),
-    user_name: Yup.string().required("Username is required"),
+    user_name: Yup.string()
+      .matches(
+        /^[a-zA-Z0-9\s.,/_:-@]*$/,
+        "Username should not contain special characters"
+      )
+      .required("Username is required"),
   });
 
   const isEdit = Boolean(userId);
@@ -222,7 +231,7 @@ export default function AddUser() {
                                       id="first_name"
                                       name="first_name"
                                       placeholder="Enter first name"
-                                      maxLength="100"
+                                      maxLength="50"
                                     />
                                     <ErrorMessage
                                       name="first_name"
@@ -266,7 +275,7 @@ export default function AddUser() {
                                       id="user_name"
                                       name="user_name"
                                       placeholder="Enter username"
-                                      maxLength="100"
+                                      maxLength="50"
                                     />
                                     <ErrorMessage
                                       name="user_name"
@@ -311,7 +320,7 @@ export default function AddUser() {
                                       id="last_name"
                                       name="last_name"
                                       placeholder="Enter last name"
-                                      maxLength="100"
+                                      maxLength="50"
                                     />
                                     <ErrorMessage
                                       name="last_name"

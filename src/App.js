@@ -10,7 +10,9 @@ import { useLocation } from "react-router-dom";
 function App() {
   const location = useLocation();
   const isLoginPage =
-    location.pathname === "/" || location.pathname === "/login";
+    location.pathname === "/" ||
+    location.pathname === "/login" ||
+    location.pathname === "/rjsbcl";
 
   return (
     <div className="wrapper">

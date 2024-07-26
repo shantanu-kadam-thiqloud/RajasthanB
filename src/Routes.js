@@ -19,11 +19,13 @@ import UserRequest from "./Components/UserRequest";
 import UserChecker from "./Components/UserChecker";
 import ReportCustomer from "./Components/ReportCustomer";
 import ReportTransactionDetail from "./Components/ReportTransactionDetail";
+import NotFound from "./Components/NotFound";
 
 const Routers = () => {
   return (
     <Routes>
       <Route path="/" element={<Login />} />
+      <Route path="/rjsbcl" element={<Login />} />
       <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/login" element={<Login />} />
       {/* --------------------------------------------------------------- */}
@@ -55,7 +57,9 @@ const Routers = () => {
       <Route
         path="/ReportTransactionDetail"
         element={<ReportTransactionDetail />}
-      />
+      />{" "}
+      <Route path="*" element={<NotFound />} />
+      <Route path="/*" element={<NotFound />} />
     </Routes>
   );
 };

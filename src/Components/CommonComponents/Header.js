@@ -8,6 +8,8 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 export default function Header() {
+  const [logoutTimer, setLogoutTimer] = useState(null);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [loginData, setLoginData] = useState({});
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ export default function Header() {
 
   useEffect(() => {
     if (!USER && !isLogin) {
-      window.location.href = "/rjsbcl";
+      // window.location.href = "/rjsbcl";
     }
   }, []);
 
@@ -53,6 +55,58 @@ export default function Header() {
     };
   }, [lastSessionStorage, isLogin]);
 
+  useEffect(() => {
+    let idleTimer;
+    let confirmationTimer;
+
+    const resetIdleTimer = () => {
+      clearTimeout(idleTimer);
+      clearTimeout(confirmationTimer);
+
+      //  idleTimer = setTimeout(logoutUser, 2 * 60 * 1000); // 2 minutes
+      idleTimer = !isLogin ? setTimeout(logoutUser, 3 * 60 * 1000) : null;
+      setLogoutTimer(idleTimer);
+
+      // Show confirmation 1 minute before logout
+      confirmationTimer = !isLogin
+        ? setTimeout(() => setShowConfirmation(true), (3 * 60 - 60) * 1000)
+        : null;
+    };
+
+    const logoutUser = () => {
+      logout();
+      console.log("User has been logged out due to inactivity");
+    };
+
+    const handleActivity = () => {
+      resetIdleTimer();
+      setShowConfirmation(false);
+    };
+
+    // Event listeners for user activity
+    const resetIdleTimerOnEvents = ["mousemove", "keypress"];
+
+    resetIdleTimerOnEvents.forEach((event) => {
+      window.addEventListener(event, handleActivity);
+    });
+
+    resetIdleTimer();
+
+    // Cleanup
+    return () => {
+      clearTimeout(idleTimer);
+      clearTimeout(confirmationTimer);
+      resetIdleTimerOnEvents.forEach((event) => {
+        window.removeEventListener(event, handleActivity);
+      });
+    };
+  }, [isLogin]);
+
+  const handleConfirmation = () => {
+    clearTimeout(logoutTimer);
+    setShowConfirmation(false);
+  };
+
   const removeUserDataSession = () => {
     sessionStorage.removeItem("USER");
   };
@@ -68,14 +122,28 @@ export default function Header() {
 
   return (
     <div>
+      {showConfirmation && !isLogin && (
+        <div className="overlay">
+          <div className="log-container">
+            <p>
+              Your session will expire in one minute due to inactivity.
+              <br />
+              Would you like to continue?
+            </p>
+            <button className="btn btn-danger" onClick={handleConfirmation}>
+              Yes
+            </button>
+          </div>
+        </div>
+      )}
       <nav className="main-header navbar navbar-expand navbar-white navbar-light">
         {!isLogin && (
           <div className="container-fluid">
             <div className="d-flex w-100">
               <div className="col-md-9"></div>
               <div className="col-md-2 text-center">
-                <div>Welcome, {USER.firstName} </div>
-                <div>Role: {USER.role_name}</div>
+                <div>Welcome, {USER?.firstName} </div>
+                <div>Role: {USER?.role_name}</div>
               </div>
               <div className="col-md-1 d-flex align-items-center">
                 <FontAwesomeIcon
