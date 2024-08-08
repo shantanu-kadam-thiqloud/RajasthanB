@@ -64,12 +64,12 @@ export default function Header() {
       clearTimeout(confirmationTimer);
 
       //  idleTimer = setTimeout(logoutUser, 2 * 60 * 1000); // 2 minutes
-      idleTimer = !isLogin ? setTimeout(logoutUser, 3 * 60 * 1000) : null;
+      idleTimer = !isLogin ? setTimeout(logoutUser, 15 * 60 * 1000) : null;
       setLogoutTimer(idleTimer);
 
       // Show confirmation 1 minute before logout
       confirmationTimer = !isLogin
-        ? setTimeout(() => setShowConfirmation(true), (3 * 60 - 60) * 1000)
+        ? setTimeout(() => setShowConfirmation(true), (15 * 60 - 60) * 1000)
         : null;
     };
 
@@ -109,6 +109,7 @@ export default function Header() {
 
   const removeUserDataSession = () => {
     sessionStorage.removeItem("USER");
+    sessionStorage.removeItem("AUTHUSER");
   };
 
   function logout() {

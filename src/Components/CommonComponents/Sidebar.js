@@ -328,7 +328,9 @@ export default function Sidebar() {
                     loginData?.role_name.toLowerCase() !== "maker")
                 ) {
                   return (
-                    x.check && (
+                    (x.subMenu.length === 0
+                      ? x.check
+                      : x.subMenu.some((z) => z.check)) && (
                       <li
                         className={
                           x.subMenu.length !== 0

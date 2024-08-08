@@ -43,7 +43,13 @@ const Login = () => {
             roleId: user.roleId,
             role_name: user.role_name,
           };
+          const authUser = {
+            //user.token
+            token:
+              "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
+          };
           setSessionStorage("USER", userData);
+          setSessionStorage("AUTHUSER", authUser);
           toast.success("Login successfully !", {
             position: "top-right",
             autoClose: 3000,

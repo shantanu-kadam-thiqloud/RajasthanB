@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getSessionStorage } from "../Components/CommonComponents/cookieData";
 // import { decryptData } from "./../Login/decryptionUtils";
 // import {
 //   getUserDataFromCookie,
@@ -25,14 +26,16 @@ export default class RestDataSource {
     // const cookieLoginData = await getUserDataFromCookie();
     // const loginData = await decryptData(cookieLoginData);
     // let token = loginData !== null ? loginData.token : "";
+    const AUTHUSER = getSessionStorage("AUTHUSER");
+    const token = AUTHUSER?.token;
     try {
       let response = await axios.request({
         method: method,
         url: url,
         data: data,
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: {
+          Authorization: `Bearer ${token === undefined ? "abc" : token}`,
+        },
       });
       callback(response);
     } catch (error) {

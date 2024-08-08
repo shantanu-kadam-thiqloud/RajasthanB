@@ -107,7 +107,7 @@ export default function Roles() {
                             detailpage={"RoleDetails"}
                             editpage={"EditRole"}
                             deletepage={""} //{"DeleteRole"}
-                            enablePagination={false}
+                            enablePagination={true}
                           />
                         </div>
                       </div>

@@ -31,7 +31,8 @@ const RoleChecker = () => {
     requestData?.updatedValue || {}
   );
   const [oldValue, setOldValue] = useState(requestData?.existing_values || {});
-  const jsonMenu = JSON.parse(requestData?.updatedValue?.menu_access || "[]"); //
+  // const jsonMenu = requestData?.updatedValue?.menu_access || [];
+  const jsonMenu = JSON.parse(requestData?.updatedValue?.menu_access || "[]");
   const [menuData, setMenuData] = useState(
     jsonMenu.length !== 0 ? jsonMenu : unCheckSideData[0].data
   );
@@ -48,7 +49,7 @@ const RoleChecker = () => {
     const minute = dateTime.getMinutes();
     const second = dateTime.getSeconds();
 
-    setReqDate(`${year}-${month}-${day}`);
+    setReqDate(`${day}-${month}-${year}`);
     setReqTime(`${hour}:${minute}:${second}`);
   };
   useEffect(() => {

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { unCheckSideData, sideData } from "./CommonComponents/sideBarData";
 import { getSessionStorage } from "./CommonComponents/cookieData";
 import { saveData } from "../Services/API-services";
+
 export default function AddRole() {
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
@@ -162,15 +163,15 @@ export default function AddRole() {
       utilityType: "role",
       requestType: isEdit ? "Update" : "Add",
       tableName: "mst_sb_roles",
-      description: isEdit ? "Update Role" : "Creat a new Role",
-      makerId: USER?.role_id,
+      description: isEdit ? "Update Role" : "Create a new Role",
+      makerId: USER?.userId, //roleId,
       user_id: USER?.userId,
       createdBy: USER?.userName,
       updatedValue: {
         role_name: values?.profileName,
         role_description: values?.profileDescription,
         created_by: USER?.userName,
-        menu_access: stringifyMenu || "[]", //"abcdefghijk", //
+        menu_access: stringifyMenu, // menuData,
       },
       existing_values: existingValue,
     };
@@ -223,12 +224,12 @@ export default function AddRole() {
     <div>
       <div>{requestData}</div>
       <br />
-      <button
+      {/* <button
         className="btn BackBtn mr-3"
         onClick={() => copyToClipboard(requestId)}
       >
         Copy ID
-      </button>
+      </button> */}
       <button className="btn addUser" onClick={() => closeToast()}>
         OK
       </button>
