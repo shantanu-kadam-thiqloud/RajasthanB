@@ -17,6 +17,30 @@ export default function AddRole() {
   const [existingValue, setExistingValue] = useState(
     location.state ? location.state.user : {}
   );
+  const initializeMenuData = (data) => {
+    return data.map((menu) => {
+      return {
+        ...menu,
+        oldCheck: menu.check, // Set oldCheck to the initial check value
+        subMenu: menu.subMenu
+          ? menu.subMenu.map((subMenu) => {
+              return {
+                ...subMenu,
+                oldCheck: subMenu.check, // Set oldCheck for subMenu
+                action: subMenu.action
+                  ? subMenu.action.map((action) => {
+                      return {
+                        ...action,
+                        oldCheck: action.check, // Set oldCheck for action
+                      };
+                    })
+                  : [],
+              };
+            })
+          : [],
+      };
+    });
+  };
   const [menuData, setMenuData] = useState(unCheckSideData[0].data);
   const path = window.location.pathname;
   const isEdit = path.includes("EditRole") ? true : false;
@@ -38,7 +62,8 @@ export default function AddRole() {
     if (isEdit) {
       // setIsLoading(true);
       const jsonMenu = JSON.parse(role?.menu_access || "[]");
-      setMenuData(jsonMenu.length !== 0 ? jsonMenu : unCheckSideData[0].data);
+      let mapping = jsonMenu.length !== 0 ? jsonMenu : unCheckSideData[0].data;
+      setMenuData(initializeMenuData(mapping));
     } else {
       handleUnCheckAll();
     }
@@ -121,7 +146,7 @@ export default function AddRole() {
       // Checkbox in menu item clicked
       const currentMenu = updatedMenuData[menuIndex];
       const oldCheckMenu = currentMenu.check;
-      currentMenu.oldCheck = oldCheckMenu; // Store old check value
+      // currentMenu.oldCheck = oldCheckMenu; // Store old check value
       currentMenu.check = !oldCheckMenu;
     }
 
@@ -134,7 +159,7 @@ export default function AddRole() {
       // Checkbox in submenu item clicked
       const currentSubMenu = updatedMenuData[menuIndex].subMenu[subMenuIndex];
       const oldCheckSubMenu = currentSubMenu.check;
-      currentSubMenu.oldCheck = oldCheckSubMenu; // Store old check value
+      // currentSubMenu.oldCheck = oldCheckSubMenu; // Store old check value
       currentSubMenu.check = !oldCheckSubMenu;
     }
 
@@ -151,12 +176,13 @@ export default function AddRole() {
       const currentAction =
         updatedMenuData[menuIndex].subMenu[subMenuIndex].action[actionIndex];
       const oldCheckAction = currentAction.check;
-      currentAction.oldCheck = oldCheckAction; // Store old check value
+      // currentAction.oldCheck = oldCheckAction; // Store old check value
       currentAction.check = !oldCheckAction;
     }
 
     setMenuData(updatedMenuData);
   };
+
   function AddEditRole(values) {
     const stringifyMenu = JSON.stringify(menuData);
     const requestBody = {
@@ -346,7 +372,7 @@ export default function AddRole() {
                                           className="form-control"
                                           id="profileDescription"
                                           name="profileDescription"
-                                          maxLength="100"
+                                          maxLength="150"
                                           placeholder="Enter role description"
                                         />
                                         <ErrorMessage

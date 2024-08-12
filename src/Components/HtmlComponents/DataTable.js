@@ -64,18 +64,18 @@ const DataTable = ({
   const { globalFilter } = state;
   const [switchStates, setSwitchStates] = useState({});
   const navigate = useNavigate();
-  const handleEyeAction = (user) => {
-    //navigate(`/NHAI/UserDetails/${user.userId}`);
-    navigate(`/NHAI/${detailpage}/${user.id}`);
-  };
-  const handleEditAction = (user) => {
-    // navigate(`/NHAI/UserDetails/${user.userId}`);
-    navigate(`/NHAI/${editpage}/${user.id}`);
-  };
-  const handleTrashAction = (user) => {
-    // navigate(`/NHAI/UserDetails/${user.userId}`);
-    navigate(`/NHAI/${deletepage}/${user.id}`);
-  };
+  // const handleEyeAction = (user) => {
+  //   //navigate(`/NHAI/UserDetails/${user.userId}`);
+  //   navigate(`/NHAI/${detailpage}/${user.id}`);
+  // };
+  // const handleEditAction = (user) => {
+  //   // navigate(`/NHAI/UserDetails/${user.userId}`);
+  //   navigate(`/NHAI/${editpage}/${user.id}`);
+  // };
+  // const handleTrashAction = (user) => {
+  //   // navigate(`/NHAI/UserDetails/${user.userId}`);
+  //   navigate(`/NHAI/${deletepage}/${user.id}`);
+  // };
 
   useEffect(() => {
     // Initialize the switch states based on the 'isActive' property in data
@@ -146,32 +146,32 @@ const DataTable = ({
                           />
                         </td>
                       );
-                    } else if (cell.column.Header === "Action") {
-                      return (
-                        <td
-                          className="text-center"
-                          {...cell.getCellProps()}
-                          title={cell.value}
-                        >
-                          {/* Add icons for eye, edit, and delete actions */}
+                      // } else if (cell.column.Header === "Action") {
+                      //   return (
+                      //     <td
+                      //       className="text-center"
+                      //       {...cell.getCellProps()}
+                      //       title={cell.value}
+                      //     >
+                      //       {/* Add icons for eye, edit, and delete actions */}
 
-                          <FontAwesomeIcon
-                            className="tableIcon"
-                            icon={faEye}
-                            onClick={() => handleEyeAction(cell.row.original)}
-                          />
-                          <FontAwesomeIcon
-                            className="tableIcon"
-                            icon={faEdit}
-                            onClick={() => handleEditAction(cell.row.original)}
-                          />
-                          <FontAwesomeIcon
-                            className="tablePointer"
-                            icon={faTrash}
-                            onClick={() => handleTrashAction(cell.row.original)}
-                          />
-                        </td>
-                      );
+                      //       <FontAwesomeIcon
+                      //         className="tableIcon"
+                      //         icon={faEye}
+                      //         onClick={() => handleEyeAction(cell.row.original)}
+                      //       />
+                      //       <FontAwesomeIcon
+                      //         className="tableIcon"
+                      //         icon={faEdit}
+                      //         onClick={() => handleEditAction(cell.row.original)}
+                      //       />
+                      //       <FontAwesomeIcon
+                      //         className="tablePointer"
+                      //         icon={faTrash}
+                      //         onClick={() => handleTrashAction(cell.row.original)}
+                      //       />
+                      //     </td>
+                      //   );
                     } else {
                       return (
                         <td {...cell.getCellProps()} title={cell.value}>
